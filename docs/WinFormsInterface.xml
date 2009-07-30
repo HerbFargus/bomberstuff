@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>WinFormsInterface</name>
+    </assembly>
+    <members>
+        <member name="T:BomberStuff.WinFormsInterface.UserInterface">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:BomberStuff.WinFormsInterface.UserInterface.Form">
+            <summary>The underlying Form</summary>
+        </member>
+        <member name="M:BomberStuff.WinFormsInterface.UserInterface.Initialize">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:BomberStuff.WinFormsInterface.UserInterface.StartMainLoop">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:BomberStuff.WinFormsInterface.UserInterface.Terminate">
+            <summary>
+            
+            </summary>
+        </member>
+    </members>
+</doc>

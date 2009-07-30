@@ -1,0 +1,65 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>BomberStuff</name>
+    </assembly>
+    <members>
+        <member name="T:BomberStuff.Core.IUserInterface">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:BomberStuff.Core.IUserInterface.Initialize">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:BomberStuff.Core.IUserInterface.StartMainLoop">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:BomberStuff.Core.IUserInterface.Terminate">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:BomberStuff.Core.ErrorHandling">
+            <summary>
+            Centralized methods for displaying and handling errors in the program
+            </summary>
+        </member>
+        <member name="M:BomberStuff.Core.ErrorHandling.FatalError(System.Exception,System.String,System.String[])">
+            <summary>
+            Handle an expected, but fatal error.
+            Outputs a user-readable message an may or may
+            not terminate the program.
+            </summary>
+            <param name="e">an exception related to the error, or <c>null</c></param>
+            <param name="fmt">an error message format string</param>
+            <param name="args">arguments for the message format</param>
+        </member>
+        <member name="M:BomberStuff.Core.ErrorHandling.UnexpectedError(System.Exception,System.String,System.String[])">
+            <summary>
+            Handle an unexpected fatal error.
+            Outputs a user-readable message and may prompt the user
+            to report the error. May or may not terminate the program.
+            </summary>
+            <param name="e">an exception related to the error, or <c>null</c></param>
+            <param name="fmt">an error message format string</param>
+            <param name="args">arguments for the message format</param>
+        </member>
+        <member name="T:BomberStuff.Core.Program">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:BomberStuff.Core.Program.Main(System.String[])">
+            <summary>
+            Program entry. Handles command line arguments and loads
+            plugins accordingly
+            </summary>
+            <param name="args">Program arguments</param>
+        </member>
+    </members>
+</doc>
