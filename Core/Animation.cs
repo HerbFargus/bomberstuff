@@ -1,5 +1,5 @@
 ﻿//
-// Interface.cs - Interface class
+// Animation.cs - Animation class
 //
 // Copyright © 2009  Thomas Faber
 //
@@ -19,46 +19,45 @@
 // along with Bomber Stuff. If not, see <http://www.gnu.org/licenses/>.
 //
 
-using System;
-using System.Drawing;
-using System.Windows.Forms;
+using System.Collections.Generic;
+using BomberStuff.Core.Drawing;
+using BomberStuff.Core.UserInterface;
 
-using BomberStuff.Core;
-
-namespace BomberStuff.WinFormsInterface
+namespace BomberStuff.Core
 {
+	/// <summary>
+	/// Represents an animation, that is, a sequence of images
+	/// </summary>
+	public class Animation
+	{
+		/// <summary></summary>
+		protected readonly AnimationState[] States;
+
+		/// <summary>
+		///  
+		/// </summary>
+		/// <param name="states"></param>
+		public Animation(AnimationState[] states)
+		{
+			States = states;
+		}
+	}
+
 	/// <summary>
 	/// 
 	/// </summary>
-	public class UserInterface : IUserInterface
+	public class AnimationState
 	{
-		/// <summary>The underlying Form</summary>
-		protected Form Form;
-		
 		/// <summary>
 		/// 
 		/// </summary>
-		public void Initialize()
-		{
-			Form = new Form();
-			Form.ClientSize = new Size(640, 480);
-			Form.Text = "Bomber Stuff, WinForms interface";
-		}
+		public readonly ISprite Sprite;
 
 		/// <summary>
 		/// 
 		/// </summary>
-		public void StartMainLoop()
-		{
-			Application.Run(Form);
-		}
+		public readonly SizeF Offset;
 
-		/// <summary>
-		/// 
-		/// </summary>
-		public void Terminate()
-		{
-			Application.Exit();
-		}
+
 	}
 }

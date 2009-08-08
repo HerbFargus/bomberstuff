@@ -54,9 +54,23 @@
     <NoStdLib>true</NoStdLib>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Animation.cs" />
+    <Compile Include="Board\Board.cs" />
+    <Compile Include="Board\Stone.cs" />
+    <Compile Include="Drawing\PointF.cs" />
+    <Compile Include="Drawing\RectangleF.cs" />
+    <Compile Include="Drawing\SizeF.cs" />
+    <Compile Include="Files\PCXReader.cs" />
+    <Compile Include="MobileObject.cs" />
     <Compile Include="ErrorHandling.cs" />
-    <Compile Include="IUserInterface.cs" />
+    <Compile Include="Game.cs" />
+    <Compile Include="UserInterface\IDevice.cs" />
+    <Compile Include="UserInterface\IUserInterface.cs" />
+    <Compile Include="Participant.cs" />
     <Compile Include="Program.cs" />
+    <Compile Include="UserInterface\LoadSpritesEventArgs.cs" />
+    <Compile Include="UserInterface\RenderEventArgs.cs" />
+    <Compile Include="Utilities\BitmapBuilder.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
@@ -72,6 +86,7 @@
       <HintPath>..\..\Program Files (x86)\Microsoft.NET\SDK\CompactFramework\v2.0\WindowsCE\System.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=969db8053d3322ac, processorArchitecture=MSIL" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">

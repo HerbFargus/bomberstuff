@@ -39,7 +39,9 @@
     <NoStdLib>true</NoStdLib>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Interface.cs">
+    <Compile Include="Device.cs" />
+    <Compile Include="UserInterface.cs">
+      <SubType>Form</SubType>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -76,7 +78,6 @@
     <ProjectReference Include="..\Core\Core.csproj">
       <Project>{652D4CBB-0C15-4083-BAA7-287377AA19DC}</Project>
       <Name>Core</Name>
-      <Private>False</Private>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

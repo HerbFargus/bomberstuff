@@ -1,5 +1,5 @@
 ﻿//
-// IUserInterface.cs - IUserInterface interface
+// Stone.cs - Stone class
 //
 // Copyright © 2009  Thomas Faber
 //
@@ -19,28 +19,40 @@
 // along with Bomber Stuff. If not, see <http://www.gnu.org/licenses/>.
 //
 
-using System;
-
 namespace BomberStuff.Core
 {
 	/// <summary>
 	/// 
 	/// </summary>
-	public interface IUserInterface
+	public class Stone : MobileObject
 	{
 		/// <summary>
 		/// 
 		/// </summary>
-		void Initialize();
+		/// <param name="x"></param>
+		/// <param name="y"></param>
+		public Stone(int x, int y)
+			: base(x, y, 1.0f, 1.0f)
+		{
+			//Animation = ...
+		}
 
 		/// <summary>
 		/// 
 		/// </summary>
-		void StartMainLoop();
+		/// <param name="other"></param>
+		/// <returns></returns>
+		protected override bool Collide(MobileObject other)
+		{
+			return true;
+		}
 
 		/// <summary>
 		/// 
 		/// </summary>
-		void Terminate();
+		protected override void BorderCollide()
+		{
+		}
 	}
+
 }

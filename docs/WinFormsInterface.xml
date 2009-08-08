@@ -6,23 +6,161 @@
     <members>
         <member name="T:BomberStuff.WinFormsInterface.UserInterface">
             <summary>
-            
+            Bomber Stuff user interface implemented using System.Windows.Forms
+            with GDI+ graphics
             </summary>
+            <remarks>
+            TODO: Add keyboard input
+            </remarks>
         </member>
         <member name="F:BomberStuff.WinFormsInterface.UserInterface.Form">
             <summary>The underlying Form</summary>
         </member>
-        <member name="M:BomberStuff.WinFormsInterface.UserInterface.Initialize">
+        <member name="F:BomberStuff.WinFormsInterface.UserInterface.Graphics">
+            <summary>The Form's Graphics object during drawing</summary>
+        </member>
+        <member name="M:BomberStuff.WinFormsInterface.UserInterface.OnLoadSprites(BomberStuff.Core.UserInterface.LoadSpritesEventArgs)">
             <summary>
             
             </summary>
+            <param name="e"></param>
         </member>
-        <member name="M:BomberStuff.WinFormsInterface.UserInterface.StartMainLoop">
+        <member name="M:BomberStuff.WinFormsInterface.UserInterface.OnRender(BomberStuff.Core.UserInterface.RenderEventArgs)">
+            <summary>
+            
+            </summary>
+            <param name="e"></param>
+        </member>
+        <member name="M:BomberStuff.WinFormsInterface.UserInterface.BomberStuff#Core#UserInterface#IUserInterface#Initialize">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:BomberStuff.WinFormsInterface.UserInterface.MainLoop">
             <summary>
             
             </summary>
         </member>
         <member name="M:BomberStuff.WinFormsInterface.UserInterface.Terminate">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:BomberStuff.WinFormsInterface.UserInterface.Draw(BomberStuff.Core.UserInterface.ISprite,BomberStuff.Core.Drawing.PointF,BomberStuff.Core.Drawing.SizeF,System.Drawing.Color)">
+            <summary>
+            
+            </summary>
+            <param name="sprite"></param>
+            <param name="position"></param>
+            <param name="size"></param>
+            <param name="color"></param>
+        </member>
+        <member name="M:BomberStuff.WinFormsInterface.UserInterface.Draw(System.String,BomberStuff.Core.Drawing.PointF,System.Drawing.Color)">
+            <summary>
+            
+            </summary>
+            <param name="text"></param>
+            <param name="position"></param>
+            <param name="color"></param>
+        </member>
+        <member name="M:BomberStuff.WinFormsInterface.UserInterface.Form_OnPaint(System.Object,System.Windows.Forms.PaintEventArgs)">
+            <summary>
+            
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="E:BomberStuff.WinFormsInterface.UserInterface.LoadSprites">
+            <summary></summary>
+        </member>
+        <member name="E:BomberStuff.WinFormsInterface.UserInterface.Render">
+            <summary></summary>
+        </member>
+        <member name="P:BomberStuff.WinFormsInterface.UserInterface.CacheAllSprites">
+            <summary></summary>
+        </member>
+        <member name="T:BomberStuff.WinFormsInterface.BomberForm">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:BomberStuff.WinFormsInterface.BomberForm.OnResize(System.EventArgs)">
+            <summary>
+            
+            </summary>
+            <param name="e"></param>
+        </member>
+        <member name="T:BomberStuff.WinFormsInterface.Sprite">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:BomberStuff.WinFormsInterface.Sprite.Bitmap">
+            <summary></summary>
+        </member>
+        <member name="M:BomberStuff.WinFormsInterface.Sprite.#ctor(System.Drawing.Bitmap)">
+            <summary>
+            
+            </summary>
+            <param name="bitmap"></param>
+        </member>
+        <member name="M:BomberStuff.WinFormsInterface.Sprite.op_Implicit(BomberStuff.WinFormsInterface.Sprite)~System.Drawing.Bitmap">
+            <summary>
+            
+            </summary>
+            <param name="s"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BomberStuff.WinFormsInterface.Sprite.op_Implicit(System.Drawing.Bitmap)~BomberStuff.WinFormsInterface.Sprite">
+            <summary>
+            
+            </summary>
+            <param name="bitmap"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BomberStuff.WinFormsInterface.Sprite.Dispose(System.Boolean)">
+            <summary>
+            
+            </summary>
+            <param name="disposing"></param>
+        </member>
+        <member name="M:BomberStuff.WinFormsInterface.Sprite.Dispose">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:BomberStuff.WinFormsInterface.Sprite.Finalize">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:BomberStuff.WinFormsInterface.Device">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:BomberStuff.WinFormsInterface.Device.LoadSprite(System.IO.Stream,System.Boolean,System.Drawing.Color)">
+            <summary>
+            
+            </summary>
+            <param name="s"></param>
+            <param name="storeInVideoMemory"></param>
+            <param name="keyColor"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BomberStuff.WinFormsInterface.Device.Dispose(System.Boolean)">
+            <summary>
+            
+            </summary>
+            <param name="disposing"></param>
+        </member>
+        <member name="M:BomberStuff.WinFormsInterface.Device.Dispose">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:BomberStuff.WinFormsInterface.Device.Finalize">
             <summary>
             
             </summary>

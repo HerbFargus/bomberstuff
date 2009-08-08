@@ -4,25 +4,566 @@
         <name>BomberStuff</name>
     </assembly>
     <members>
-        <member name="T:BomberStuff.Core.IUserInterface">
+        <member name="T:BomberStuff.Core.Drawing.RectangleF">
             <summary>
             
             </summary>
         </member>
-        <member name="M:BomberStuff.Core.IUserInterface.Initialize">
+        <member name="F:BomberStuff.Core.Drawing.RectangleF.Empty">
+             <summary>
+            	Empty Shared Field
+             </summary>
+            
+             <remarks>
+            	An uninitialized RectangleF Structure.
+             </remarks>
+        </member>
+        <member name="M:BomberStuff.Core.Drawing.RectangleF.FromLTRB(System.Single,System.Single,System.Single,System.Single)">
+             <summary>
+            	FromLTRB Shared Method
+             </summary>
+            
+             <remarks>
+            	Produces a RectangleF structure from left, top, right,
+            	and bottom coordinates.
+             </remarks>
+        </member>
+        <member name="M:BomberStuff.Core.Drawing.RectangleF.Inflate(BomberStuff.Core.Drawing.RectangleF,System.Single,System.Single)">
+             <summary>
+            	Inflate Shared Method
+             </summary>
+            
+             <remarks>
+            	Produces a new RectangleF by inflating an existing 
+            	RectangleF by the specified coordinate values.
+             </remarks>
+        </member>
+        <member name="M:BomberStuff.Core.Drawing.RectangleF.Inflate(System.Single,System.Single)">
+             <summary>
+            	Inflate Method
+             </summary>
+            
+             <remarks>
+            	Inflates the RectangleF by a specified width and height.
+             </remarks>
+        </member>
+        <member name="M:BomberStuff.Core.Drawing.RectangleF.Inflate(BomberStuff.Core.Drawing.SizeF)">
+             <summary>
+            	Inflate Method
+             </summary>
+            
+             <remarks>
+            	Inflates the RectangleF by a specified Size.
+             </remarks>
+        </member>
+        <member name="M:BomberStuff.Core.Drawing.RectangleF.Intersect(BomberStuff.Core.Drawing.RectangleF,BomberStuff.Core.Drawing.RectangleF)">
+             <summary>
+            	Intersect Shared Method
+             </summary>
+            
+             <remarks>
+            	Produces a new RectangleF by intersecting 2 existing 
+            	RectangleFs. Returns null if there is no intersection.
+             </remarks>
+        </member>
+        <member name="M:BomberStuff.Core.Drawing.RectangleF.Intersect(BomberStuff.Core.Drawing.RectangleF)">
+             <summary>
+            	Intersect Method
+             </summary>
+            
+             <remarks>
+            	Replaces the RectangleF with the intersection of itself
+            	and another RectangleF.
+             </remarks>
+        </member>
+        <member name="M:BomberStuff.Core.Drawing.RectangleF.Union(BomberStuff.Core.Drawing.RectangleF,BomberStuff.Core.Drawing.RectangleF)">
+             <summary>
+            	Union Shared Method
+             </summary>
+            
+             <remarks>
+            	Produces a new RectangleF from the union of 2 existing 
+            	RectangleFs.
+             </remarks>
+        </member>
+        <member name="M:BomberStuff.Core.Drawing.RectangleF.op_Equality(BomberStuff.Core.Drawing.RectangleF,BomberStuff.Core.Drawing.RectangleF)">
+             <summary>
+            	Equality Operator
+             </summary>
+            
+             <remarks>
+            	Compares two RectangleF objects. The return value is
+            	based on the equivalence of the Location and Size 
+            	properties of the two RectangleFs.
+             </remarks>
+        </member>
+        <member name="M:BomberStuff.Core.Drawing.RectangleF.op_Inequality(BomberStuff.Core.Drawing.RectangleF,BomberStuff.Core.Drawing.RectangleF)">
+             <summary>
+            	Inequality Operator
+             </summary>
+            
+             <remarks>
+            	Compares two RectangleF objects. The return value is
+            	based on the equivalence of the Location and Size 
+            	properties of the two RectangleFs.
+             </remarks>
+        </member>
+        <member name="M:BomberStuff.Core.Drawing.RectangleF.op_Implicit(System.Drawing.Rectangle)~BomberStuff.Core.Drawing.RectangleF">
+             <summary>
+            	Rectangle to RectangleF Conversion
+             </summary>
+            
+             <remarks>
+            	Converts a Rectangle object to a RectangleF.
+             </remarks>
+        </member>
+        <member name="M:BomberStuff.Core.Drawing.RectangleF.#ctor(BomberStuff.Core.Drawing.PointF,BomberStuff.Core.Drawing.SizeF)">
+             <summary>
+            	RectangleF Constructor
+             </summary>
+            
+             <remarks>
+            	Creates a RectangleF from PointF and SizeF values.
+             </remarks>
+        </member>
+        <member name="M:BomberStuff.Core.Drawing.RectangleF.#ctor(System.Single,System.Single,System.Single,System.Single)">
+             <summary>
+            	RectangleF Constructor
+             </summary>
+            
+             <remarks>
+            	Creates a RectangleF from a specified x,y location and
+            	width and height values.
+             </remarks>
+        </member>
+        <member name="M:BomberStuff.Core.Drawing.RectangleF.Contains(System.Single,System.Single)">
+             <summary>
+            	Contains Method
+             </summary>
+            
+             <remarks>
+            	Checks if an x,y coordinate lies within this RectangleF.
+             </remarks>
+        </member>
+        <member name="M:BomberStuff.Core.Drawing.RectangleF.Contains(BomberStuff.Core.Drawing.PointF)">
+             <summary>
+            	Contains Method
+             </summary>
+            
+             <remarks>
+            	Checks if a Point lies within this RectangleF.
+             </remarks>
+        </member>
+        <member name="M:BomberStuff.Core.Drawing.RectangleF.Contains(BomberStuff.Core.Drawing.RectangleF)">
+             <summary>
+            	Contains Method
+             </summary>
+            
+             <remarks>
+            	Checks if a RectangleF lies entirely within this 
+            	RectangleF.
+             </remarks>
+        </member>
+        <member name="M:BomberStuff.Core.Drawing.RectangleF.Equals(System.Object)">
+             <summary>
+            	Equals Method
+             </summary>
+            
+             <remarks>
+            	Checks equivalence of this RectangleF and an object.
+             </remarks>
+        </member>
+        <member name="M:BomberStuff.Core.Drawing.RectangleF.GetHashCode">
+             <summary>
+            	GetHashCode Method
+             </summary>
+            
+             <remarks>
+            	Calculates a hashing value.
+             </remarks>
+        </member>
+        <member name="M:BomberStuff.Core.Drawing.RectangleF.IntersectsWith(BomberStuff.Core.Drawing.RectangleF)">
+             <summary>
+            	IntersectsWith Method
+             </summary>
+            
+             <remarks>
+            	Checks if a RectangleF intersects with this one.
+             </remarks>
+        </member>
+        <member name="M:BomberStuff.Core.Drawing.RectangleF.Offset(System.Single,System.Single)">
+             <summary>
+            	Offset Method
+             </summary>
+            
+             <remarks>
+            	Moves the RectangleF a specified distance.
+             </remarks>
+        </member>
+        <member name="M:BomberStuff.Core.Drawing.RectangleF.Offset(BomberStuff.Core.Drawing.PointF)">
+             <summary>
+            	Offset Method
+             </summary>
+            
+             <remarks>
+            	Moves the RectangleF a specified distance.
+             </remarks>
+        </member>
+        <member name="M:BomberStuff.Core.Drawing.RectangleF.ToString">
+             <summary>
+            	ToString Method
+             </summary>
+            
+             <remarks>
+            	Formats the RectangleF in (x,y,w,h) notation.
+             </remarks>
+        </member>
+        <member name="P:BomberStuff.Core.Drawing.RectangleF.Bottom">
+             <summary>
+            	Bottom Property
+             </summary>
+            
+             <remarks>
+            	The Y coordinate of the bottom edge of the RectangleF.
+            	Read only.
+             </remarks>
+        </member>
+        <member name="P:BomberStuff.Core.Drawing.RectangleF.Height">
+             <summary>
+            	Height Property
+             </summary>
+            
+             <remarks>
+            	The Height of the RectangleF.
+             </remarks>
+        </member>
+        <member name="P:BomberStuff.Core.Drawing.RectangleF.IsEmpty">
+             <summary>
+            	IsEmpty Property
+             </summary>
+            
+             <remarks>
+            	Indicates if the width or height are zero. Read only.
+             </remarks>
+        </member>
+        <member name="P:BomberStuff.Core.Drawing.RectangleF.Left">
+             <summary>
+            	Left Property
+             </summary>
+            
+             <remarks>
+            	The X coordinate of the left edge of the RectangleF.
+            	Read only.
+             </remarks>
+        </member>
+        <member name="P:BomberStuff.Core.Drawing.RectangleF.Location">
+             <summary>
+            	Location Property
+             </summary>
+            
+             <remarks>
+            	The Location of the top-left corner of the RectangleF.
+             </remarks>
+        </member>
+        <member name="P:BomberStuff.Core.Drawing.RectangleF.Right">
+             <summary>
+            	Right Property
+             </summary>
+            
+             <remarks>
+            	The X coordinate of the right edge of the RectangleF.
+            	Read only.
+             </remarks>
+        </member>
+        <member name="P:BomberStuff.Core.Drawing.RectangleF.Size">
+             <summary>
+            	Size Property
+             </summary>
+            
+             <remarks>
+            	The Size of the RectangleF.
+             </remarks>
+        </member>
+        <member name="P:BomberStuff.Core.Drawing.RectangleF.Top">
+             <summary>
+            	Top Property
+             </summary>
+            
+             <remarks>
+            	The Y coordinate of the top edge of the RectangleF.
+            	Read only.
+             </remarks>
+        </member>
+        <member name="P:BomberStuff.Core.Drawing.RectangleF.Width">
+             <summary>
+            	Width Property
+             </summary>
+            
+             <remarks>
+            	The Width of the RectangleF.
+             </remarks>
+        </member>
+        <member name="P:BomberStuff.Core.Drawing.RectangleF.X">
+             <summary>
+            	X Property
+             </summary>
+            
+             <remarks>
+            	The X coordinate of the RectangleF.
+             </remarks>
+        </member>
+        <member name="P:BomberStuff.Core.Drawing.RectangleF.Y">
+             <summary>
+            	Y Property
+             </summary>
+            
+             <remarks>
+            	The Y coordinate of the RectangleF.
+             </remarks>
+        </member>
+        <member name="T:Bomber.Files.PCXReader">
             <summary>
             
             </summary>
         </member>
-        <member name="M:BomberStuff.Core.IUserInterface.StartMainLoop">
+        <member name="M:Bomber.Files.PCXReader.StreamFromFile(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="filename"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Bomber.Files.PCXReader.FromFile(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="filename"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Bomber.Files.PCXReader.StreamFromStream(System.IO.Stream)">
+            <summary>
+            
+            </summary>
+            <param name="s"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Bomber.Files.PCXReader.FromStream(System.IO.Stream)">
+            <summary>
+            
+            </summary>
+            <param name="s"></param>
+            <returns></returns>
+        </member>
+        <member name="T:BomberStuff.Core.Board">
             <summary>
             
             </summary>
         </member>
-        <member name="M:BomberStuff.Core.IUserInterface.Terminate">
+        <member name="F:BomberStuff.Core.Board.Width">
+            <summary>
+            Dimensions of the board, measured in fields
+            </summary>
+        </member>
+        <member name="F:BomberStuff.Core.Board.Height">
+            <summary>
+            Dimensions of the board, measured in fields
+            </summary>
+        </member>
+        <member name="F:BomberStuff.Core.Board.TopLeft">
             <summary>
             
             </summary>
+        </member>
+        <member name="F:BomberStuff.Core.Board.BottomRight">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:BomberStuff.Core.Board.Items">
+            <summary>
+            List of items on the board
+            </summary>
+            <remarks>
+            Items are: stones, walls, players, powerups, extras, bombs.
+            Flames?
+            </remarks>
+        </member>
+        <member name="M:BomberStuff.Core.Board.#ctor">
+            <summary>
+            Initialize a new board with the specified number of fields
+            </summary>
+        </member>
+        <member name="M:BomberStuff.Core.Board.AddPlayer(BomberStuff.Core.MobileObject)">
+            <summary>
+            
+            </summary>
+            <param name="player"></param>
+            <remarks>
+            TODO: is this sensible? Also, make this player specific
+            once we have that class
+            </remarks>
+        </member>
+        <member name="T:BomberStuff.Core.Stone">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:BomberStuff.Core.MobileObject">
+            <summary>
+            An item on the board: a player, wall, powerup, bomb or extra
+            </summary>
+        </member>
+        <member name="F:BomberStuff.Core.MobileObject.Position">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:BomberStuff.Core.MobileObject.Size">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:BomberStuff.Core.MobileObject.#ctor(System.Single,System.Single,System.Single,System.Single)">
+            <summary>
+            
+            </summary>
+            <param name="x"></param>
+            <param name="y"></param>
+            <param name="width"></param>
+            <param name="height"></param>
+        </member>
+        <member name="F:BomberStuff.Core.MobileObject.Origin">
+            <summary></summary>
+        </member>
+        <member name="F:BomberStuff.Core.MobileObject.AnimationState">
+            <summary></summary>
+        </member>
+        <member name="F:BomberStuff.Core.MobileObject.Loop">
+            <summary></summary>
+        </member>
+        <member name="M:BomberStuff.Core.MobileObject.Animate(System.Int32)">
+            <summary>
+            Increase the animation state
+            </summary>
+            <param name="ticks">
+            Number of time units that have passed
+            </param>
+            <returns>
+            <c>true</c> if the animation should go on,
+            <c>false</c> if the object should be removed from the board
+            </returns>
+        </member>
+        <member name="M:BomberStuff.Core.MobileObject.GetSprite">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:BomberStuff.Core.MobileObject.GetOffset">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="F:BomberStuff.Core.MobileObject.SpeedX">
+            <summary>The object's speed</summary>
+            <seealso cref="F:BomberStuff.Core.MobileObject.SpeedX"/>
+            <seealso cref="F:BomberStuff.Core.MobileObject.SpeedY"/>
+        </member>
+        <member name="F:BomberStuff.Core.MobileObject.SpeedY">
+            <summary>The object's speed</summary>
+            <seealso cref="F:BomberStuff.Core.MobileObject.SpeedX"/>
+            <seealso cref="F:BomberStuff.Core.MobileObject.SpeedY"/>
+        </member>
+        <member name="M:BomberStuff.Core.MobileObject.Move(BomberStuff.Core.Board,System.Int32)">
+            <summary>
+            
+            </summary>
+            <param name="board"></param>
+            <param name="ticks"></param>
+        </member>
+        <member name="M:BomberStuff.Core.MobileObject.IsCollision(BomberStuff.Core.Board,System.Single,System.Single)">
+            <summary>
+            
+            </summary>
+            <param name="board"></param>
+            <param name="newX"></param>
+            <param name="newY"></param>
+        </member>
+        <member name="M:BomberStuff.Core.MobileObject.Collide(BomberStuff.Core.MobileObject)">
+            <summary>
+            When overridden in a derived class, handles collision with
+            another object.
+            </summary>
+            <param name="other">
+            the object with which a collision is occuring
+            </param>
+            <returns>
+            <c>false</c> if the object can move on,
+            <c>true</c> if the collision caused the object to stop
+            </returns>
+        </member>
+        <member name="M:BomberStuff.Core.MobileObject.BorderCollide">
+            <summary>
+            When overridden in a derived class, handles collision with the
+            board border. Any required actions, such as bouncing, should
+            be initiated.
+            </summary>
+        </member>
+        <member name="P:BomberStuff.Core.MobileObject.X">
+            <summary></summary>
+        </member>
+        <member name="P:BomberStuff.Core.MobileObject.Y">
+            <summary></summary>
+        </member>
+        <member name="P:BomberStuff.Core.MobileObject.Width">
+            <summary></summary>
+        </member>
+        <member name="P:BomberStuff.Core.MobileObject.Height">
+            <summary></summary>
+        </member>
+        <member name="P:BomberStuff.Core.MobileObject.Bounds">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:BomberStuff.Core.Stone.#ctor(System.Int32,System.Int32)">
+            <summary>
+            
+            </summary>
+            <param name="x"></param>
+            <param name="y"></param>
+        </member>
+        <member name="M:BomberStuff.Core.Stone.Collide(BomberStuff.Core.MobileObject)">
+            <summary>
+            
+            </summary>
+            <param name="other"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BomberStuff.Core.Stone.BorderCollide">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:BomberStuff.Core.UserInterface.ISprite">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:BomberStuff.Core.UserInterface.IDevice">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:BomberStuff.Core.UserInterface.IDevice.LoadSprite(System.IO.Stream,System.Boolean,System.Drawing.Color)">
+            <summary>
+            
+            </summary>
+            <param name="s"></param>
+            <param name="storeInVideoMemory"></param>
+            <param name="keyColor"></param>
+            <returns></returns>
         </member>
         <member name="T:BomberStuff.Core.ErrorHandling">
             <summary>
@@ -49,6 +590,404 @@
             <param name="fmt">an error message format string</param>
             <param name="args">arguments for the message format</param>
         </member>
+        <member name="T:BomberStuff.Core.Animation">
+            <summary>
+            Represents an animation, that is, a sequence of images
+            </summary>
+        </member>
+        <member name="F:BomberStuff.Core.Animation.States">
+            <summary></summary>
+        </member>
+        <member name="M:BomberStuff.Core.Animation.#ctor(BomberStuff.Core.AnimationState[])">
+            <summary>
+             
+            </summary>
+            <param name="states"></param>
+        </member>
+        <member name="T:BomberStuff.Core.AnimationState">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:BomberStuff.Core.AnimationState.Sprite">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:BomberStuff.Core.AnimationState.Offset">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:BomberStuff.Core.Game">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:BomberStuff.Core.Game.Participants">
+            <summary>
+            List of the participants in the game, including the
+            local player(s)
+            </summary>
+        </member>
+        <member name="F:BomberStuff.Core.Game.Board">
+            <summary>The board on which the game is played</summary>
+        </member>
+        <member name="M:BomberStuff.Core.Game.#ctor">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:BomberStuff.Core.Game.LoadSprites(System.Object,BomberStuff.Core.UserInterface.LoadSpritesEventArgs)">
+            <summary>
+            
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:BomberStuff.Core.Game.Render(System.Object,BomberStuff.Core.UserInterface.RenderEventArgs)">
+            <summary>
+            
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:BomberStuff.Core.Game.DrawMobileObject(BomberStuff.Core.UserInterface.IUserInterface,BomberStuff.Core.MobileObject,System.Drawing.Color)">
+            <summary>
+            
+            </summary>
+            <param name="ui"></param>
+            <param name="obj"></param>
+            <param name="color"></param>
+        </member>
+        <member name="T:Fabba.Utilities.BitmapBuilder">
+            <summary>
+            A wrapper object providing functionality for creating raw
+            bitmap data from different image formats
+            </summary>
+        </member>
+        <member name="F:Fabba.Utilities.BitmapBuilder.BitmapHeaderSize">
+            <summary>The size of a bitmap file header</summary>
+        </member>
+        <member name="F:Fabba.Utilities.BitmapBuilder.PaletteSize">
+            <summary>The size of the bitmap's palette</summary>
+        </member>
+        <member name="F:Fabba.Utilities.BitmapBuilder.PaletteLocation">
+            <summary>
+            The index into the BitmapData array at which the palette starts,
+            if present
+            </summary>
+        </member>
+        <member name="F:Fabba.Utilities.BitmapBuilder.DataLocation">
+            <summary>
+            The index into the BitmapData array at which the image data starts
+            </summary>
+        </member>
+        <member name="F:Fabba.Utilities.BitmapBuilder.BitsPerPixel">
+            <summary></summary>
+        </member>
+        <member name="M:Fabba.Utilities.BitmapBuilder.#ctor(Fabba.Utilities.BitmapBuilder)">
+            <summary>
+            Copy constructor. Performs a shallow copy, and creates a new,
+            blank array of previous size in BitmapData
+            </summary>
+            <param name="old"></param>
+        </member>
+        <member name="M:Fabba.Utilities.BitmapBuilder.Finalize">
+            <summary>
+            Destructor
+            </summary>
+        </member>
+        <member name="M:Fabba.Utilities.BitmapBuilder.GetStream">
+            <summary>
+            Creates a new <see cref="T:System.IO.Stream"/> backed by the BuildmapBuilder's
+            bitmap data
+            </summary>
+            <returns>a Stream that will provide bitmap data</returns>
+            <remarks>
+            This method's return value is primarily intended for use
+            with <see cref="M:System.Drawing.Bitmap.#ctor(System.IO.Stream)"/> or similar (for
+            example Texture creation) functions
+            </remarks>
+        </member>
+        <member name="M:Fabba.Utilities.BitmapBuilder.#ctor(System.UInt16,System.UInt32,System.UInt32)">
+            <summary>
+            Constructor that creates the byte array required to hold a bitmap file
+            with the specified properties and initializes the bitmap header
+            information
+            </summary>
+            <param name="bitsPerPixel">
+            Number of bits per pixel in the bitmap.
+            </param>
+            <param name="width">The width of the bitmap image</param>
+            <param name="height">The height of the bitmap image</param>
+            <remarks>
+            Bitmap images support <paramref name="bitsPerPixel" /> values of
+            1, 4, 8, 16, 24 or 32.
+            Images with less than 16 bits per pixel will need a palette of 2^bpp
+            32-bit entries, which is allocated by the constructor.
+            </remarks>
+        </member>
+        <member name="M:Fabba.Utilities.BitmapBuilder.ReadPaletteFromBitmap(System.IO.Stream)">
+            <summary>
+            Reads a bitmap-format palette from the specified <see cref="T:System.IO.Stream"/>
+            and inserts it into the bitmap data
+            </summary>
+            <param name="s">the Stream to read the palette from</param>
+            <remarks>
+            This will read a constant amount of <see cref="F:Fabba.Utilities.BitmapBuilder.PaletteSize"/> bytes.
+            The caller needs to make sure that this amount of data is available.
+            </remarks>
+        </member>
+        <member name="M:Fabba.Utilities.BitmapBuilder.ReadPaletteFromPCX(System.IO.Stream)">
+            <summary>
+            Reads a PCX-format palette from the specified <see cref="T:System.IO.Stream"/>
+            and inserts it into the bitmap data
+            </summary>
+            <param name="s">the Stream to read the palette from</param>
+            <remarks>
+            TODO: This will read a currently unknown number of bytes.
+            </remarks>
+        </member>
+        <member name="M:Fabba.Utilities.BitmapBuilder.ReadPaletteFromPCX(System.IO.BinaryReader)">
+            <summary>
+            Reads a PCX-format palette from a Stream with the help of the
+            specified <see cref="T:System.IO.BinaryReader"/> and inserts it into the bitmap
+            data
+            </summary>
+            <param name="r">the BinaryReader to read the palette with</param>
+            <remarks>
+            TODO: This will read a currently unknown number of bytes.
+            </remarks>
+        </member>
+        <member name="M:Fabba.Utilities.BitmapBuilder.ReadDataFromAni(System.IO.BinaryReader,System.UInt64)">
+            <summary>
+            Reads the actual image data from a Stream with the help of the
+            specified <see cref="T:System.IO.BinaryReader"/> and insert it into the bitmap
+            data
+            </summary>
+            <param name="r">the BinaryReader to read the data with</param>
+            <param name="maxLength">
+            the maximum number of bytes to be read from the stream. Pass
+            <see cref="F:System.UInt64.MaxValue"/> if there is no limit
+            </param>
+            <returns>
+            A positive number of bytes read from the stream if successful, the
+            negative of the number of bytes read on failure, zero if no bytes have
+            been read.
+            </returns>
+            <remarks>
+            The data will be read using the Run-length-encoding format used in
+            Atomic bomberman ANI files, which is (exactly?) the same as that used
+            in TGA files.
+            </remarks>
+        </member>
+        <member name="M:Fabba.Utilities.BitmapBuilder.SeqCropDone(System.Boolean)">
+            <summary>
+            
+            </summary>
+            <param name="remapped"></param>
+        </member>
+        <member name="M:Fabba.Utilities.BitmapBuilder.MissingTextures">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Fabba.Utilities.BitmapBuilder.Crop(System.Drawing.Color,System.UInt16,System.UInt32@,System.UInt32@)">
+            <summary>
+            
+            </summary>
+            <param name="keyColor"></param>
+            <param name="rawKeyColor"></param>
+            <param name="dLeft"></param>
+            <param name="dTop"></param>
+            <returns></returns>
+        </member>
+        <member name="P:Fabba.Utilities.BitmapBuilder.Width">
+            <summary>Width of the bitmap</summary>
+        </member>
+        <member name="P:Fabba.Utilities.BitmapBuilder.Height">
+            <summary>Height of the bitmap</summary>
+        </member>
+        <member name="P:Fabba.Utilities.BitmapBuilder.BytesPerLine">
+            <summary></summary>
+        </member>
+        <member name="P:Fabba.Utilities.BitmapBuilder.PaddingPerLine">
+            <summary></summary>
+        </member>
+        <member name="P:Fabba.Utilities.BitmapBuilder.BitmapData">
+            <summary>The raw bitmap data</summary>
+        </member>
+        <member name="P:Fabba.Utilities.BitmapBuilder.TexturesCropped">
+            <summary>Debug/Optimization/Test Value</summary>
+        </member>
+        <member name="P:Fabba.Utilities.BitmapBuilder.RTexturesCropped">
+            <summary>Debug/Optimization/Test Value</summary>
+        </member>
+        <member name="P:Fabba.Utilities.BitmapBuilder.ColumnsCropped">
+            <summary>Debug/Optimization/Test Value</summary>
+        </member>
+        <member name="P:Fabba.Utilities.BitmapBuilder.RColumnsCropped">
+            <summary>Debug/Optimization/Test Value</summary>
+        </member>
+        <member name="P:Fabba.Utilities.BitmapBuilder.RowsCropped">
+            <summary>Debug/Optimization/Test Value</summary>
+        </member>
+        <member name="P:Fabba.Utilities.BitmapBuilder.RRowsCropped">
+            <summary>Debug/Optimization/Test Value</summary>
+        </member>
+        <member name="P:Fabba.Utilities.BitmapBuilder.BytesSavedByCropping">
+            <summary>Debug/Optimization/Test Value</summary>
+        </member>
+        <member name="P:Fabba.Utilities.BitmapBuilder.RBytesSavedByCropping">
+            <summary>Debug/Optimization/Test Value</summary>
+        </member>
+        <member name="T:BomberStuff.Core.Participant">
+            <summary>
+            Represents a participant in a game
+            </summary>
+            <remarks>
+            <para>
+            This class represents a participant, which can in turn
+            be able to control zero (spectator) or more BombDudes (players)
+            in the game.
+            </para><para>
+            In a server-based network game, each client is a participant from
+            the server's perspective, while each client sees only itself and
+            the server as participants.
+            </para><para>
+            In a peer to peer game, each client sees itself and every other
+            client as a participant
+            </para>
+            <para>
+            Important: The results of a public method call, as well as every
+            event must be idempotent!
+            </para>
+            </remarks>
+        </member>
+        <member name="F:BomberStuff.Core.Participant.Notify">
+            <summary>
+            Notify the participant of changes to the board?
+            </summary>
+        </member>
+        <member name="F:BomberStuff.Core.Participant.HasAuthority">
+            <summary>
+            Is the participant authorized to make changes to the board
+            other than its own dudes' actions? This applies to the server
+            normally, or to everyone if cheating mode is enabled
+            </summary>
+        </member>
+        <member name="M:BomberStuff.Core.Participant.#ctor(System.Boolean,System.Boolean)">
+            <summary>
+            
+            </summary>
+            <param name="notify"></param>
+            <param name="hasAuthority"></param>
+        </member>
+        <member name="T:BomberStuff.Core.LocalParticipant">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:BomberStuff.Core.LocalParticipant.#ctor">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:BomberStuff.Core.UserInterface.IUserInterface">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:BomberStuff.Core.UserInterface.IUserInterface.Initialize">
+            <summary>
+            Initialize the user interface
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:BomberStuff.Core.UserInterface.IUserInterface.MainLoop">
+            <summary>
+            
+            </summary>
+            <remarks>
+            This method is not expected to return until the user interface
+            was in some way terminated, either by calling Terminate(), or
+            by an action such as closing the window.
+            </remarks>
+        </member>
+        <member name="M:BomberStuff.Core.UserInterface.IUserInterface.Terminate">
+            <summary>
+            Finalize the user interface
+            </summary>
+            <remarks>
+            This should close the interface, clean up all of its resources
+            and cause <see cref="M:BomberStuff.Core.UserInterface.IUserInterface.MainLoop"/> to return.
+            </remarks>
+        </member>
+        <member name="M:BomberStuff.Core.UserInterface.IUserInterface.Draw(BomberStuff.Core.UserInterface.ISprite,BomberStuff.Core.Drawing.PointF,BomberStuff.Core.Drawing.SizeF,System.Drawing.Color)">
+            <summary>
+            
+            </summary>
+            <remarks>Shall only be called from the Render event handler</remarks>
+            <param name="sprite"></param>
+            <param name="position"></param>
+            <param name="size"></param>
+            <param name="color"></param>
+        </member>
+        <member name="M:BomberStuff.Core.UserInterface.IUserInterface.Draw(System.String,BomberStuff.Core.Drawing.PointF,System.Drawing.Color)">
+            <summary>
+            
+            </summary>
+            <param name="text"></param>
+            <param name="position"></param>
+            <param name="color"></param>
+        </member>
+        <member name="P:BomberStuff.Core.UserInterface.IUserInterface.CacheAllSprites">
+            <summary>
+            Boolean value specifying whether all sprites should be
+            cached (<c>true</c>), or only the most important ones
+            (<c>false</c>)
+            </summary>
+        </member>
+        <member name="E:BomberStuff.Core.UserInterface.IUserInterface.LoadSprites">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="E:BomberStuff.Core.UserInterface.IUserInterface.Render">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:BomberStuff.Core.UserInterface.RenderEventArgs">
+            <summary>
+            Event arguments for <see cref="E:BomberStuff.Core.UserInterface.IUserInterface.Render"/>.
+            Contains the <see cref="T:BomberStuff.Core.UserInterface.IDevice"/> needed to load the sprites.
+            </summary>
+        </member>
+        <member name="F:BomberStuff.Core.UserInterface.RenderEventArgs.Device">
+            <summary>
+            The device for which the sprites should be loaded
+            </summary>
+        </member>
+        <member name="F:BomberStuff.Core.UserInterface.RenderEventArgs.UserInterface">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:BomberStuff.Core.UserInterface.RenderEventArgs.#ctor(BomberStuff.Core.UserInterface.IUserInterface,BomberStuff.Core.UserInterface.IDevice)">
+            <summary>
+            Initialize a new RenderEventArgs object
+            </summary>
+            <param name="userInterface">
+            The <see cref="T:BomberStuff.Core.UserInterface.IUserInterface"/> on which to
+            render the scene
+            </param>
+            <param name="device">
+            The device for which the sprites should be loaded
+            </param>
+        </member>
         <member name="T:BomberStuff.Core.Program">
             <summary>
             
@@ -60,6 +999,301 @@
             plugins accordingly
             </summary>
             <param name="args">Program arguments</param>
+        </member>
+        <member name="T:BomberStuff.Core.Drawing.SizeF">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:BomberStuff.Core.Drawing.SizeF.Empty">
+             <summary>
+            	Empty Shared Field
+             </summary>
+            
+             <remarks>
+            	An uninitialized SizeF Structure.
+             </remarks>
+        </member>
+        <member name="M:BomberStuff.Core.Drawing.SizeF.op_Addition(BomberStuff.Core.Drawing.SizeF,BomberStuff.Core.Drawing.SizeF)">
+             <summary>
+            	Addition Operator
+             </summary>
+            
+             <remarks>
+            	Addition of two SizeF structures.
+             </remarks>
+        </member>
+        <member name="M:BomberStuff.Core.Drawing.SizeF.op_Equality(BomberStuff.Core.Drawing.SizeF,BomberStuff.Core.Drawing.SizeF)">
+             <summary>
+            	Equality Operator
+             </summary>
+            
+             <remarks>
+            	Compares two SizeF objects. The return value is
+            	based on the equivalence of the Width and Height 
+            	properties of the two Sizes.
+             </remarks>
+        </member>
+        <member name="M:BomberStuff.Core.Drawing.SizeF.op_Inequality(BomberStuff.Core.Drawing.SizeF,BomberStuff.Core.Drawing.SizeF)">
+             <summary>
+            	Inequality Operator
+             </summary>
+            
+             <remarks>
+            	Compares two SizeF objects. The return value is
+            	based on the equivalence of the Width and Height 
+            	properties of the two Sizes.
+             </remarks>
+        </member>
+        <member name="M:BomberStuff.Core.Drawing.SizeF.op_Subtraction(BomberStuff.Core.Drawing.SizeF,BomberStuff.Core.Drawing.SizeF)">
+             <summary>
+            	Subtraction Operator
+             </summary>
+            
+             <remarks>
+            	Subtracts two SizeF structures.
+             </remarks>
+        </member>
+        <member name="M:BomberStuff.Core.Drawing.SizeF.op_Explicit(BomberStuff.Core.Drawing.SizeF)~BomberStuff.Core.Drawing.PointF">
+             <summary>
+            	SizeF to PointF Conversion
+             </summary>
+            
+             <remarks>
+            	Returns a PointF based on the dimensions of a given 
+            	SizeF. Requires explicit cast.
+             </remarks>
+        </member>
+        <member name="M:BomberStuff.Core.Drawing.SizeF.#ctor(BomberStuff.Core.Drawing.PointF)">
+             <summary>
+            	SizeF Constructor
+             </summary>
+            
+             <remarks>
+            	Creates a SizeF from a PointF value.
+             </remarks>
+        </member>
+        <member name="M:BomberStuff.Core.Drawing.SizeF.#ctor(BomberStuff.Core.Drawing.SizeF)">
+             <summary>
+            	SizeF Constructor
+             </summary>
+            
+             <remarks>
+            	Creates a SizeF from an existing SizeF value.
+             </remarks>
+        </member>
+        <member name="M:BomberStuff.Core.Drawing.SizeF.#ctor(System.Single,System.Single)">
+             <summary>
+            	SizeF Constructor
+             </summary>
+            
+             <remarks>
+            	Creates a SizeF from specified dimensions.
+             </remarks>
+        </member>
+        <member name="M:BomberStuff.Core.Drawing.SizeF.Equals(System.Object)">
+             <summary>
+            	Equals Method
+             </summary>
+            
+             <remarks>
+            	Checks equivalence of this SizeF and another object.
+             </remarks>
+        </member>
+        <member name="M:BomberStuff.Core.Drawing.SizeF.GetHashCode">
+             <summary>
+            	GetHashCode Method
+             </summary>
+            
+             <remarks>
+            	Calculates a hashing value.
+             </remarks>
+        </member>
+        <member name="M:BomberStuff.Core.Drawing.SizeF.ToPointF">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:BomberStuff.Core.Drawing.SizeF.ToSize">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:BomberStuff.Core.Drawing.SizeF.ToString">
+             <summary>
+            	ToString Method
+             </summary>
+            
+             <remarks>
+            	Formats the SizeF as a string in coordinate notation.
+             </remarks>
+        </member>
+        <member name="P:BomberStuff.Core.Drawing.SizeF.IsEmpty">
+             <summary>
+            	IsEmpty Property
+             </summary>
+            
+             <remarks>
+            	Indicates if both Width and Height are zero.
+             </remarks>
+        </member>
+        <member name="P:BomberStuff.Core.Drawing.SizeF.Width">
+             <summary>
+            	Width Property
+             </summary>
+            
+             <remarks>
+            	The Width coordinate of the SizeF.
+             </remarks>
+        </member>
+        <member name="P:BomberStuff.Core.Drawing.SizeF.Height">
+             <summary>
+            	Height Property
+             </summary>
+            
+             <remarks>
+            	The Height coordinate of the SizeF.
+             </remarks>
+        </member>
+        <member name="T:BomberStuff.Core.UserInterface.LoadSpritesEventArgs">
+            <summary>
+            Event arguments for <see cref="E:BomberStuff.Core.UserInterface.IUserInterface.LoadSprites"/>.
+            Contains the <see cref="T:BomberStuff.Core.UserInterface.IDevice"/> needed to load the sprites.
+            </summary>
+        </member>
+        <member name="F:BomberStuff.Core.UserInterface.LoadSpritesEventArgs.Device">
+            <summary>
+            The device for which the sprites should be loaded
+            </summary>
+        </member>
+        <member name="M:BomberStuff.Core.UserInterface.LoadSpritesEventArgs.#ctor(BomberStuff.Core.UserInterface.IDevice)">
+            <summary>
+            Initialize a new LoadSpritesEventArgs object
+            </summary>
+            <param name="device">
+            The device for which the sprites should be loaded
+            </param>
+        </member>
+        <member name="T:BomberStuff.Core.Drawing.PointF">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:BomberStuff.Core.Drawing.PointF.Empty">
+             <summary>
+            	Empty Shared Field
+             </summary>
+            
+             <remarks>
+            	An uninitialized PointF Structure.
+             </remarks>
+        </member>
+        <member name="M:BomberStuff.Core.Drawing.PointF.op_Addition(BomberStuff.Core.Drawing.PointF,System.Drawing.Size)">
+             <summary>
+            	Addition Operator
+             </summary>
+            
+             <remarks>
+            	Translates a PointF using the Width and Height
+            	properties of the given Size.
+             </remarks>
+        </member>
+        <member name="M:BomberStuff.Core.Drawing.PointF.op_Equality(BomberStuff.Core.Drawing.PointF,BomberStuff.Core.Drawing.PointF)">
+             <summary>
+            	Equality Operator
+             </summary>
+            
+             <remarks>
+            	Compares two PointF objects. The return value is
+            	based on the equivalence of the X and Y properties 
+            	of the two points.
+             </remarks>
+        </member>
+        <member name="M:BomberStuff.Core.Drawing.PointF.op_Inequality(BomberStuff.Core.Drawing.PointF,BomberStuff.Core.Drawing.PointF)">
+             <summary>
+            	Inequality Operator
+             </summary>
+            
+             <remarks>
+            	Compares two PointF objects. The return value is
+            	based on the equivalence of the X and Y properties 
+            	of the two points.
+             </remarks>
+        </member>
+        <member name="M:BomberStuff.Core.Drawing.PointF.op_Subtraction(BomberStuff.Core.Drawing.PointF,System.Drawing.Size)">
+             <summary>
+            	Subtraction Operator
+             </summary>
+            
+             <remarks>
+            	Translates a PointF using the negation of the Width 
+            	and Height properties of the given Size.
+             </remarks>
+        </member>
+        <member name="M:BomberStuff.Core.Drawing.PointF.#ctor(System.Single,System.Single)">
+             <summary>
+            	PointF Constructor
+             </summary>
+            
+             <remarks>
+            	Creates a PointF from a specified x,y coordinate pair.
+             </remarks>
+        </member>
+        <member name="M:BomberStuff.Core.Drawing.PointF.Equals(System.Object)">
+             <summary>
+            	Equals Method
+             </summary>
+            
+             <remarks>
+            	Checks equivalence of this PointF and another object.
+             </remarks>
+        </member>
+        <member name="M:BomberStuff.Core.Drawing.PointF.GetHashCode">
+             <summary>
+            	GetHashCode Method
+             </summary>
+            
+             <remarks>
+            	Calculates a hashing value.
+             </remarks>
+        </member>
+        <member name="M:BomberStuff.Core.Drawing.PointF.ToString">
+             <summary>
+            	ToString Method
+             </summary>
+            
+             <remarks>
+            	Formats the PointF as a string in coordinate notation.
+             </remarks>
+        </member>
+        <member name="P:BomberStuff.Core.Drawing.PointF.IsEmpty">
+             <summary>
+            	IsEmpty Property
+             </summary>
+            
+             <remarks>
+            	Indicates if both X and Y are zero.
+             </remarks>
+        </member>
+        <member name="P:BomberStuff.Core.Drawing.PointF.X">
+             <summary>
+            	X Property
+             </summary>
+            
+             <remarks>
+            	The X coordinate of the PointF.
+             </remarks>
+        </member>
+        <member name="P:BomberStuff.Core.Drawing.PointF.Y">
+             <summary>
+            	Y Property
+             </summary>
+            
+             <remarks>
+            	The Y coordinate of the PointF.
+             </remarks>
         </member>
     </members>
 </doc>

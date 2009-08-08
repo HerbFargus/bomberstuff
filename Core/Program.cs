@@ -23,22 +23,24 @@ using System;
 using System.IO;
 using System.Reflection;
 
+using BomberStuff.Core.UserInterface;
+
 namespace BomberStuff.Core
 {
 	/// <summary>
 	/// 
 	/// </summary>
-	public class Program
+	internal static class Program
 	{
+		private static Game Game;
 		/// <summary>
 		/// Program entry. Handles command line arguments and loads
 		/// plugins accordingly
 		/// </summary>
 		/// <param name="args">Program arguments</param>
-		static void Main(string[] args)
+		private static void Main(string/*^!^*/[]/*^!^*/ args)
 		{
-			
-			string uiName = "WinFormsInterface";
+			string/*^!^*/ uiName = "WinFormsInterface";
 
 			try
 			{
@@ -50,11 +52,19 @@ namespace BomberStuff.Core
 				if (uiObject == null)
 					throw new MissingMethodException();
 
+				// TODO/TRYTRY: start with menu?
+
+				Game = new Game();
+
+				ui.LoadSprites += Game.LoadSprites;
+				ui.Render += Game.Render;
+
 				ui.Initialize();
-				ui.StartMainLoop();
+				ui.MainLoop();
 				ui.Terminate();
+
 			}
-			catch (FileNotFoundException e)
+			catch (FileNotFoundException/*^!^*/ e)
 			{
 				ErrorHandling.FatalError(e, @"The interface module ""{0}"" or one of its"
 											+ @" dependencies could not be found:",
@@ -67,19 +77,19 @@ namespace BomberStuff.Core
 											+ @" dependencies could not be loaded:\n{1}",
 												uiName);
 			}*/
-			catch (BadImageFormatException e)
+			catch (BadImageFormatException/*^!^*/ e)
 			{
 				ErrorHandling.FatalError(e, @"The interface module ""{0}"" or one of its"
 											+ @" dependencies could has an invalid format:",
 												uiName);
 			}
-			catch (MissingMethodException e)
+			catch (MissingMethodException/*^!^*/ e)
 			{
 				ErrorHandling.FatalError(e, @"The module ""{0}"" is not a valid BomberStuff"
 											+ @" interface module:",
 												uiName);
 			}
-			catch (Exception e)
+			catch (Exception/*^!^*/ e)
 			{
 				ErrorHandling.UnexpectedError(e, @"while trying to load the interface module {0}:",
 														uiName);
