@@ -23,14 +23,14 @@
 using System;
 using System.IO;
 
-namespace Fabba.Utilities
+namespace BomberStuff.Core.Utilities
 {
 
 /// <summary>
 /// A wrapper object providing functionality for creating raw
 /// bitmap data from different image formats
 /// </summary>
-public class BitmapBuilder
+public class BitmapBuilder : IDisposable
 {
 	/// <summary>The size of a bitmap file header</summary>
 	public const int BitmapHeaderSize = 54;
@@ -65,7 +65,9 @@ public class BitmapBuilder
 	public byte[] BitmapData { get { return m_BitmapData; } }
 	
 	private Stream m_Stream;
-	
+
+	#region Constructors
+
 	/// <summary>
 	/// Copy constructor. Performs a shallow copy, and creates a new,
 	/// blank array of previous size in BitmapData
@@ -82,38 +84,6 @@ public class BitmapBuilder
 		m_BytesPerLine = old.BytesPerLine;
 		m_PaddingPerLine = old.PaddingPerLine;
 		m_BitmapData = new byte[old.BitmapData.Length];
-	}
-
-	/// <summary>
-	/// Destructor
-	/// </summary>
-	~BitmapBuilder()
-	{
-		if (m_Stream != null)
-		{
-			m_Stream.Close();
-			m_Stream = null;
-		}
-
-		m_BitmapData = null;
-	}
-	
-	/// <summary>
-	/// Creates a new <see cref="Stream" /> backed by the BuildmapBuilder's
-	/// bitmap data
-	/// </summary>
-	/// <returns>a Stream that will provide bitmap data</returns>
-	/// <remarks>
-	/// This method's return value is primarily intended for use
-	/// with <see cref="System.Drawing.Bitmap(System.IO.Stream)" /> or similar (for
-	/// example Texture creation) functions
-	/// </remarks>
-	public Stream GetStream()
-	{
-		if (m_Stream == null)
-			m_Stream = new MemoryStream(BitmapData);
-		
-		return m_Stream;
 	}
 	
 	/// <summary>
@@ -187,6 +157,26 @@ public class BitmapBuilder
 		
 		PaletteLocation = BitmapHeaderSize;
 		DataLocation = PaletteLocation + PaletteSize;
+	}
+
+	#endregion
+
+	/// <summary>
+	/// Creates a new <see cref="Stream" /> backed by the BuildmapBuilder's
+	/// bitmap data
+	/// </summary>
+	/// <returns>a Stream that will provide bitmap data</returns>
+	/// <remarks>
+	/// This method's return value is primarily intended for use
+	/// with <see cref="System.Drawing.Bitmap(System.IO.Stream)" /> or similar (for
+	/// example Texture creation) functions
+	/// </remarks>
+	public Stream GetStream()
+	{
+		if (m_Stream == null)
+			m_Stream = new MemoryStream(BitmapData);
+
+		return m_Stream;
 	}
 	
 	/// <summary>
@@ -605,6 +595,46 @@ public class BitmapBuilder
 		++texturesCropped;
 		return newBB;
 	}
+
+	#region IDisposable implementation
+	/// <summary>
+	/// Disposes of the object's unmanaged and optionally
+	/// managed resources
+	/// </summary>
+	/// <param name="disposing">
+	/// <c>true</c> to free managed resources
+	/// </param>
+	protected virtual void Dispose(bool disposing)
+	{
+		if (disposing)
+		{
+			m_BitmapData = null;
+		}
+
+		if (m_Stream != null)
+		{
+			m_Stream.Close();
+			m_Stream = null;
+		}
+	}
+
+	/// <summary>
+	/// Disposes of the object's managed and unmanaged resources
+	/// </summary>
+	public void Dispose()
+	{
+		Dispose(true);
+		GC.SuppressFinalize(this);
+	}
+
+	/// <summary>
+	/// Finalizer. Disposes of unmanaged resources
+	/// </summary>
+	~BitmapBuilder()
+	{
+		Dispose(false);
+	}
+	#endregion
 }
 
 

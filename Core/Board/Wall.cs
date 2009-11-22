@@ -1,5 +1,5 @@
 ﻿//
-// Animation.cs - Animation class
+// Wall.cs - Stone class
 //
 // Copyright © 2009  Thomas Faber
 //
@@ -19,45 +19,53 @@
 // along with Bomber Stuff. If not, see <http://www.gnu.org/licenses/>.
 //
 
-using System.Collections.Generic;
-using BomberStuff.Core.Drawing;
-using BomberStuff.Core.UserInterface;
+using BomberStuff.Core.Animation;
 
 namespace BomberStuff.Core
 {
 	/// <summary>
-	/// Represents an animation, that is, a sequence of images
+	/// 
 	/// </summary>
-	public class Animation
+	public class Wall : MobileObject
 	{
-		/// <summary></summary>
-		protected readonly AnimationState[] States;
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="x"></param>
+		/// <param name="y"></param>
+		public Wall(int x, int y)
+			: base(x, y, 1.0f, 1.0f)
+		{
+			Animation = new TilesetAnimationIndex(TilesetAnimationIndex.Types.Wall, 0);
+		}
 
 		/// <summary>
-		///  
+		/// 
 		/// </summary>
-		/// <param name="states"></param>
-		public Animation(AnimationState[] states)
+		/// <param name="aniList"></param>
+		/// <returns></returns>
+		public override BomberStuff.Core.Drawing.SizeF GetOffset(AnimationList aniList)
 		{
-			States = states;
+			// Wall offset is completely weird. They shouldn't have any.
+			return new BomberStuff.Core.Drawing.SizeF();
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="other"></param>
+		/// <returns></returns>
+		protected override bool Collide(MobileObject other)
+		{
+			return true;
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		protected override void BorderCollide()
+		{
 		}
 	}
 
-	/// <summary>
-	/// 
-	/// </summary>
-	public class AnimationState
-	{
-		/// <summary>
-		/// 
-		/// </summary>
-		public readonly ISprite Sprite;
-
-		/// <summary>
-		/// 
-		/// </summary>
-		public readonly SizeF Offset;
-
-
-	}
 }

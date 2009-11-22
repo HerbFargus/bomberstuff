@@ -33,6 +33,20 @@ namespace BomberStuff.Core
 	internal static class Program
 	{
 		private static Game Game;
+		private static int playerCount = 0;
+		private static int nParticipantsNegotiating;
+		private static int[] playersRequested;
+		private static void Participant_Negotiate(object sender, NegotiateEventArgs e)
+		{
+			int i = Game.Participants.IndexOf((Participant)sender);
+
+			System.Diagnostics.Debug.Assert(i != -1);
+
+			playersRequested[i] = e.NumberOfOwnPlayers;
+			playerCount += e.NumberOfOwnPlayers;
+			--nParticipantsNegotiating;
+		}
+
 		/// <summary>
 		/// Program entry. Handles command line arguments and loads
 		/// plugins accordingly
@@ -52,12 +66,40 @@ namespace BomberStuff.Core
 				if (uiObject == null)
 					throw new MissingMethodException();
 
-				// TODO/TRYTRY: start with menu?
+				// TODO/TRYTRY: start with some kind of menu?
 
+				// start a new game. Let's have some players
 				Game = new Game();
 
 				ui.LoadSprites += Game.LoadSprites;
 				ui.Render += Game.Render;
+
+				Game.Participants.Add(new LocalParticipant());
+				nParticipantsNegotiating = 1;
+				playersRequested = new int[nParticipantsNegotiating];
+
+				foreach (Participant p in Game.Participants)
+				{
+					p.Negotiate += Participant_Negotiate;
+					p.StartNegotiation();
+				}
+
+				while (nParticipantsNegotiating != 0);
+
+				Game.StartRound(playerCount);
+
+				int iFirstPlayer = 0;
+				
+				for (int i = 0; i < Game.Participants.Count; ++i)
+				{
+					Player[] players = new Player[playersRequested[i]];
+					//Array.Copy(Game.Players, iFirstPlayer, players, 0, playersRequested[i]);
+					for (int j = 0; j < playersRequested[i]; ++j)
+						players[j] = Game.Players[iFirstPlayer + j];
+					iFirstPlayer += playersRequested[i];
+					System.Console.WriteLine(Game.Participants[i] + " starting round controlling " + players.Length + " players");
+					Game.Participants[i].StartRound(players);
+				}
 
 				ui.Initialize();
 				ui.MainLoop();

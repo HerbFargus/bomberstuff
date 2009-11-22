@@ -118,10 +118,10 @@ namespace BomberStuff.WinFormsInterface
 			float w = Form.ClientSize.Width;
 			float h = Form.ClientSize.Height;
 			src = new Rectangle(0, 0, s.Bitmap.Width, s.Bitmap.Height);
-			dest = new Rectangle((int)(w * position.X),
-								(int)(h * position.Y),
-								(int)(w * size.Width),
-								(int)(h * size.Height));
+			dest = new Rectangle((int)Math.Round(w * position.X),
+								(int)Math.Round(h * position.Y),
+								(int)Math.Round(w * size.Width),
+								(int)Math.Round(h * size.Height));
 			
 			Graphics.DrawImage(s.Bitmap, dest, src, GraphicsUnit.Pixel);
 		}
@@ -153,6 +153,7 @@ namespace BomberStuff.WinFormsInterface
 			Graphics = e.Graphics;
 			OnRender(new RenderEventArgs(this, new Device()));
 			Graphics = null;
+			Form.Invalidate();
 		}
 	}
 
@@ -169,6 +170,17 @@ namespace BomberStuff.WinFormsInterface
 		{
 			base.OnResize(e);
 			Invalidate();
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		public BomberForm()
+		{
+			CreateParams.ClassStyle |= 0x23;
+
+			this.SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer | ControlStyles.UserPaint | ControlStyles.Opaque | ControlStyles.ResizeRedraw, true);
+			this.SetStyle(ControlStyles.StandardClick | ControlStyles.StandardDoubleClick | ControlStyles.SupportsTransparentBackColor, false);
 		}
 	}
 }

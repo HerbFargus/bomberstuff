@@ -29,6 +29,8 @@
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
+    <StartupObject>
+    </StartupObject>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -41,6 +43,7 @@
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <DocumentationFile>..\docs\BomberStuff.xml</DocumentationFile>
     <NoStdLib>true</NoStdLib>
+    <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -54,16 +57,24 @@
     <NoStdLib>true</NoStdLib>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Animation.cs" />
+    <Compile Include="Animation\Animation.cs" />
+    <Compile Include="Animation\AnimationIndex.cs" />
+    <Compile Include="Animation\AnimationList.cs" />
     <Compile Include="Board\Board.cs" />
+    <Compile Include="Board\Player.cs" />
     <Compile Include="Board\Stone.cs" />
+    <Compile Include="Board\Wall.cs" />
+    <Compile Include="Directions.cs" />
     <Compile Include="Drawing\PointF.cs" />
     <Compile Include="Drawing\RectangleF.cs" />
     <Compile Include="Drawing\SizeF.cs" />
+    <Compile Include="Files\AniFileReader.cs" />
     <Compile Include="Files\PCXReader.cs" />
-    <Compile Include="MobileObject.cs" />
+    <Compile Include="Files\SchemeReader.cs" />
+    <Compile Include="Board\MobileObject.cs" />
     <Compile Include="ErrorHandling.cs" />
     <Compile Include="Game.cs" />
+    <Compile Include="Board\Powerup.cs" />
     <Compile Include="UserInterface\IDevice.cs" />
     <Compile Include="UserInterface\IUserInterface.cs" />
     <Compile Include="Participant.cs" />
@@ -71,9 +82,7 @@
     <Compile Include="UserInterface\LoadSpritesEventArgs.cs" />
     <Compile Include="UserInterface\RenderEventArgs.cs" />
     <Compile Include="Utilities\BitmapBuilder.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="app.config" />
+    <Compile Include="Utilities\ColorRemapper.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=969db8053d3322ac, processorArchitecture=MSIL">
@@ -87,6 +96,7 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=969db8053d3322ac, processorArchitecture=MSIL" />
+    <Reference Include="System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=969db8053d3322ac, processorArchitecture=MSIL" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
@@ -114,6 +124,9 @@
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\" />

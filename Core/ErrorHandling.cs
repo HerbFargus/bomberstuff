@@ -40,8 +40,8 @@ namespace BomberStuff.Core
 		{
 			Console.Error.WriteLine(fmt, args);
 			Console.Error.WriteLine(e);
-			// HACKHACK: FatalError waits for input
-			Console.ReadLine();
+			// ACKHACK: FatalError waits for input
+			//Console.ReadLine();
 		}
 
 		/// <summary>
@@ -57,8 +57,8 @@ namespace BomberStuff.Core
 			Console.Error.WriteLine("An unpected error occured " + fmt, args);
 			Console.Error.WriteLine("Please report this error message to the developers.");
 			Console.Error.WriteLine(e);
-			// HACKHACK: UnexpectedError waits for input
-			Console.ReadLine();
+			// ACKHACK: UnexpectedError waits for input
+			//Console.ReadLine();
 		}
 	}
 }

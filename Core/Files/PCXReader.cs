@@ -24,9 +24,9 @@
 using System;
 using System.IO;
 
-using Fabba.Utilities;
+using BomberStuff.Core.Utilities;
 
-namespace Bomber.Files
+namespace BomberStuff.Files
 {
 	/// <summary>
 	/// 

@@ -19,6 +19,8 @@
 // along with Bomber Stuff. If not, see <http://www.gnu.org/licenses/>.
 //
 
+using BomberStuff.Core.Animation;
+
 namespace BomberStuff.Core
 {
 	/// <summary>
@@ -34,7 +36,20 @@ namespace BomberStuff.Core
 		public Stone(int x, int y)
 			: base(x, y, 1.0f, 1.0f)
 		{
-			//Animation = ...
+			Animation = new TilesetAnimationIndex(TilesetAnimationIndex.Types.Stone, 0);
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="aniList"></param>
+		/// <returns></returns>
+		public override BomberStuff.Core.Drawing.SizeF GetOffset(AnimationList aniList)
+		{
+			// HACKHACK: Stone offset seems not completely ridiculous.
+			// How did I make it work in the old version without
+			// manual adjustment? :(
+			return new BomberStuff.Core.Drawing.SizeF(-1.0f / 40.0f, -1.0f / 40.0f);
 		}
 
 		/// <summary>

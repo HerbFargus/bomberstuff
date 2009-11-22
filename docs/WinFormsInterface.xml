@@ -4,6 +4,82 @@
         <name>WinFormsInterface</name>
     </assembly>
     <members>
+        <member name="T:BomberStuff.WinFormsInterface.Sprite">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:BomberStuff.WinFormsInterface.Sprite.Bitmap">
+            <summary></summary>
+        </member>
+        <member name="M:BomberStuff.WinFormsInterface.Sprite.#ctor(System.Drawing.Bitmap)">
+            <summary>
+            
+            </summary>
+            <param name="bitmap"></param>
+        </member>
+        <member name="M:BomberStuff.WinFormsInterface.Sprite.op_Implicit(BomberStuff.WinFormsInterface.Sprite)~System.Drawing.Bitmap">
+            <summary>
+            
+            </summary>
+            <param name="s"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BomberStuff.WinFormsInterface.Sprite.op_Implicit(System.Drawing.Bitmap)~BomberStuff.WinFormsInterface.Sprite">
+            <summary>
+            
+            </summary>
+            <param name="bitmap"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BomberStuff.WinFormsInterface.Sprite.Dispose(System.Boolean)">
+            <summary>
+            
+            </summary>
+            <param name="disposing"></param>
+        </member>
+        <member name="M:BomberStuff.WinFormsInterface.Sprite.Dispose">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:BomberStuff.WinFormsInterface.Sprite.Finalize">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:BomberStuff.WinFormsInterface.Device">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:BomberStuff.WinFormsInterface.Device.LoadSprite(System.IO.Stream,System.Int32,System.Int32,System.Boolean,System.Drawing.Color)">
+            <summary>
+            
+            </summary>
+            <param name="s"></param>
+            <param name="width"></param>
+            <param name="height"></param>
+            <param name="storeInVideoMemory"></param>
+            <param name="keyColor"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BomberStuff.WinFormsInterface.Device.Dispose(System.Boolean)">
+            <summary>
+            
+            </summary>
+            <param name="disposing"></param>
+        </member>
+        <member name="M:BomberStuff.WinFormsInterface.Device.Dispose">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:BomberStuff.WinFormsInterface.Device.Finalize">
+            <summary>
+            
+            </summary>
+        </member>
         <member name="T:BomberStuff.WinFormsInterface.UserInterface">
             <summary>
             Bomber Stuff user interface implemented using System.Windows.Forms
@@ -91,76 +167,7 @@
             </summary>
             <param name="e"></param>
         </member>
-        <member name="T:BomberStuff.WinFormsInterface.Sprite">
-            <summary>
-            
-            </summary>
-        </member>
-        <member name="F:BomberStuff.WinFormsInterface.Sprite.Bitmap">
-            <summary></summary>
-        </member>
-        <member name="M:BomberStuff.WinFormsInterface.Sprite.#ctor(System.Drawing.Bitmap)">
-            <summary>
-            
-            </summary>
-            <param name="bitmap"></param>
-        </member>
-        <member name="M:BomberStuff.WinFormsInterface.Sprite.op_Implicit(BomberStuff.WinFormsInterface.Sprite)~System.Drawing.Bitmap">
-            <summary>
-            
-            </summary>
-            <param name="s"></param>
-            <returns></returns>
-        </member>
-        <member name="M:BomberStuff.WinFormsInterface.Sprite.op_Implicit(System.Drawing.Bitmap)~BomberStuff.WinFormsInterface.Sprite">
-            <summary>
-            
-            </summary>
-            <param name="bitmap"></param>
-            <returns></returns>
-        </member>
-        <member name="M:BomberStuff.WinFormsInterface.Sprite.Dispose(System.Boolean)">
-            <summary>
-            
-            </summary>
-            <param name="disposing"></param>
-        </member>
-        <member name="M:BomberStuff.WinFormsInterface.Sprite.Dispose">
-            <summary>
-            
-            </summary>
-        </member>
-        <member name="M:BomberStuff.WinFormsInterface.Sprite.Finalize">
-            <summary>
-            
-            </summary>
-        </member>
-        <member name="T:BomberStuff.WinFormsInterface.Device">
-            <summary>
-            
-            </summary>
-        </member>
-        <member name="M:BomberStuff.WinFormsInterface.Device.LoadSprite(System.IO.Stream,System.Boolean,System.Drawing.Color)">
-            <summary>
-            
-            </summary>
-            <param name="s"></param>
-            <param name="storeInVideoMemory"></param>
-            <param name="keyColor"></param>
-            <returns></returns>
-        </member>
-        <member name="M:BomberStuff.WinFormsInterface.Device.Dispose(System.Boolean)">
-            <summary>
-            
-            </summary>
-            <param name="disposing"></param>
-        </member>
-        <member name="M:BomberStuff.WinFormsInterface.Device.Dispose">
-            <summary>
-            
-            </summary>
-        </member>
-        <member name="M:BomberStuff.WinFormsInterface.Device.Finalize">
+        <member name="M:BomberStuff.WinFormsInterface.BomberForm.#ctor">
             <summary>
             
             </summary>

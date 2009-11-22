@@ -59,7 +59,6 @@ namespace BomberStuff.Core
 			TopLeft = new PointF(20.0f / 640.0f, 68.0f / 480.0f);
 			BottomRight = new PointF(620.0f / 640.0f, 464.0f / 480.0f);
 			Items = new List<MobileObject>();
-			// TODO: add stones/walls as determined by scheme
 		}
 
 		/// <summary>
@@ -67,18 +66,25 @@ namespace BomberStuff.Core
 		/// </summary>
 		/// <param name="player"></param>
 		/// <remarks>
-		/// TODO: is this sensible? Also, make this player specific
-		/// once we have that class
+		/// TODO: is this sensible? Here?
 		/// </remarks>
-		public void AddPlayer(MobileObject player)
+		public void AddPlayer(Player player)
 		{
 			float x = player.X;
 			float y = player.Y;
-			foreach (MobileObject other in Items)
-				if (new RectangleF(x - 1.5f, y - 1.5f, 3.0f, 3.0f).IntersectsWith(new RectangleF(other.Position, other.Size)))
+			for (int i = 0; i < Items.Count; ++i)
+			{
+				MobileObject other = Items[i];
+				if (other == player)
+					continue;
+				if (new RectangleF(x - 1.5f, y - 1.5f, 3.0f, 3.0f).IntersectsWith(new RectangleF(other.Position, other.Size))
+						&& !(other is Stone))
 				{
-					// TODO: something
+					System.Console.WriteLine("Removing a " + other + " from (" + other.X + ", " + other.Y + ")");
+					Items.Remove(other);
+					--i;
 				}
+			}
 		}
 	}
 }

@@ -24,40 +24,62 @@
 using System;
 using System.IO;
 using System.Text;
+using System.Collections.Generic;
 
-namespace Bomber.Files
+using BomberStuff.Core;
+using System.Drawing;
+
+namespace BomberStuff.Files
 {
 	/// <summary>
 	/// 
 	/// </summary>
-	public class SchemeReader
+	public static class SchemeReader
 	{
-		// TODO does this really need an extra class/file?
+		private static Random Random = new Random();
+
+		private static bool TryParse(/*this int i,*/ string s, out int value)
+		{
+			try
+			{
+				value = int.Parse(s);
+				return true;
+			}
+			catch (Exception)
+			{
+				value = 0;
+				return false;
+			}
+		}
+
 		/// <summary>
 		/// Reads an Atomic Bomberman scheme file and returns a board built
 		/// accordingly
 		/// </summary>
 		/// <param name="filename">path to the AB scheme file</param>
 		/// <param name="startPositions"></param>
+		/// <param name="boardWidth"></param>
+		/// <param name="boardHeight"></param>
 		/// <returns>
 		/// An array of FieldContents values representing a new board filled
 		/// according to the specified scheme
 		/// </returns>
-		public static FieldContents[, ] GetScheme(string filename, ref Point<BoardX, BoardY>[] startPositions)
+		public static List<MobileObject> GetScheme(string filename, ref Point[] startPositions, int boardWidth, int boardHeight)
 		{
-			FieldContents[, ] field = new FieldContents[Board.Width, Board.Height];
-			string[] lines = File.ReadAllLines(filename, Encoding.ASCII);
+			//FieldContents[, ] field = new FieldContents[Board.Width, Board.Height];
+			List<MobileObject> objs = new List<MobileObject>();
+			StreamReader r = new StreamReader(filename, Encoding.ASCII);
 			
 			int i, x, y;
 			int density = 100;
-			
-			foreach (string origLine in lines)
+			string origLine;
+			while ((origLine = r.ReadLine()) != null)
 			{
 				string line = origLine;
 				int commentStart = line.IndexOf(';');
-				
+
 				if (commentStart != -1)
-					line = line.Remove(commentStart);
+					line = line.Substring(0, commentStart);
 				
 				line = line.Trim().ToUpper();
 				
@@ -65,7 +87,7 @@ namespace Bomber.Files
 				
 				if (items[0] == "-B"
 							&& items.Length == 2
-							&& int.TryParse(items[1], out i))
+							&& TryParse(items[1], out i))
 				{
 					// i is the brick density here, must be in ]0, 100]
 					if (i <= 0 || i > 100)
@@ -75,55 +97,58 @@ namespace Bomber.Files
 				}
 				else if (items[0] == "-S"
 							&& items.Length >= 4
-							&& int.TryParse(items[1], out i)
+							&& TryParse(items[1], out i)
 							&& startPositions != null
 							&& i < startPositions.Length
-							&& int.TryParse(items[2], out x)
-							&& int.TryParse(items[3], out y))
+							&& TryParse(items[2], out x)
+							&& TryParse(items[3], out y))
 				{
-					x %= Board.Width;
-					y %= Board.Height;
+					x %= boardWidth;
+					y %= boardHeight;
 					
 					if (x < 0)
-						x += Board.Width;
+						x += boardWidth;
 					
 					if (y < 0)
-						y += Board.Height;
+						y += boardHeight;
 					
-					startPositions[i] = new Point<BoardX, BoardY>(new BoardX(x), new BoardY(y));
+					startPositions[i] = new Point(x, y);
 				}
 				else if (items[0] == "-R"
 							&& items.Length == 3
-							&& (items[2] = items[2].Trim()).Length == Board.Width
-							&& int.TryParse(items[1], out y))
+							&& (items[2] = items[2].Trim()).Length == boardWidth
+							&& TryParse(items[1], out y))
 				{
-					if (y < 0 || y >= Board.Height)
+					if (y < 0 || y >= boardHeight)
 						continue;
 					
-					for (x = 0; x < Board.Width; ++x)
+					for (x = 0; x < boardWidth; ++x)
 					{
 						switch (items[2][x])
 						{
 							case ':':
 								// random is in [0, 99], this is always < 100
 								// and only < 1 in 1/100 of cases
-								if (BomberStuff.Random.Next(100) < density)
-									field[x, y] = FieldContents.Wall;
-								else
-									field[x, y] = FieldContents.Empty;
+								if (Random.Next(100) < density)
+									//field[x, y] = FieldContents.Wall;
+									objs.Add(new Wall(x, y));
+								/*else
+									field[x, y] = FieldContents.Empty;*/
 								break;
 							case '.':
-								field[x, y] = FieldContents.Empty;
+								//field[x, y] = FieldContents.Empty;
 								break;
 							case '#':
-								field[x, y] = FieldContents.Stone;
+								//field[x, y] = FieldContents.Stone;
+								objs.Add(new Stone(x, y)); 
+								
 								break;
 						}
 					}
 				}
 			}
 			
-			return field;
+			return objs;
 		}
 	}
 }

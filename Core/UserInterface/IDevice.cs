@@ -41,9 +41,11 @@ namespace BomberStuff.Core.UserInterface
 		/// 
 		/// </summary>
 		/// <param name="s"></param>
+		/// <param name="width"></param>
+		/// <param name="height"></param>
 		/// <param name="storeInVideoMemory"></param>
 		/// <param name="keyColor"></param>
 		/// <returns></returns>
-		ISprite LoadSprite(Stream s, bool storeInVideoMemory, Color keyColor);
+		ISprite LoadSprite(Stream s, int width, int height, bool storeInVideoMemory, Color keyColor);
 	}
 }

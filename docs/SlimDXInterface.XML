@@ -1,0 +1,192 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>SlimDXInterface</name>
+    </assembly>
+    <members>
+        <member name="T:BomberStuff.SlimDXInterface.UserInterface">
+            <summary>
+            Bomber Stuff user interface implemented using System.Windows.Forms
+            with GDI+ graphics
+            </summary>
+            <remarks>
+            TODO: Add keyboard input
+            </remarks>
+        </member>
+        <member name="F:BomberStuff.SlimDXInterface.UserInterface.Form">
+            <summary>The underlying Form</summary>
+        </member>
+        <member name="F:BomberStuff.SlimDXInterface.UserInterface.Direct3D">
+            <summary></summary>
+        </member>
+        <member name="F:BomberStuff.SlimDXInterface.UserInterface.Device">
+            <summary></summary>
+        </member>
+        <member name="F:BomberStuff.SlimDXInterface.UserInterface.PresentParams">
+            <summary></summary>
+        </member>
+        <member name="F:BomberStuff.SlimDXInterface.UserInterface.Sprite">
+            <summary></summary>
+        </member>
+        <member name="F:BomberStuff.SlimDXInterface.UserInterface.d3dFont">
+            <summary></summary>
+        </member>
+        <member name="M:BomberStuff.SlimDXInterface.UserInterface.OnLoadSprites(BomberStuff.Core.UserInterface.LoadSpritesEventArgs)">
+            <summary>
+            
+            </summary>
+            <param name="e"></param>
+        </member>
+        <member name="M:BomberStuff.SlimDXInterface.UserInterface.OnRender(BomberStuff.Core.UserInterface.RenderEventArgs)">
+            <summary>
+            
+            </summary>
+            <param name="e"></param>
+        </member>
+        <member name="M:BomberStuff.SlimDXInterface.UserInterface.BomberStuff#Core#UserInterface#IUserInterface#Initialize">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:BomberStuff.SlimDXInterface.UserInterface.MainLoop">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:BomberStuff.SlimDXInterface.UserInterface.Terminate">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:BomberStuff.SlimDXInterface.UserInterface.Draw(BomberStuff.Core.UserInterface.ISprite,BomberStuff.Core.Drawing.PointF,BomberStuff.Core.Drawing.SizeF,System.Drawing.Color)">
+            <summary>
+            
+            </summary>
+            <param name="sprite"></param>
+            <param name="position"></param>
+            <param name="size"></param>
+            <param name="color"></param>
+        </member>
+        <member name="M:BomberStuff.SlimDXInterface.UserInterface.Draw(System.String,BomberStuff.Core.Drawing.PointF,System.Drawing.Color)">
+            <summary>
+            
+            </summary>
+            <param name="text"></param>
+            <param name="position"></param>
+            <param name="color"></param>
+        </member>
+        <member name="M:BomberStuff.SlimDXInterface.UserInterface.Idle">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="E:BomberStuff.SlimDXInterface.UserInterface.LoadSprites">
+            <summary></summary>
+        </member>
+        <member name="E:BomberStuff.SlimDXInterface.UserInterface.Render">
+            <summary></summary>
+        </member>
+        <member name="P:BomberStuff.SlimDXInterface.UserInterface.CacheAllSprites">
+            <summary></summary>
+        </member>
+        <member name="T:BomberStuff.SlimDXInterface.BomberForm">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:BomberStuff.SlimDXInterface.BomberForm.OnResize(System.EventArgs)">
+            <summary>
+            
+            </summary>
+            <param name="e"></param>
+        </member>
+        <member name="M:BomberStuff.SlimDXInterface.BomberForm.#ctor">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:BomberStuff.SlimDXInterface.SDXSprite">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:BomberStuff.SlimDXInterface.SDXSprite.Texture">
+            <summary></summary>
+        </member>
+        <member name="M:BomberStuff.SlimDXInterface.SDXSprite.#ctor(SlimDX.Direct3D9.Texture)">
+            <summary>
+            
+            </summary>
+            <param name="texture"></param>
+        </member>
+        <member name="M:BomberStuff.SlimDXInterface.SDXSprite.op_Implicit(BomberStuff.SlimDXInterface.SDXSprite)~SlimDX.Direct3D9.Texture">
+            <summary>
+            
+            </summary>
+            <param name="s"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BomberStuff.SlimDXInterface.SDXSprite.op_Implicit(SlimDX.Direct3D9.Texture)~BomberStuff.SlimDXInterface.SDXSprite">
+            <summary>
+            
+            </summary>
+            <param name="texture"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BomberStuff.SlimDXInterface.SDXSprite.Dispose(System.Boolean)">
+            <summary>
+            
+            </summary>
+            <param name="disposing"></param>
+        </member>
+        <member name="M:BomberStuff.SlimDXInterface.SDXSprite.Dispose">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:BomberStuff.SlimDXInterface.SDXSprite.Finalize">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:BomberStuff.SlimDXInterface.SDXDevice">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:BomberStuff.SlimDXInterface.SDXDevice.#ctor(SlimDX.Direct3D9.Device)">
+            <summary>
+            
+            </summary>
+            <param name="device"></param>
+        </member>
+        <member name="M:BomberStuff.SlimDXInterface.SDXDevice.LoadSprite(System.IO.Stream,System.Int32,System.Int32,System.Boolean,System.Drawing.Color)">
+            <summary>
+            
+            </summary>
+            <param name="s"></param>
+            <param name="width"></param>
+            <param name="height"></param>
+            <param name="storeInVideoMemory"></param>
+            <param name="keyColor"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BomberStuff.SlimDXInterface.SDXDevice.Dispose(System.Boolean)">
+            <summary>
+            
+            </summary>
+            <param name="disposing"></param>
+        </member>
+        <member name="M:BomberStuff.SlimDXInterface.SDXDevice.Dispose">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:BomberStuff.SlimDXInterface.SDXDevice.Finalize">
+            <summary>
+            
+            </summary>
+        </member>
+    </members>
+</doc>
