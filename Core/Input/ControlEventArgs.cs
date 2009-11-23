@@ -1,5 +1,5 @@
 ﻿//
-// Wall.cs - Stone class
+// ControlEventArgs.cs - ControlEventArgs class
 //
 // Copyright © 2009  Thomas Faber
 //
@@ -19,54 +19,27 @@
 // along with Bomber Stuff. If not, see <http://www.gnu.org/licenses/>.
 //
 
-using BomberStuff.Core.Animation;
-using BomberStuff.Core.Drawing;
+using System;
 
-namespace BomberStuff.Core
+namespace BomberStuff.Core.Input
 {
 	/// <summary>
 	/// 
 	/// </summary>
-	public class Wall : MobileObject
+	public class ControlEventArgs : EventArgs
 	{
 		/// <summary>
 		/// 
 		/// </summary>
-		/// <param name="x"></param>
-		/// <param name="y"></param>
-		public Wall(int x, int y)
-			: base(x, y, 1.0f, 1.0f)
-		{
-			Animation = new TilesetAnimationIndex(TilesetAnimationIndex.Types.Wall, 0);
-		}
+		public readonly bool Pressed;
 
 		/// <summary>
 		/// 
 		/// </summary>
-		/// <param name="aniList"></param>
-		/// <returns></returns>
-		public override SizeF GetOffset(AnimationList aniList)
+		/// <param name="pressed"></param>
+		public ControlEventArgs(bool pressed)
 		{
-			// Wall offset is completely weird. They shouldn't have any.
-			return new SizeF();
-		}
-
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="other"></param>
-		/// <returns></returns>
-		protected override bool Collide(MobileObject other)
-		{
-			return true;
-		}
-
-		/// <summary>
-		/// 
-		/// </summary>
-		protected override void BorderCollide()
-		{
+			Pressed = pressed;
 		}
 	}
-
 }

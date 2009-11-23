@@ -24,6 +24,7 @@ using System.IO;
 using System.Drawing;
 
 using BomberStuff.Core.UserInterface;
+using BomberStuff.Core.Utilities;
 
 namespace BomberStuff.WinFormsInterface
 {
@@ -106,15 +107,13 @@ namespace BomberStuff.WinFormsInterface
 		/// <summary>
 		/// 
 		/// </summary>
-		/// <param name="s"></param>
-		/// <param name="width"></param>
-		/// <param name="height"></param>
+		/// <param name="b"></param>
 		/// <param name="storeInVideoMemory"></param>
 		/// <param name="keyColor"></param>
 		/// <returns></returns>
-		public ISprite LoadSprite(Stream s, int width, int height, bool storeInVideoMemory, Color keyColor)
+		public ISprite LoadSprite(BitmapBuilder b, bool storeInVideoMemory, Color keyColor)
 		{
-			Bitmap bitmap = new Bitmap(s);
+			Bitmap bitmap = new Bitmap(b.GetStream());
 			bitmap.MakeTransparent(keyColor);
 			return new Sprite(bitmap);
 		}

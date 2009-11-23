@@ -1,5 +1,5 @@
 ﻿//
-// Stone.cs - Stone class
+// Control.cs - Control class
 //
 // Copyright © 2009  Thomas Faber
 //
@@ -19,57 +19,56 @@
 // along with Bomber Stuff. If not, see <http://www.gnu.org/licenses/>.
 //
 
-using BomberStuff.Core.Animation;
+using System;
 
-using BomberStuff.Core.Drawing;
-
-namespace BomberStuff.Core
+namespace BomberStuff.Core.Input
 {
 	/// <summary>
 	/// 
 	/// </summary>
-	public class Stone : MobileObject
+	public abstract class Control
 	{
 		/// <summary>
 		/// 
 		/// </summary>
-		/// <param name="x"></param>
-		/// <param name="y"></param>
-		public Stone(int x, int y)
-			: base(x, y, 1.0f, 1.0f)
-		{
-			Animation = new TilesetAnimationIndex(TilesetAnimationIndex.Types.Stone, 0);
-		}
+		public abstract string Name { get; }
 
 		/// <summary>
 		/// 
 		/// </summary>
-		/// <param name="aniList"></param>
 		/// <returns></returns>
-		public override SizeF GetOffset(AnimationList aniList)
+		public override string ToString()
 		{
-			// HACKHACK: Stone offset seems not completely ridiculous.
-			// How did I make it work in the old version without
-			// manual adjustment? :(
-			return new SizeF(-1.0f / 40.0f, -1.0f / 40.0f);
+			return Name;
 		}
 
 		/// <summary>
 		/// 
 		/// </summary>
-		/// <param name="other"></param>
-		/// <returns></returns>
-		protected override bool Collide(MobileObject other)
+		public event EventHandler<ControlEventArgs> Pressed;
+		/// <summary>
+		/// 
+		/// </summary>
+		public event EventHandler<ControlEventArgs> Released;
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="e"></param>
+		protected virtual void OnPressed(ControlEventArgs e)
 		{
-			return true;
+			if (Pressed != null)
+				Pressed(this, e);
 		}
 
 		/// <summary>
 		/// 
 		/// </summary>
-		protected override void BorderCollide()
+		/// <param name="e"></param>
+		protected virtual void OnReleased(ControlEventArgs e)
 		{
+			if (Released != null)
+				Released(this, e);
 		}
 	}
-
 }

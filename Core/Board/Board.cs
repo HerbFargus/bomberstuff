@@ -80,7 +80,7 @@ namespace BomberStuff.Core
 				if (new RectangleF(x - 1.5f, y - 1.5f, 3.0f, 3.0f).IntersectsWith(new RectangleF(other.Position, other.Size))
 						&& !(other is Stone))
 				{
-					System.Console.WriteLine("Removing a " + other + " from (" + other.X + ", " + other.Y + ")");
+					//System.Console.WriteLine("Removing a " + other + " from (" + other.X + ", " + other.Y + ")");
 					Items.Remove(other);
 					--i;
 				}

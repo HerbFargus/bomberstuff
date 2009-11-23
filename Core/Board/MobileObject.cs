@@ -84,18 +84,8 @@ namespace BomberStuff.Core
 		protected MobileObject(float x, float y, float width, float height)
 			: this(x, y, width, height, -1) { }
 
-		private AnimationIndex ai;
 		/// <summary></summary>
-		protected AnimationIndex Animation
-		{
-			get { return ai; }
-			set
-			{
-				if (this is Player)
-					System.Console.WriteLine("Setting " + this + " animation to " + value);
-				ai = value;
-			}
-		}
+		protected AnimationIndex Animation;
 		/// <summary></summary>
 		protected int AnimationState;
 		/// <summary></summary>
@@ -223,20 +213,68 @@ namespace BomberStuff.Core
 				if (Math.Abs(m_SpeedX) >= Math.Abs(m_SpeedY))
 				{
 					newX = X + SpeedX;
+					if (newX < 0.0f)
+					{
+						BorderCollide();
+						m_SpeedX = 0.0f;
+						newX = 0.0f;
+					}
+					else if (newX > board.Width - 1.0f)
+					{
+						BorderCollide();
+						m_SpeedX = 0.0f;
+						newX = board.Width - 1.0f;
+					}
 					if (IsCollision(board, newX, newY))
 						m_SpeedX = 0.0f;
 
 					newY = Y + SpeedY;
+					if (newY < 0.0f)
+					{
+						BorderCollide();
+						m_SpeedY = 0.0f;
+						newY = 0.0f;
+					}
+					else if (newY > board.Height - 1.0f)
+					{
+						BorderCollide();
+						m_SpeedY = 0.0f;
+						newY = board.Height - 1.0f;
+					}
 					if (IsCollision(board, newX, newY))
 						m_SpeedY = 0.0f;
 				}
 				else
 				{
 					newY = Y + SpeedY;
+					if (newY < 0.0f)
+					{
+						BorderCollide();
+						m_SpeedY = 0.0f;
+						newY = 0.0f;
+					}
+					else if (newY > board.Height - 1.0f)
+					{
+						BorderCollide();
+						m_SpeedY = 0.0f;
+						newY = board.Height - 1.0f;
+					}
 					if (IsCollision(board, newX, newY))
 						m_SpeedY = 0.0f;
 
 					newX = X + SpeedX;
+					if (newX < 0.0f)
+					{
+						BorderCollide();
+						m_SpeedX = 0.0f;
+						newX = 0.0f;
+					}
+					else if (newX > board.Width - 1.0f)
+					{
+						BorderCollide();
+						m_SpeedX = 0.0f;
+						newX = board.Width - 1.0f;
+					}
 					if (IsCollision(board, newX, newY))
 						m_SpeedX = 0.0f;
 				}

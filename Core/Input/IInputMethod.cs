@@ -1,5 +1,5 @@
 ﻿//
-// Stone.cs - Stone class
+// IInputMethod.cs - IInputMethod interface
 //
 // Copyright © 2009  Thomas Faber
 //
@@ -19,57 +19,37 @@
 // along with Bomber Stuff. If not, see <http://www.gnu.org/licenses/>.
 //
 
-using BomberStuff.Core.Animation;
+using System;
+using System.Collections.Generic;
 
-using BomberStuff.Core.Drawing;
-
-namespace BomberStuff.Core
+namespace BomberStuff.Core.Input
 {
 	/// <summary>
 	/// 
 	/// </summary>
-	public class Stone : MobileObject
+	public interface IInputMethod
 	{
 		/// <summary>
 		/// 
 		/// </summary>
-		/// <param name="x"></param>
-		/// <param name="y"></param>
-		public Stone(int x, int y)
-			: base(x, y, 1.0f, 1.0f)
-		{
-			Animation = new TilesetAnimationIndex(TilesetAnimationIndex.Types.Stone, 0);
-		}
+		string Name { get; }
 
 		/// <summary>
 		/// 
 		/// </summary>
-		/// <param name="aniList"></param>
 		/// <returns></returns>
-		public override SizeF GetOffset(AnimationList aniList)
-		{
-			// HACKHACK: Stone offset seems not completely ridiculous.
-			// How did I make it work in the old version without
-			// manual adjustment? :(
-			return new SizeF(-1.0f / 40.0f, -1.0f / 40.0f);
-		}
+		Dictionary<string, Control> GetControls();
 
 		/// <summary>
 		/// 
 		/// </summary>
-		/// <param name="other"></param>
-		/// <returns></returns>
-		protected override bool Collide(MobileObject other)
-		{
-			return true;
-		}
+		/// <param name="control"></param>
+		void RegisterControl(Control control);
 
 		/// <summary>
 		/// 
 		/// </summary>
-		protected override void BorderCollide()
-		{
-		}
+		/// <param name="control"></param>
+		void UnregisterControl(Control control);
 	}
-
 }

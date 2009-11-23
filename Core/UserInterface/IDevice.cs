@@ -23,6 +23,8 @@ using System;
 using System.IO;
 using System.Drawing;
 
+using BomberStuff.Core.Utilities;
+
 namespace BomberStuff.Core.UserInterface
 {
 	/// <summary>
@@ -40,12 +42,10 @@ namespace BomberStuff.Core.UserInterface
 		/// <summary>
 		/// 
 		/// </summary>
-		/// <param name="s"></param>
-		/// <param name="width"></param>
-		/// <param name="height"></param>
+		/// <param name="b"></param>
 		/// <param name="storeInVideoMemory"></param>
 		/// <param name="keyColor"></param>
 		/// <returns></returns>
-		ISprite LoadSprite(Stream s, int width, int height, bool storeInVideoMemory, Color keyColor);
+		ISprite LoadSprite(BitmapBuilder b, bool storeInVideoMemory, Color keyColor);
 	}
 }

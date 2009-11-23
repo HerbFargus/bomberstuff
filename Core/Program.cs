@@ -22,8 +22,10 @@
 using System;
 using System.IO;
 using System.Reflection;
+using System.Collections.Generic;
 
 using BomberStuff.Core.UserInterface;
+using BomberStuff.Core.Input;
 
 namespace BomberStuff.Core
 {
@@ -54,12 +56,12 @@ namespace BomberStuff.Core
 		/// <param name="args">Program arguments</param>
 		private static void Main(string/*^!^*/[]/*^!^*/ args)
 		{
-			string/*^!^*/ uiName = "WinFormsInterface";
+			string/*^!^*/ uiName = "SlimDXInterface";
 
 			try
 			{
 				Assembly assembly = Assembly.LoadFrom(uiName + ".dll");
-				object uiObject = assembly.CreateInstance("BomberStuff." + uiName + ".UserInterface");
+				object uiObject = assembly.CreateInstance("BomberStuff." + uiName + "." + uiName);
 
 				IUserInterface ui = uiObject as IUserInterface;
 
@@ -68,13 +70,36 @@ namespace BomberStuff.Core
 
 				// TODO/TRYTRY: start with some kind of menu?
 
-				// start a new game. Let's have some players
-				Game = new Game();
+				// load settings
+				Settings settings = new Settings();
+				settings.Set<string>(Settings.Types.ABDirectory, @"H:\Lappy\Temp\atomic_bomberman\bomber");
+
+				// start a new game
+				Game = new Game(settings);
 
 				ui.LoadSprites += Game.LoadSprites;
 				ui.Render += Game.Render;
 
-				Game.Participants.Add(new LocalParticipant());
+				PlayerControls[] playerControls = new PlayerControls[2];
+
+				List<KeyValuePair<PlayerControls.Types, Control>> controls = new List<KeyValuePair<PlayerControls.Types, Control>>();
+
+				IInputMethod im = uiObject as IInputMethod;
+
+				Dictionary<string, Control> imControls = im.GetControls();
+
+				controls.Add(new KeyValuePair<PlayerControls.Types, Control>(PlayerControls.Types.Up, imControls["W"]));
+				controls.Add(new KeyValuePair<PlayerControls.Types, Control>(PlayerControls.Types.Down, imControls["S"]));
+				controls.Add(new KeyValuePair<PlayerControls.Types, Control>(PlayerControls.Types.Left, imControls["A"]));
+				controls.Add(new KeyValuePair<PlayerControls.Types, Control>(PlayerControls.Types.Right, imControls["D"]));
+				//System.Windows.Forms.Keys.Up;
+
+				foreach (KeyValuePair<PlayerControls.Types, Control> control in controls)
+					im.RegisterControl(control.Value);
+				
+				playerControls[0] = new PlayerControls(controls);
+
+				Game.Participants.Add(new LocalParticipant(playerControls));
 				nParticipantsNegotiating = 1;
 				playersRequested = new int[nParticipantsNegotiating];
 
@@ -93,14 +118,14 @@ namespace BomberStuff.Core
 				for (int i = 0; i < Game.Participants.Count; ++i)
 				{
 					Player[] players = new Player[playersRequested[i]];
-					//Array.Copy(Game.Players, iFirstPlayer, players, 0, playersRequested[i]);
-					for (int j = 0; j < playersRequested[i]; ++j)
-						players[j] = Game.Players[iFirstPlayer + j];
+					Array.Copy(Game.Players, iFirstPlayer, players, 0, playersRequested[i]);
 					iFirstPlayer += playersRequested[i];
 					System.Console.WriteLine(Game.Participants[i] + " starting round controlling " + players.Length + " players");
 					Game.Participants[i].StartRound(players);
 				}
 
+
+				// start up the game UI
 				ui.Initialize();
 				ui.MainLoop();
 				ui.Terminate();

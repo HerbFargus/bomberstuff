@@ -1,5 +1,5 @@
 ﻿//
-// Stone.cs - Stone class
+// PlayerControlEventArgs.cs - PlayerControlEventArgs class
 //
 // Copyright © 2009  Thomas Faber
 //
@@ -19,57 +19,38 @@
 // along with Bomber Stuff. If not, see <http://www.gnu.org/licenses/>.
 //
 
-using BomberStuff.Core.Animation;
+using System;
 
-using BomberStuff.Core.Drawing;
-
-namespace BomberStuff.Core
+namespace BomberStuff.Core.Input
 {
 	/// <summary>
 	/// 
 	/// </summary>
-	public class Stone : MobileObject
+	public class PlayerControlEventArgs : EventArgs
 	{
 		/// <summary>
 		/// 
 		/// </summary>
-		/// <param name="x"></param>
-		/// <param name="y"></param>
-		public Stone(int x, int y)
-			: base(x, y, 1.0f, 1.0f)
-		{
-			Animation = new TilesetAnimationIndex(TilesetAnimationIndex.Types.Stone, 0);
-		}
+		public readonly PlayerControls.Types Type;
+		/// <summary>
+		/// 
+		/// </summary>
+		public readonly bool Pressed;
+		///// <summary>
+		///// 
+		///// </summary>
+		//public readonly Control Control;
 
 		/// <summary>
 		/// 
 		/// </summary>
-		/// <param name="aniList"></param>
-		/// <returns></returns>
-		public override SizeF GetOffset(AnimationList aniList)
+		/// <param name="type"></param>
+		/// <param name="pressed"></param>
+		public PlayerControlEventArgs(PlayerControls.Types type, bool pressed/*, Control control*/)
 		{
-			// HACKHACK: Stone offset seems not completely ridiculous.
-			// How did I make it work in the old version without
-			// manual adjustment? :(
-			return new SizeF(-1.0f / 40.0f, -1.0f / 40.0f);
-		}
-
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="other"></param>
-		/// <returns></returns>
-		protected override bool Collide(MobileObject other)
-		{
-			return true;
-		}
-
-		/// <summary>
-		/// 
-		/// </summary>
-		protected override void BorderCollide()
-		{
+			Type = type;
+			Pressed = pressed;
+			//Control = control;
 		}
 	}
-
 }

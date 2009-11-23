@@ -47,6 +47,11 @@ namespace BomberStuff.Core
 	public abstract class Participant
 	{
 		/// <summary>
+		/// The players that this participant controls
+		/// </summary>
+		protected Player[] Players;
+
+		/// <summary>
 		/// Is the participant authorized to make changes to the board
 		/// other than its own dudes' actions? This applies to the server
 		/// normally, or to everyone in peer-to-peer games
@@ -54,12 +59,50 @@ namespace BomberStuff.Core
 		public readonly bool HasAuthority;
 
 		/// <summary>
-		/// 
+		/// Initializes a new participant
 		/// </summary>
-		/// <param name="hasAuthority"></param>
+		/// <param name="hasAuthority">
+		/// boolean value specifying whether the participant has authority,
+		/// that is, whether it can control more than just its players'
+		/// movement
+		/// </param>
 		protected Participant(bool hasAuthority)
 		{
 			HasAuthority = hasAuthority;
+		}
+
+		/// <summary>
+		/// Returns whether the given player is controlled by
+		/// this participant
+		/// </summary>
+		/// <param name="p"></param>
+		/// <returns>
+		/// <c>true</c> if this participant controls <paramref name="p" />,
+		/// <c>false</c> otherwise
+		/// </returns>
+		public bool ControlsPlayer(Player p)
+		{
+			foreach (Player pi in Players)
+				if (pi == p)
+					return true;
+			return false;
+		}
+
+		/// <summary>
+		/// Returns whether the given player is controlled by
+		/// this participant
+		/// </summary>
+		/// <param name="player">Index of the player to check</param>
+		/// <returns>
+		/// <c>true</c> if this participant controls <paramref name="player" />,
+		/// <c>false</c> otherwise
+		/// </returns>
+		public bool ControlsPlayer(int player)
+		{
+			foreach (Player pi in Players)
+				if (pi.PlayerIndex == player)
+					return true;
+			return false;
 		}
 
 		#region Notification methods
@@ -185,43 +228,6 @@ namespace BomberStuff.Core
 			PlayerIndex = playerIndex;
 			Direction = direction;
 			Moving = moving;
-		}
-	}
-
-	/// <summary>
-	/// 
-	/// </summary>
-	public class LocalParticipant : Participant
-	{
-		private Player[] Players;
-		/// <summary>
-		/// 
-		/// </summary>
-		public LocalParticipant()
-			: base(false)
-		{
-
-		}
-
-		/// <summary>
-		/// 
-		/// </summary>
-		public override void StartNegotiation()
-		{
-			OnNegotiate(new NegotiateEventArgs(1));
-		}
-
-		/// <summary>
-		/// 
-		/// </summary>
-		public override void StartRound(Player[] yourPlayers)
-		{
-			Players = yourPlayers;
-			// ... okay... so the round is starting
-			
-			// let's do something crazy... move in a random direction! :D
-			Directions direction = (Directions)new Random().Next(4);
-			OnControlPlayer(new ControlPlayerEventArgs(Players[0].PlayerIndex, direction, true));
 		}
 	}
 }

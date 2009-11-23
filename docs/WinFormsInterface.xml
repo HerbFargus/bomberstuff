@@ -53,13 +53,11 @@
             
             </summary>
         </member>
-        <member name="M:BomberStuff.WinFormsInterface.Device.LoadSprite(System.IO.Stream,System.Int32,System.Int32,System.Boolean,System.Drawing.Color)">
+        <member name="M:BomberStuff.WinFormsInterface.Device.LoadSprite(BomberStuff.Core.Utilities.BitmapBuilder,System.Boolean,System.Drawing.Color)">
             <summary>
             
             </summary>
-            <param name="s"></param>
-            <param name="width"></param>
-            <param name="height"></param>
+            <param name="b"></param>
             <param name="storeInVideoMemory"></param>
             <param name="keyColor"></param>
             <returns></returns>
@@ -80,7 +78,7 @@
             
             </summary>
         </member>
-        <member name="T:BomberStuff.WinFormsInterface.UserInterface">
+        <member name="T:BomberStuff.WinFormsInterface.WinFormsInterface">
             <summary>
             Bomber Stuff user interface implemented using System.Windows.Forms
             with GDI+ graphics
@@ -89,41 +87,41 @@
             TODO: Add keyboard input
             </remarks>
         </member>
-        <member name="F:BomberStuff.WinFormsInterface.UserInterface.Form">
+        <member name="F:BomberStuff.WinFormsInterface.WinFormsInterface.Form">
             <summary>The underlying Form</summary>
         </member>
-        <member name="F:BomberStuff.WinFormsInterface.UserInterface.Graphics">
+        <member name="F:BomberStuff.WinFormsInterface.WinFormsInterface.Graphics">
             <summary>The Form's Graphics object during drawing</summary>
         </member>
-        <member name="M:BomberStuff.WinFormsInterface.UserInterface.OnLoadSprites(BomberStuff.Core.UserInterface.LoadSpritesEventArgs)">
+        <member name="M:BomberStuff.WinFormsInterface.WinFormsInterface.OnLoadSprites(BomberStuff.Core.UserInterface.LoadSpritesEventArgs)">
             <summary>
             
             </summary>
             <param name="e"></param>
         </member>
-        <member name="M:BomberStuff.WinFormsInterface.UserInterface.OnRender(BomberStuff.Core.UserInterface.RenderEventArgs)">
+        <member name="M:BomberStuff.WinFormsInterface.WinFormsInterface.OnRender(BomberStuff.Core.UserInterface.RenderEventArgs)">
             <summary>
             
             </summary>
             <param name="e"></param>
         </member>
-        <member name="M:BomberStuff.WinFormsInterface.UserInterface.BomberStuff#Core#UserInterface#IUserInterface#Initialize">
+        <member name="M:BomberStuff.WinFormsInterface.WinFormsInterface.BomberStuff#Core#UserInterface#IUserInterface#Initialize">
             <summary>
             
             </summary>
             <returns></returns>
         </member>
-        <member name="M:BomberStuff.WinFormsInterface.UserInterface.MainLoop">
+        <member name="M:BomberStuff.WinFormsInterface.WinFormsInterface.MainLoop">
             <summary>
             
             </summary>
         </member>
-        <member name="M:BomberStuff.WinFormsInterface.UserInterface.Terminate">
+        <member name="M:BomberStuff.WinFormsInterface.WinFormsInterface.Terminate">
             <summary>
             
             </summary>
         </member>
-        <member name="M:BomberStuff.WinFormsInterface.UserInterface.Draw(BomberStuff.Core.UserInterface.ISprite,BomberStuff.Core.Drawing.PointF,BomberStuff.Core.Drawing.SizeF,System.Drawing.Color)">
+        <member name="M:BomberStuff.WinFormsInterface.WinFormsInterface.Draw(BomberStuff.Core.UserInterface.ISprite,BomberStuff.Core.Drawing.PointF,BomberStuff.Core.Drawing.SizeF,System.Drawing.Color)">
             <summary>
             
             </summary>
@@ -132,7 +130,7 @@
             <param name="size"></param>
             <param name="color"></param>
         </member>
-        <member name="M:BomberStuff.WinFormsInterface.UserInterface.Draw(System.String,BomberStuff.Core.Drawing.PointF,System.Drawing.Color)">
+        <member name="M:BomberStuff.WinFormsInterface.WinFormsInterface.Draw(System.String,BomberStuff.Core.Drawing.PointF,System.Drawing.Color)">
             <summary>
             
             </summary>
@@ -140,20 +138,20 @@
             <param name="position"></param>
             <param name="color"></param>
         </member>
-        <member name="M:BomberStuff.WinFormsInterface.UserInterface.Form_OnPaint(System.Object,System.Windows.Forms.PaintEventArgs)">
+        <member name="M:BomberStuff.WinFormsInterface.WinFormsInterface.Form_OnPaint(System.Object,System.Windows.Forms.PaintEventArgs)">
             <summary>
             
             </summary>
             <param name="sender"></param>
             <param name="e"></param>
         </member>
-        <member name="E:BomberStuff.WinFormsInterface.UserInterface.LoadSprites">
+        <member name="E:BomberStuff.WinFormsInterface.WinFormsInterface.LoadSprites">
             <summary></summary>
         </member>
-        <member name="E:BomberStuff.WinFormsInterface.UserInterface.Render">
+        <member name="E:BomberStuff.WinFormsInterface.WinFormsInterface.Render">
             <summary></summary>
         </member>
-        <member name="P:BomberStuff.WinFormsInterface.UserInterface.CacheAllSprites">
+        <member name="P:BomberStuff.WinFormsInterface.WinFormsInterface.CacheAllSprites">
             <summary></summary>
         </member>
         <member name="T:BomberStuff.WinFormsInterface.BomberForm">

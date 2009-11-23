@@ -30,8 +30,6 @@ namespace BomberStuff.Core
 	/// </summary>
 	public class Player : MobileObject
 	{
-		static int nPlayers = 0;
-		int PIndex;
 		/// <summary>
 		/// 
 		/// </summary>
@@ -41,8 +39,7 @@ namespace BomberStuff.Core
 		public Player(int x, int y, int player)
 			: base(x, y, 1.0f, 1.0f, player)
 		{
-			PIndex = nPlayers++;
-			Animation = new PlayerDirectionAnimationIndex(PlayerDirectionAnimationIndex.Types.Stand, Directions.Down, player);
+			Animation = new PlayerDirectionAnimationIndex(PlayerDirectionAnimationIndex.Types.Stand, Directions.Down, 0);
 		}
 
 		/// <summary>
@@ -51,7 +48,7 @@ namespace BomberStuff.Core
 		/// <returns></returns>
 		public override string ToString()
 		{
-			return "Player(" + PlayerIndex + "; " + PIndex + ")";
+			return "Player" + PlayerIndex;
 		}
 
 		/// <summary>
@@ -70,15 +67,14 @@ namespace BomberStuff.Core
 		/// <param name="speed"></param>
 		public override void SetMoveState(Directions direction, float speed)
 		{
-			System.Console.WriteLine("Setting move state of " + this + " to " + direction + " @ " + speed);
 			base.SetMoveState(direction, speed);
 
 			if (speed == 0)
 			{
-				Animation = new PlayerDirectionAnimationIndex(PlayerDirectionAnimationIndex.Types.Stand, direction, PlayerIndex);
+				Animation = new PlayerDirectionAnimationIndex(PlayerDirectionAnimationIndex.Types.Stand, direction, 0);
 			}
 			else
-				Animation = new PlayerDirectionAnimationIndex(PlayerDirectionAnimationIndex.Types.Walk, direction, PlayerIndex);
+				Animation = new PlayerDirectionAnimationIndex(PlayerDirectionAnimationIndex.Types.Walk, direction, 0);
 			AnimationState = 0;
 		}
 

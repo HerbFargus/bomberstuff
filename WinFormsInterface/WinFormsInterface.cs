@@ -34,7 +34,7 @@ namespace BomberStuff.WinFormsInterface
 	/// <remarks>
 	/// TODO: Add keyboard input
 	/// </remarks>
-	public class UserInterface : IUserInterface
+	public class WinFormsInterface : IUserInterface
 	{
 		/// <summary>The underlying Form</summary>
 		protected Form Form;

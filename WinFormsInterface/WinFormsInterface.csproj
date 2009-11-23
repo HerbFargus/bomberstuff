@@ -41,7 +41,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Device.cs" />
-    <Compile Include="UserInterface.cs">
+    <Compile Include="WinFormsInterface.cs">
       <SubType>Form</SubType>
     </Compile>
   </ItemGroup>

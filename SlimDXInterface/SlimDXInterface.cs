@@ -23,8 +23,12 @@ using System;
 using System.Drawing;
 using Font = SlimDX.Direct3D9.Font;
 using System.Windows.Forms;
+using System.Collections.Generic;
 
 using BomberStuff.Core.UserInterface;
+using BomberStuff.Core.Input;
+using Control = BomberStuff.Core.Input.Control;
+using ControlEventArgs = BomberStuff.Core.Input.ControlEventArgs;
 
 using SlimDX;
 using SlimDX.Direct3D9;
@@ -34,12 +38,12 @@ namespace BomberStuff.SlimDXInterface
 {
 	/// <summary>
 	/// Bomber Stuff user interface implemented using System.Windows.Forms
-	/// with GDI+ graphics
+	/// with SlimDX Direct3D9 graphics
 	/// </summary>
 	/// <remarks>
-	/// TODO: Add keyboard input
+	/// TODO: Add keyboard input via RawInput
 	/// </remarks>
-	public class UserInterface : IUserInterface
+	public class SlimDXInterface : IUserInterface, IInputMethod
 	{
 		/// <summary>The underlying Form</summary>
 		protected Form Form;
@@ -47,7 +51,7 @@ namespace BomberStuff.SlimDXInterface
 		/// <summary></summary>
 		protected Direct3D Direct3D;
 		/// <summary></summary>
-		protected Device Device;
+		internal SDXDevice Device;
 		/// <summary></summary>
 		protected PresentParameters PresentParams;
 		/// <summary></summary>
@@ -55,7 +59,7 @@ namespace BomberStuff.SlimDXInterface
 		/// <summary></summary>
 		protected Font d3dFont;
 
-		#region Events
+		#region UserInterface Events
 		/// <summary></summary>
 		public event EventHandler<LoadSpritesEventArgs> LoadSprites;
 		/// <summary></summary>
@@ -91,17 +95,81 @@ namespace BomberStuff.SlimDXInterface
 		/// <returns></returns>
 		bool IUserInterface.Initialize()
 		{
-			Form = new BomberForm();
+			Form = new SlimDXForm();
 
-			Form.ClientSize = new Size(640, 480);
+			Form.ClientSize = new Size(1280, 960);
 			Form.Text = "Bomber Stuff, SlimDX interface";
-			Form.Activated += new EventHandler(Form_Activated);
+			Form.Load += Form_Load;
+			Form.Resize += Form_Resize;
+			Form.FormClosing += Form_Closing;
+			Form.KeyDown += Form_KeyDown;
+			Form.KeyUp += Form_KeyUp;
 			return true;
 		}
 
-		void Form_Activated(object sender, EventArgs e)
+		#region IDisposable implementation
+		/// <summary>
+		/// 
+		/// </summary>
+		public void Dispose()
+		{
+			Dispose(true);
+			GC.SuppressFinalize(this);
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="disposing"></param>
+		protected virtual void Dispose(bool disposing)
+		{
+			if (disposing)
+				PresentParams = null;
+
+			if (Direct3D != null)
+			{
+				Direct3D.Dispose();
+				Direct3D = null;
+			}
+			if (Sprite != null)
+			{
+				Sprite.Dispose();
+				Sprite = null;
+			}
+
+			if (Device != null)
+			{
+				Device.Dispose();
+				Device = null;
+			}
+
+			if (d3dFont != null)
+			{
+				d3dFont.Dispose();
+				d3dFont = null;
+			}
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		~SlimDXInterface()
+		{
+			Dispose(false);
+		}
+
+		#endregion
+
+		private void Form_Closing(object sender, EventArgs e)
+		{
+			Dispose(true);
+		}
+
+		private void Form_Load(object sender, EventArgs e)
 		{
 			Form form = (Form)sender;
+
+			System.Diagnostics.Debug.Assert(Direct3D == null);
 			Direct3D = new Direct3D();
 
 			int nAdapter = Direct3D.Adapters[0].Adapter;
@@ -124,6 +192,7 @@ namespace BomberStuff.SlimDXInterface
 
 			DisplayMode displayMode = Direct3D.GetAdapterDisplayMode(nAdapter);
 
+			System.Diagnostics.Debug.Assert(PresentParams == null);
 			PresentParams = new PresentParameters();
 			PresentParams.BackBufferWidth = form.ClientSize.Width;
 			PresentParams.BackBufferHeight = form.ClientSize.Height;
@@ -135,18 +204,35 @@ namespace BomberStuff.SlimDXInterface
 			PresentParams.EnableAutoDepthStencil = true;
 			PresentParams.DeviceWindowHandle = form.Handle;
 
+			System.Diagnostics.Debug.Assert(Device == null);
 			// create the Direct3D device
-			Device = new SlimDX.Direct3D9.Device(Direct3D, nAdapter, DeviceType.Hardware, form.Handle,
-									devFlags, PresentParams);
+			Device = new SDXDevice(new Device(Direct3D, nAdapter, DeviceType.Hardware, form.Handle,
+									devFlags, PresentParams),
+									Form.ClientSize.Width / 640.0f, Form.ClientSize.Height / 480.0f);
 
-			// ResetDevice;
-			Sprite = new Sprite(Device);
-			OnLoadSprites(new LoadSpritesEventArgs(new SDXDevice(Device)));
+			ResetDevice();
 
 			using (System.Drawing.Font baseFont = new System.Drawing.Font("Arial Black", 18, FontStyle.Bold))
 			{
+				System.Diagnostics.Debug.Assert(d3dFont == null);
 				d3dFont = new Font(Device, baseFont);
 			}
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		private void ResetDevice()
+		{
+			if (Sprite != null)
+				Sprite.Dispose();
+			Sprite = new Sprite(Device);
+			OnLoadSprites(new LoadSpritesEventArgs(Device));
+		}
+
+		private void Form_Resize(object sender, EventArgs e)
+		{
+			//ResetDevice();
 		}
 
 		/// <summary>
@@ -205,6 +291,7 @@ namespace BomberStuff.SlimDXInterface
 		public void Draw(ISprite sprite, BomberStuff.Core.Drawing.PointF position, BomberStuff.Core.Drawing.SizeF size, System.Drawing.Color color)
 		{
 			SDXSprite s = (SDXSprite)sprite;
+			System.Diagnostics.Debug.Assert(s.Texture != null);
 
 			float w = Form.ClientSize.Width;
 			float h = Form.ClientSize.Height;
@@ -224,12 +311,9 @@ namespace BomberStuff.SlimDXInterface
 		{
 			int x = (int)(position.X * Form.ClientSize.Width);
 			int y = (int)(position.Y * Form.ClientSize.Height);
-			/*Font font = new Font("Arial Black", 18, FontStyle.Bold);
-			StringFormat format = new StringFormat(StringFormatFlags.NoClip | StringFormatFlags.NoWrap);
-			format.Alignment = StringAlignment.Center;
-			format.LineAlignment = StringAlignment.Center;
-			Graphics.DrawString(text, font, new SolidBrush(color), x, y, format);*/
-			d3dFont.DrawString(Sprite, text, x, y, color);
+			Rectangle rect = new Rectangle(x - 1, y - 1, 2, 2);
+			DrawTextFormat format = DrawTextFormat.Center | DrawTextFormat.VerticalCenter | DrawTextFormat.NoClip;
+			d3dFont.DrawString(Sprite, text, rect, format, color);
 		}
 
 		/// <summary>
@@ -249,7 +333,9 @@ namespace BomberStuff.SlimDXInterface
 			Sprite.Begin(SpriteFlags.AlphaBlend
 							| SpriteFlags.SortDepthBackToFront);
 
-			OnRender(new RenderEventArgs(this, new SDXDevice(Device)));
+			OnRender(new RenderEventArgs(this, Device));
+
+			System.Diagnostics.Debug.Assert(device != null);
 
 			// aaaannnd.... done!
 			Sprite.End();
@@ -260,41 +346,125 @@ namespace BomberStuff.SlimDXInterface
 			// ... so show the result on screen
 			device.Present();
 		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		string IInputMethod.Name
+		{
+			get { return "SlimDXInterface"; }
+		}
+
+		#region InputMethod methods
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <returns></returns>
+		public Dictionary<string, Control> GetControls()
+		{
+			string[] keyNames = Enum.GetNames(typeof(Keys));
+			Array keyValues = Enum.GetValues(typeof(Keys));
+			Dictionary<string, Control> keys = new Dictionary<string, Control>(keyValues.Length);
+
+			for (int i = 0; i < keyValues.Length; ++i)
+				keys.Add(keyNames[i], new WinFormsKeyControl((Keys)keyValues.GetValue(i)));
+
+			return keys;
+		}
+
+		private List<WinFormsKeyControl> RegisteredControls = new List<WinFormsKeyControl>();
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="c"></param>
+		public void RegisterControl(Control c)
+		{
+			WinFormsKeyControl key = c as WinFormsKeyControl;
+
+			System.Diagnostics.Debug.Assert(key != null);
+
+			System.Diagnostics.Debug.Assert(RegisteredControls.IndexOf(key) == -1);
+
+			RegisteredControls.Add(key);
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="c"></param>
+		public void UnregisterControl(Control c)
+		{
+			WinFormsKeyControl key = c as WinFormsKeyControl;
+
+			System.Diagnostics.Debug.Assert(key != null);
+
+			System.Diagnostics.Debug.Assert(RegisteredControls.Remove(key));
+		}
+
+		private void Form_KeyDown(object sender, KeyEventArgs e)
+		{
+			foreach (WinFormsKeyControl key in RegisteredControls)
+				if (key.Key == e.KeyCode)
+				{
+					key.Press();
+					break;
+				}
+		}
+
+		private void Form_KeyUp(object sender, KeyEventArgs e)
+		{
+			foreach (WinFormsKeyControl key in RegisteredControls)
+				if (key.Key == e.KeyCode)
+				{
+					key.Release();
+					break;
+				}
+		}
+		#endregion
 	}
 
-	/// <summary>
-	/// 
-	/// </summary>
-	public class BomberForm : Form
+	internal sealed class WinFormsKeyControl : Control
 	{
+		public readonly Keys Key;
+		private bool IsPressed;
+
 		/// <summary>
 		/// 
 		/// </summary>
-		/// <param name="e"></param>
-		protected override void OnResize(EventArgs e)
+		public WinFormsKeyControl(Keys key)
 		{
-			base.OnResize(e);
-			Invalidate();
+			Key = key;
 		}
 
 		/// <summary>
 		/// 
 		/// </summary>
-		public BomberForm()
+		public override string Name
 		{
-			MinimizeBox = false;
-			MaximizeBox = false;
+			get { return Key.ToString(); }
+		}
 
-			CreateParams.ClassStyle |= 0x23;
+		internal void Press()
+		{
+			if (!IsPressed)
+			{
+				IsPressed = true;
+				//System.Console.WriteLine(Key + " pressed");
+				OnPressed(new ControlEventArgs(true));
+			}
+		}
 
-			this.SetStyle(ControlStyles.AllPaintingInWmPaint
-				//| ControlStyles.OptimizedDoubleBuffer
-				| ControlStyles.UserPaint
-				| ControlStyles.Opaque
-				| ControlStyles.ResizeRedraw, true);
-			this.SetStyle(ControlStyles.StandardClick | ControlStyles.StandardDoubleClick | ControlStyles.SupportsTransparentBackColor, false);
-
-			FormBorderStyle = FormBorderStyle.FixedSingle;
+		internal void Release()
+		{
+			if (IsPressed)
+			{
+				IsPressed = false;
+				//System.Console.WriteLine(Key + " released");
+				OnReleased(new ControlEventArgs(false));
+			}
 		}
 	}
+
+	
 }

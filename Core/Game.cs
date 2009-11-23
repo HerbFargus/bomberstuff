@@ -48,12 +48,16 @@ namespace BomberStuff.Core
 
 		/// <summary></summary>
 		private AnimationList Animations;
+
+		/// <summary></summary>
+		private Settings Settings;
 		
 		/// <summary>
 		/// 
 		/// </summary>
-		public Game()
+		public Game(Settings settings)
 		{
+			Settings = settings;
 			Participants = new List<Participant>();
 		}
 
@@ -67,7 +71,7 @@ namespace BomberStuff.Core
 			Board = new Board();
 			
 			System.Drawing.Point[] startPositions = new System.Drawing.Point[playerCount];
-			Board.Items.AddRange(BomberStuff.Files.SchemeReader.GetScheme(ABPath + @"\DATA\SCHEMES\BASIC.SCH", ref startPositions, Board.Width, Board.Height));
+			Board.Items.AddRange(BomberStuff.Files.SchemeReader.GetScheme(Settings.Get<string>(Settings.Types.ABDirectory) + @"\DATA\SCHEMES\BASIC.SCH", ref startPositions, Board.Width, Board.Height));
 
 			for (int i = 0; i < playerCount; ++i)
 			{
@@ -85,16 +89,13 @@ namespace BomberStuff.Core
 		{
 			Participant p = (Participant)sender;
 
-			System.Console.WriteLine(p + " is controlling " + Players[e.PlayerIndex] + " " + e.PlayerIndex + " to " + (e.Moving ? "move " : "stand facing ") + e.Direction);
-
-			//if (p.HasAuthority || ...)
+			if (p.HasAuthority || p.ControlsPlayer(e.PlayerIndex))
 				Players[e.PlayerIndex].SetMoveState(e.Direction, e.Moving ? 0.05f : 0);
-
-				System.Console.WriteLine("Controlled " + Players[e.PlayerIndex] + " is board item " + Board.Items.IndexOf(Players[e.PlayerIndex]));
+			else
+				System.Diagnostics.Debug.Assert(false);
 		}
 
 		private ISprite background;
-		internal const string ABPath = @"H:\Lappy\Temp\atomic_bomberman\bomber";
 
 		/// <summary>
 		/// 
@@ -105,16 +106,29 @@ namespace BomberStuff.Core
 		{
 			if (Animations != null)
 			{
+				System.Console.WriteLine("Reloading animations:");
 				Animations.Dispose();
 				Animations = null;
+				background.Dispose();
+				background = null;
 				System.GC.Collect();
 			}
 
-			Animations = new AnimationList(1 /*PlayerCount*/);
-			AniFileReader.AddAliFile(Animations, ABPath + @"\DATA\ANI\master.ali");
+			Animations = new AnimationList(Players.Length);
+			System.Console.WriteLine("Loading animations...");
+			AniFileReader.AddAliFile(Animations, Settings.Get<string>(Settings.Types.ABDirectory) + @"\DATA\ANI\master.ali");
+			System.Console.WriteLine("Done loading animations...");
 			Animations.Check();
+			System.Console.WriteLine("Animation check succeeded. All animations accounted for.");
 
-			background = e.Device.LoadSprite(PCXReader.StreamFromFile(ABPath + @"\DATA\RES\FIELD0.PCX"), 640, 480, false, System.Drawing.Color.Transparent);
+			System.Console.WriteLine("Caching animations...");
+			Animations.Cache(e.Device, Players.Length);
+			System.Console.WriteLine("Done caching animations.");
+
+			background = e.Device.LoadSprite(PCXReader.FromFile(Settings.Get<string>(Settings.Types.ABDirectory) + @"\DATA\RES\FIELD0.PCX"), false, System.Drawing.Color.Transparent);
+
+			System.Console.WriteLine("Stand by...");
+			System.GC.Collect();
 		}
 
 		long lastSec;
@@ -146,8 +160,8 @@ namespace BomberStuff.Core
 			//
 			// Draw text
 			//
-			e.UserInterface.Draw(fps, new BomberStuff.Core.Drawing.PointF(0.1f, 0.05f), System.Drawing.Color.White);
-			e.UserInterface.Draw("Bomber Stuff v0.1", new BomberStuff.Core.Drawing.PointF(0.5f, 0.05f), System.Drawing.Color.YellowGreen);
+			e.UserInterface.Draw(fps, new PointF(0.1f, 0.05f), System.Drawing.Color.White);
+			e.UserInterface.Draw("Bomber Stuff 0.1.0", new PointF(0.5f, 0.05f), System.Drawing.Color.YellowGreen);
 
 			// HACKHACK/TODO: Seperate animation!!!
 			int diffTicks = 0;
@@ -166,13 +180,18 @@ namespace BomberStuff.Core
 			}
 
 			//
+			// Draw player shadows
+			//
+			foreach (Player p in Players)
+				DrawMobileObject(e.UserInterface, e.Device, p.GetShadow(), System.Drawing.Color.White);
+
+			//
 			// Draw items on the board
 			//
 			foreach (MobileObject obj in Board.Items)
 			{
-				// players have a shadow. This is a special case
-				if (obj is Player)
-					DrawMobileObject(e.UserInterface, e.Device, ((Player)obj).GetShadow(), System.Drawing.Color.White);
+				System.Diagnostics.Debug.Assert(obj != null);
+				
 				DrawMobileObject(e.UserInterface, e.Device, obj, System.Drawing.Color.White);
 				obj.Animate(Animations, diffTicks);
 				obj.Move(Board, diffTicks);
@@ -189,6 +208,8 @@ namespace BomberStuff.Core
 		private void DrawMobileObject(IUserInterface ui, IDevice device, MobileObject obj, System.Drawing.Color color)
 		{
 			ISprite sprite = obj.GetSprite(Animations, device);
+
+			System.Diagnostics.Debug.Assert(sprite != null);
 
 			// the coordinates we want in the end are normalized
 			// [0, 0] is the top left, [1, 1] is the bottom right

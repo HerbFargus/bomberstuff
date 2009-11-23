@@ -79,13 +79,11 @@
             
             </summary>
         </member>
-        <member name="M:BomberStuff.Core.UserInterface.IDevice.LoadSprite(System.IO.Stream,System.Int32,System.Int32,System.Boolean,System.Drawing.Color)">
+        <member name="M:BomberStuff.Core.UserInterface.IDevice.LoadSprite(BomberStuff.Core.Utilities.BitmapBuilder,System.Boolean,System.Drawing.Color)">
             <summary>
             
             </summary>
-            <param name="s"></param>
-            <param name="width"></param>
-            <param name="height"></param>
+            <param name="b"></param>
             <param name="storeInVideoMemory"></param>
             <param name="keyColor"></param>
             <returns></returns>
@@ -293,6 +291,9 @@
             <param name="width"></param>
             <param name="height"></param>
         </member>
+        <member name="F:BomberStuff.Core.MobileObject.Animation">
+            <summary></summary>
+        </member>
         <member name="F:BomberStuff.Core.MobileObject.AnimationState">
             <summary></summary>
         </member>
@@ -404,9 +405,6 @@
             <summary>
             
             </summary>
-        </member>
-        <member name="P:BomberStuff.Core.MobileObject.Animation">
-            <summary></summary>
         </member>
         <member name="P:BomberStuff.Core.MobileObject.SpeedX">
             <summary>
@@ -522,20 +520,27 @@
         </member>
         <member name="T:BomberStuff.Core.Animation.Animation">
             <summary>
-            Represents an animation, that is, a sequence of images
+            Represents an animation, that is, a sequence of frames (images)
             </summary>
         </member>
         <member name="F:BomberStuff.Core.Animation.Animation.Name">
-            <summary></summary>
+            <summary>Animation name</summary>
         </member>
         <member name="F:BomberStuff.Core.Animation.Animation.VideoMemory">
-            <summary></summary>
+            <value>
+            <c>true</c> to store the animation's sprites in video
+            memory, if the user interface supports this
+            </value>
         </member>
         <member name="F:BomberStuff.Core.Animation.Animation.Cached">
-            <summary></summary>
+            <value>
+            <c>true</c> to cache the animation's sprites, that is,
+            preload and keep them instead of only creating them
+            from the <see cref="T:BomberStuff.Core.Utilities.BitmapBuilder"/>s when required
+            </value>
         </member>
         <member name="F:BomberStuff.Core.Animation.Animation.Frames">
-            <summary></summary>
+            <summary>The frames that the animation consists of</summary>
         </member>
         <member name="F:BomberStuff.Core.Animation.Animation.FrameOffset">
             <summary></summary>
@@ -584,7 +589,9 @@
         </member>
         <member name="T:BomberStuff.Core.Animation.AnimationFrame">
             <summary>
-            
+            Represents an animation frame, that is, an image (in the form
+            of a <see cref="F:BomberStuff.Core.Animation.AnimationFrame.BitmapBuilder"/> and/or <see cref="T:BomberStuff.Core.UserInterface.ISprite"/>)
+            with properties (offset, key color)
             </summary>
         </member>
         <member name="F:BomberStuff.Core.Animation.AnimationFrame.Sprite">
@@ -766,7 +773,7 @@
             <summary>The source hue value that shall be remapped</summary>
             <value>the hue value for green</value>
         </member>
-        <member name="M:BomberStuff.Core.Utilities.ColorRemapper.Remap(BomberStuff.Core.Animation.AnimationFrame,BomberStuff.Core.Animation.AnimationFrame,BomberStuff.Core.Utilities.ColorRemapInfo)">
+        <member name="M:BomberStuff.Core.Utilities.ColorRemapper.Remap(BomberStuff.Core.Animation.AnimationFrame,BomberStuff.Core.Utilities.ColorRemapInfo)">
             <summary>
             Remaps all pixels in the specified sequence state's frame that have
             a hue value of OriginalHue ± 45 (and a lightness less than 340) to the
@@ -775,20 +782,18 @@
             <param name="srcFrame">
             the animation frame is frame is to be remapped
             </param>
-            <param name="destFrame">
-            The animation frame in which the new information should be saved
-            </param>
             <param name="changes">
             a ColorRemapInfo specifying the destination color range
             </param>
+            <returns>
+            A remapped copy of the frame, or the original frame if nothing
+            is to be done
+            </returns>
             <remarks>
             This is an O(width*height) operation - and pixel operations are slow!
-            Note that this will also loop through the whole image if
-            <c>changes</c> specifies no remap is to be done. This should be
-            prevented by the caller.
-            Also note that the original frame will be overwritten
-            TODO: this should instead create a new, remapped copy of the frame,
-                  so that copying as an extra operation is not required beforehand
+            If no changes are specified in <paramref name="changes" />, or if
+            only a hue change with the original hue and new hue being the same is
+            specified, the source frame is returned.
             </remarks>
         </member>
         <member name="M:BomberStuff.Core.Utilities.ColorRemapper.ColorToShort(System.Drawing.Color)">
@@ -1276,6 +1281,11 @@
             </para>
             </remarks>
         </member>
+        <member name="F:BomberStuff.Core.Participant.Players">
+            <summary>
+            The players that this participant controls
+            </summary>
+        </member>
         <member name="F:BomberStuff.Core.Participant.HasAuthority">
             <summary>
             Is the participant authorized to make changes to the board
@@ -1285,9 +1295,35 @@
         </member>
         <member name="M:BomberStuff.Core.Participant.#ctor(System.Boolean)">
             <summary>
-            
+            Initializes a new participant
             </summary>
-            <param name="hasAuthority"></param>
+            <param name="hasAuthority">
+            boolean value specifying whether the participant has authority,
+            that is, whether it can control more than just its players'
+            movement
+            </param>
+        </member>
+        <member name="M:BomberStuff.Core.Participant.ControlsPlayer(BomberStuff.Core.Player)">
+            <summary>
+            Returns whether the given player is controlled by
+            this participant
+            </summary>
+            <param name="p"></param>
+            <returns>
+            <c>true</c> if this participant controls <paramref name="p" />,
+            <c>false</c> otherwise
+            </returns>
+        </member>
+        <member name="M:BomberStuff.Core.Participant.ControlsPlayer(System.Int32)">
+            <summary>
+            Returns whether the given player is controlled by
+            this participant
+            </summary>
+            <param name="player">Index of the player to check</param>
+            <returns>
+            <c>true</c> if this participant controls <paramref name="player" />,
+            <c>false</c> otherwise
+            </returns>
         </member>
         <member name="M:BomberStuff.Core.Participant.StartNegotiation">
             <summary>
@@ -1379,26 +1415,6 @@
             <param name="direction"></param>
             <param name="moving"></param>
         </member>
-        <member name="T:BomberStuff.Core.LocalParticipant">
-            <summary>
-            
-            </summary>
-        </member>
-        <member name="M:BomberStuff.Core.LocalParticipant.#ctor">
-            <summary>
-            
-            </summary>
-        </member>
-        <member name="M:BomberStuff.Core.LocalParticipant.StartNegotiation">
-            <summary>
-            
-            </summary>
-        </member>
-        <member name="M:BomberStuff.Core.LocalParticipant.StartRound(BomberStuff.Core.Player[])">
-            <summary>
-            
-            </summary>
-        </member>
         <member name="T:BomberStuff.Core.Game">
             <summary>
             Represents a game, that is, a series of rounds
@@ -1419,7 +1435,10 @@
         <member name="F:BomberStuff.Core.Game.Animations">
             <summary></summary>
         </member>
-        <member name="M:BomberStuff.Core.Game.#ctor">
+        <member name="F:BomberStuff.Core.Game.Settings">
+            <summary></summary>
+        </member>
+        <member name="M:BomberStuff.Core.Game.#ctor(BomberStuff.Core.Settings)">
             <summary>
             
             </summary>
@@ -2148,6 +2167,11 @@
             Check whether all animations are properly loaded
             </summary>
         </member>
+        <member name="M:BomberStuff.Core.Animation.AnimationList.Cache(BomberStuff.Core.UserInterface.IDevice,System.Int32)">
+            <summary>
+            Load sprites for all animations that are supposed to be cached
+            </summary>
+        </member>
         <member name="M:BomberStuff.Core.Animation.AnimationList.Dispose(System.Boolean)">
             <summary>
             Frees the object's unmanaged and optionally managed
@@ -2519,6 +2543,242 @@
         </member>
         <member name="P:BomberStuff.Core.Animation.PlayerDeathAnimationIndex.Value">
             <summary></summary>
+        </member>
+        <member name="T:BomberStuff.Core.Settings">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:BomberStuff.Core.Settings.#ctor">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:BomberStuff.Core.Settings.Get``1(BomberStuff.Core.Settings.Types)">
+            <summary>
+            
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="type"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BomberStuff.Core.Settings.Get``1(System.String)">
+            <summary>
+            
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="type"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BomberStuff.Core.Settings.Set``1(BomberStuff.Core.Settings.Types,``0)">
+            <summary>
+            
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="type"></param>
+            <param name="value"></param>
+        </member>
+        <member name="M:BomberStuff.Core.Settings.Set``1(System.String,``0)">
+            <summary>
+            
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="type"></param>
+            <param name="value"></param>
+        </member>
+        <member name="T:BomberStuff.Core.Settings.Types">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:BomberStuff.Core.Settings.Types.ABDirectory">
+            <summary></summary>
+        </member>
+        <member name="F:BomberStuff.Core.Settings.Types.WindowSize">
+            <summary></summary>
+        </member>
+        <member name="F:BomberStuff.Core.Settings.Types.Last">
+            <summary>The last type of setting</summary>
+        </member>
+        <member name="T:BomberStuff.Core.Input.IInputMethod">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:BomberStuff.Core.Input.IInputMethod.GetControls">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:BomberStuff.Core.Input.IInputMethod.RegisterControl(BomberStuff.Core.Input.Control)">
+            <summary>
+            
+            </summary>
+            <param name="control"></param>
+        </member>
+        <member name="M:BomberStuff.Core.Input.IInputMethod.UnregisterControl(BomberStuff.Core.Input.Control)">
+            <summary>
+            
+            </summary>
+            <param name="control"></param>
+        </member>
+        <member name="P:BomberStuff.Core.Input.IInputMethod.Name">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:BomberStuff.Core.Input.Control">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:BomberStuff.Core.Input.Control.ToString">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:BomberStuff.Core.Input.Control.OnPressed(BomberStuff.Core.Input.ControlEventArgs)">
+            <summary>
+            
+            </summary>
+            <param name="e"></param>
+        </member>
+        <member name="M:BomberStuff.Core.Input.Control.OnReleased(BomberStuff.Core.Input.ControlEventArgs)">
+            <summary>
+            
+            </summary>
+            <param name="e"></param>
+        </member>
+        <member name="P:BomberStuff.Core.Input.Control.Name">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="E:BomberStuff.Core.Input.Control.Pressed">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="E:BomberStuff.Core.Input.Control.Released">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:BomberStuff.Core.Input.PlayerControls">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:BomberStuff.Core.Input.PlayerControls.#ctor(System.Collections.Generic.List{System.Collections.Generic.KeyValuePair{BomberStuff.Core.Input.PlayerControls.Types,BomberStuff.Core.Input.Control}})">
+            <summary>
+            
+            </summary>
+            <param name="controls"></param>
+        </member>
+        <member name="M:BomberStuff.Core.Input.PlayerControls.OnPressed(BomberStuff.Core.Input.PlayerControlEventArgs)">
+            <summary>
+            
+            </summary>
+            <param name="e"></param>
+        </member>
+        <member name="M:BomberStuff.Core.Input.PlayerControls.OnReleased(BomberStuff.Core.Input.PlayerControlEventArgs)">
+            <summary>
+            
+            </summary>
+            <param name="e"></param>
+        </member>
+        <member name="E:BomberStuff.Core.Input.PlayerControls.Pressed">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="E:BomberStuff.Core.Input.PlayerControls.Released">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:BomberStuff.Core.Input.PlayerControls.Types">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:BomberStuff.Core.Input.PlayerControls.Types.Up">
+            <summary></summary>
+        </member>
+        <member name="F:BomberStuff.Core.Input.PlayerControls.Types.Down">
+            <summary></summary>
+        </member>
+        <member name="F:BomberStuff.Core.Input.PlayerControls.Types.Left">
+            <summary></summary>
+        </member>
+        <member name="F:BomberStuff.Core.Input.PlayerControls.Types.Right">
+            <summary></summary>
+        </member>
+        <member name="F:BomberStuff.Core.Input.PlayerControls.Types.Action1">
+            <summary></summary>
+        </member>
+        <member name="F:BomberStuff.Core.Input.PlayerControls.Types.Action2">
+            <summary></summary>
+        </member>
+        <member name="T:BomberStuff.Core.Input.PlayerControlEventArgs">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:BomberStuff.Core.Input.PlayerControlEventArgs.Type">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:BomberStuff.Core.Input.PlayerControlEventArgs.Pressed">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:BomberStuff.Core.Input.PlayerControlEventArgs.#ctor(BomberStuff.Core.Input.PlayerControls.Types,System.Boolean)">
+            <summary>
+            
+            </summary>
+            <param name="type"></param>
+            <param name="pressed"></param>
+        </member>
+        <member name="T:BomberStuff.Core.Input.ControlEventArgs">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:BomberStuff.Core.Input.ControlEventArgs.Pressed">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:BomberStuff.Core.Input.ControlEventArgs.#ctor(System.Boolean)">
+            <summary>
+            
+            </summary>
+            <param name="pressed"></param>
+        </member>
+        <member name="T:BomberStuff.Core.LocalParticipant">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:BomberStuff.Core.LocalParticipant.#ctor(BomberStuff.Core.Input.PlayerControls[])">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:BomberStuff.Core.LocalParticipant.StartNegotiation">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:BomberStuff.Core.LocalParticipant.StartRound(BomberStuff.Core.Player[])">
+            <summary>
+            
+            </summary>
         </member>
     </members>
 </doc>

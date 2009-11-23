@@ -326,7 +326,6 @@ namespace BomberStuff.Files
 		/// <returns>the new position in the file</returns>
 		private long ParseFrame(Stream s, BinaryReader r, long bytesRead, ushort itemId, uint itemLength, long itemStart, long itemEnd)
 		{
-			// HACKHACK/TRYTRY itemStart should be equal to bytesRead?!
 			System.Diagnostics.Debug.Assert(itemStart == bytesRead);
 			long a; // random var for temporary readings
 			int iFrame = Frames.Count;
@@ -453,7 +452,6 @@ namespace BomberStuff.Files
 		/// <returns>the new position in the file</returns>
 		private long ParseFrameCImage(Stream s, BinaryReader r, long bytesRead, int iFrame, AnimationFrame frame, ushort frameItemId, uint frameItemLength, long frameItemStart, long frameItemEnd)
 		{
-			// HACKHACK/TRYTRY frameItemStart should be equal to bytesRead?!
 			System.Diagnostics.Debug.Assert(frameItemStart == bytesRead);
 			long a;
 			if (frameItemId != 1)
@@ -712,7 +710,6 @@ namespace BomberStuff.Files
 		/// <returns>the new position in the file</returns>
 		private long ParseSequence(Stream s, BinaryReader r, long bytesRead, ushort itemId, uint itemLength, long itemStart, long itemEnd)
 		{
-			// HACKHACK/TRYTRY itemStart should be equal to bytesRead?!
 			System.Diagnostics.Debug.Assert(itemStart == bytesRead);
 			int iSeq = Sequences.Count;
 			Animation seq = new Animation();
@@ -835,7 +832,6 @@ namespace BomberStuff.Files
 		/// <returns>the new position in the file</returns>
 		private long ParseSequenceState(Stream s, BinaryReader r, long bytesRead, int iSeq, int iStat, /*AnimationState stat,*/out ushort frame, out short frameX, out short frameY, ushort seqItemId, uint seqItemLength, long seqItemStart, long seqItemEnd)
 		{
-			// HACKHACK/TRYTRY seqItemStart should be equal to bytesRead?!
 			System.Diagnostics.Debug.Assert(seqItemStart == bytesRead);
 			long a;
 

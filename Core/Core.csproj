@@ -75,6 +75,13 @@
     <Compile Include="ErrorHandling.cs" />
     <Compile Include="Game.cs" />
     <Compile Include="Board\Powerup.cs" />
+    <Compile Include="Input\Control.cs" />
+    <Compile Include="Input\ControlEventArgs.cs" />
+    <Compile Include="Input\PlayerControlEventArgs.cs" />
+    <Compile Include="Input\IInputMethod.cs" />
+    <Compile Include="Input\PlayerControls.cs" />
+    <Compile Include="LocalParticipant.cs" />
+    <Compile Include="Settings.cs" />
     <Compile Include="UserInterface\IDevice.cs" />
     <Compile Include="UserInterface\IUserInterface.cs" />
     <Compile Include="Participant.cs" />

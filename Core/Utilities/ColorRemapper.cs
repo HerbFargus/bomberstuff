@@ -146,25 +146,34 @@ namespace BomberStuff.Core.Utilities
 		/// <param name="srcFrame">
 		/// the animation frame is frame is to be remapped
 		/// </param>
-		/// <param name="destFrame">
-		/// The animation frame in which the new information should be saved
-		/// </param>
 		/// <param name="changes">
 		/// a ColorRemapInfo specifying the destination color range
 		/// </param>
+		/// <returns>
+		/// A remapped copy of the frame, or the original frame if nothing
+		/// is to be done
+		/// </returns>
 		/// <remarks>
 		/// This is an O(width*height) operation - and pixel operations are slow!
-		/// Note that this will also loop through the whole image if
-		/// <c>changes</c> specifies no remap is to be done. This should be
-		/// prevented by the caller.
-		/// Also note that the original frame will be overwritten
-		/// TODO: this should instead create a new, remapped copy of the frame,
-		///       so that copying as an extra operation is not required beforehand
+		/// If no changes are specified in <paramref name="changes" />, or if
+		/// only a hue change with the original hue and new hue being the same is
+		/// specified, the source frame is returned.
 		/// </remarks>
-		public static void Remap(AnimationFrame destFrame, AnimationFrame srcFrame, ColorRemapInfo changes)
+		public static AnimationFrame Remap(AnimationFrame srcFrame, ColorRemapInfo changes)
 		{
-			BitmapBuilder dest = destFrame.BitmapBuilder;
+			AnimationFrame destFrame = new AnimationFrame(srcFrame);
+
+			if (!changes.SetSaturation && changes.DiffLightness == 0
+					&& (!changes.SetHue || changes.NewHue == OriginalHue))
+			{
+				destFrame.BitmapBuilder = srcFrame.BitmapBuilder;
+				return destFrame;
+			}
+
+			
 			BitmapBuilder src = srcFrame.BitmapBuilder;
+			BitmapBuilder dest =  new BitmapBuilder(src.BitsPerPixel, src.Width, src.Height);
+			destFrame.BitmapBuilder = dest;
 			ushort newRawKeyColor = 0x7A38;
 			Color newKeyColor = Color.FromArgb(247, 140, 198);
 			if (changes.SetHue && (changes.NewHue > 220 || changes.NewHue < 60))
@@ -189,7 +198,7 @@ namespace BomberStuff.Core.Utilities
 							lineSize = src.Width + 1;
 
 						// copy everything that's not image data
-						Array.Copy(src.BitmapData, dest.BitmapData, (int)src.DataLocation);
+						//Array.Copy(src.BitmapData, dest.BitmapData, (int)src.DataLocation);
 
 						for (int y = 0; y < src.Height; ++y)
 							for (int x = 0; x < src.Width; ++x)
@@ -264,6 +273,8 @@ namespace BomberStuff.Core.Utilities
 			}
 
 			destFrame.SetKeyColor(newRawKeyColor, newKeyColor);
+
+			return destFrame;
 		}
 
 		/// <summary>

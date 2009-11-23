@@ -59,7 +59,7 @@ namespace BomberStuff.Core.Animation
 			// this is enlarged automatically
 			TilesetAnimations = new Animation[TilesetAnimationIndex.Count];
 			DeathAnimations = new List<Animation>[1/*playerCount*/];
-			for (int i = 0; i < playerCount; ++i)
+			for (int i = 0; i < 1/*playerCount*/; ++i)
 				DeathAnimations[i] = new List<Animation>();
 			RemapInfo = new ColorRemapInfo[playerCount];
 			for (int i = 0; i < playerCount; ++i)
@@ -78,7 +78,8 @@ namespace BomberStuff.Core.Animation
 			{
 				if (i is PlayerDeathAnimationIndex)
 				{
-					return null;
+					PlayerDeathAnimationIndex di = (PlayerDeathAnimationIndex)i;
+					return DeathAnimations[di.Player][di.Type];
 				}
 				else if (i is TilesetAnimationIndex)
 				{
@@ -201,6 +202,49 @@ namespace BomberStuff.Core.Animation
 			for (int i = 0; i < Animations.Length; ++i)
 				if (Animations[i] == null)
 					Console.WriteLine("Animation " + i + " has not been loaded!");
+		}
+
+		/// <summary>
+		/// Load sprites for all animations that are supposed to be cached
+		/// </summary>
+		public void Cache(BomberStuff.Core.UserInterface.IDevice device, int nPlayers)
+		{
+			foreach (Animation ani in TilesetAnimations)
+				if (ani.Cached)
+				{
+					//System.Console.WriteLine("Caching " + ani.Name);
+					foreach (AnimationFrame frame in ani.Frames)
+						if (frame.RemappedCopies == null)
+							frame.GetSprite(device, ani.VideoMemory);
+						else
+							for (int iPlayer = 0; iPlayer < nPlayers; ++iPlayer)
+								frame.GetSprite(device, ani.VideoMemory, iPlayer);
+
+				}
+			foreach (Animation ani in Animations)
+				if (ani.Cached)
+				{
+					//System.Console.WriteLine("Caching " + ani.Name);
+					foreach (AnimationFrame frame in ani.Frames)
+						if (frame.RemappedCopies == null)
+							frame.GetSprite(device, ani.VideoMemory);
+						else
+							for (int iPlayer = 0; iPlayer < nPlayers; ++iPlayer)
+								frame.GetSprite(device, ani.VideoMemory, iPlayer);
+						
+				}
+			foreach (Animation ani in DeathAnimations[0])
+				if (ani.Cached)
+				{
+					//System.Console.WriteLine("Caching " + ani.Name);
+					foreach (AnimationFrame frame in ani.Frames)
+						if (frame.RemappedCopies == null)
+							frame.GetSprite(device, ani.VideoMemory);
+						else
+							for (int iPlayer = 0; iPlayer < nPlayers; ++iPlayer)
+								frame.GetSprite(device, ani.VideoMemory, iPlayer);
+
+				}
 		}
 
 		#region IDisposable implementation
