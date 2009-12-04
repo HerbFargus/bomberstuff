@@ -72,15 +72,17 @@ namespace BomberStuff.Core
 		{
 			float x = player.X;
 			float y = player.Y;
+			float w = player.Width;
+			float h = player.Height;
 			for (int i = 0; i < Items.Count; ++i)
 			{
 				MobileObject other = Items[i];
 				if (other == player)
 					continue;
-				if (new RectangleF(x - 1.5f, y - 1.5f, 3.0f, 3.0f).IntersectsWith(new RectangleF(other.Position, other.Size))
-						&& !(other is Stone))
+				if (new RectangleF(x + 0.5f * w - 1.0f, y + 0.5f * h - 1.0f, 2.0f, 2.0f).IntersectsWith(new RectangleF(other.Position, other.Size))
+						&& !(other is Stone) && !(other is Player))
 				{
-					//System.Console.WriteLine("Removing a " + other + " from (" + other.X + ", " + other.Y + ")");
+					System.Console.WriteLine("Removing a " + other + " from (" + other.X + ", " + other.Y + ")");
 					Items.Remove(other);
 					--i;
 				}

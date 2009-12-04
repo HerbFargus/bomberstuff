@@ -91,7 +91,27 @@ namespace BomberStuff.Core.Utilities
 		public ColorRemapInfo(int newHue, int newSaturation, int diffLightness)
 			: this(true, newHue, true, newSaturation, diffLightness) { }
 
-		private ColorRemapInfo(bool setHue, int newHue, bool setSaturation,
+		/// <summary>
+		/// Initialize a new ColorRemapInfo specifying a lightness difference and
+		/// whether hue and saturation should be remapped, as well as the values
+		/// they should be remapped to, if any
+		/// </summary>
+		/// <param name="setHue"></param>
+		/// <param name="newHue">
+		/// destination hue. Ignored if <paramref name="setHue"/> is <c>false</c>
+		/// </param>
+		/// <param name="setSaturation"></param>
+		/// <param name="newSaturation">
+		/// destination saturation. Ignored if <paramref name="setSaturation"/>
+		/// is <c>false</c>
+		/// </param>
+		/// <param name="diffLightness"></param>
+		/// <remarks>
+		/// This overload is provided for <see cref="BomberStuff.Files.SettingsReader"/>.
+		/// For creating remap info structures from other code, you should use one
+		/// of the more convenient overloads.
+		/// </remarks>
+		public ColorRemapInfo(bool setHue, int newHue, bool setSaturation,
 							int newSaturation, int diffLightness)
 		{
 			SetHue = setHue;
@@ -192,24 +212,30 @@ namespace BomberStuff.Core.Utilities
 					{
 						uint lineSize;
 
-						if (src.Width % 2 == 0)
+						if ((src.Width & 1U) == 0)
 							lineSize = src.Width;
 						else
 							lineSize = src.Width + 1;
 
+						uint padding = (lineSize - src.Width) << 1;
+
 						// copy everything that's not image data
 						//Array.Copy(src.BitmapData, dest.BitmapData, (int)src.DataLocation);
+						
+						long i = src.DataLocation;
+						long copyStart = 0;
 
-						for (int y = 0; y < src.Height; ++y)
-							for (int x = 0; x < src.Width; ++x)
+						for (int y = 0; y < src.Height; ++y, i += padding)
+							for (int x = 0; x < src.Width; ++x, i += 2)
 							{
-								long i = src.DataLocation + 2 * (lineSize * y + x);
-
 								ushort c = (ushort)(src.BitmapData[i]
 											+ (src.BitmapData[i + 1] << 8));
 
 								if (c == srcFrame.RawKeyColor)
 								{
+									if (i > copyStart)
+									{ }// Array.Copy(src.BitmapData, (int)copyStart, dest.BitmapData, (int)copyStart, (int)(i - copyStart));
+									copyStart = i + 2;
 									dest.BitmapData[i] = newKeyColorL;
 									dest.BitmapData[i + 1] = newKeyColorH;
 									continue;
@@ -218,10 +244,13 @@ namespace BomberStuff.Core.Utilities
 								int R = (c >> 10) << 3,
 									G = ((c >> 5) & 0x1F) << 3,
 									B = (c & 0x1F) << 3;
+								//int R = (c >> 7) & ~7,
+								//	G = (c >> 2) & 0xF8,
+								//	B = (c & 0x1F) << 3;
 
-								R += (int)Math.Ceiling(R * 6.0 / 239.0);
-								G += (int)Math.Ceiling(G * 6.0 / 239.0);
-								B += (int)Math.Ceiling(B * 6.0 / 239.0);
+								R += (int)Math.Ceiling(R * 6.0f / 239.0f);
+								G += (int)Math.Ceiling(G * 6.0f / 239.0f);
+								B += (int)Math.Ceiling(B * 6.0f / 239.0f);
 
 								int h, s, l;
 								RGBToHSL(R, G, B, out h, out s, out l);
@@ -229,6 +258,9 @@ namespace BomberStuff.Core.Utilities
 								// apply changes to all green color
 								if (h > OriginalHue - 45 && h < OriginalHue + 45 && l < 340)
 								{
+									if (i > copyStart)
+									{ }// Array.Copy(src.BitmapData, (int)copyStart, dest.BitmapData, (int)copyStart, (int)(i - copyStart));
+									copyStart = i + 2;
 									if (changes.SetHue)
 									{
 										h += changes.NewHue - OriginalHue;
@@ -257,6 +289,7 @@ namespace BomberStuff.Core.Utilities
 									dest.BitmapData[i + 1] = src.BitmapData[i + 1];
 								}
 							}
+
 						break;
 					}
 
@@ -285,11 +318,12 @@ namespace BomberStuff.Core.Utilities
 		/// <returns></returns>
 		private static ushort ColorToShort(Color c)
 		{
-			int r = c.R >> 3,
+			/*int r = c.R >> 3,
 				g = c.G >> 3,
 				b = c.B >> 3;
 
-			return (ushort)((r << 10) | (g << 5) | b);
+			return (ushort)((r << 10) | (g << 5) | b);*/
+			return (ushort)(((c.R & ~7) << 7) | ((c.G & ~7) << 2) | (c.B >> 3));
 		}
 
 		/// <summary>
@@ -306,10 +340,13 @@ namespace BomberStuff.Core.Utilities
 		{
 			//calculate min and max
 			int min, max;
+			
 			if (r > b) { max = r; min = b; }
 			else { max = b; min = r; }
+
 			if (g > max) max = g;
 			else if (g < min) min = g;
+
 			int maxMinDiff = max - min,
 				maxMinSum = max + min;
 
@@ -340,6 +377,97 @@ namespace BomberStuff.Core.Utilities
 			}
 		}
 
+#if OLDHSL
+		//Source:
+		//A Fast HSL-to-RGB Transform
+		//by Ken Fishkin
+		//[from Graphics gems, edited by Andrew S. Glassner]
+
+		//given H, Sl, L on [0 ... 1], compute R, G, B on [0 ... 1]
+
+		//if L <= 1/2
+		//        then v <- L (1.0 + Sl);
+		//        else v <- L + Sl - L * Sl;
+		//if v = 0
+		//        then R <- G <- B <- 0.0;
+		//        else begin
+		//            min <- 2L - v;
+		//            Sv <- (v - min) / v;
+		//            H <- 6H; map onto [0 ... 6)
+		//            sextant: int <- floor(H);
+		//            fract: real <- H - sextant;
+		//            vsf: real <- v * Sv * fract;
+		//            mid1: real <- min + vsf;
+		//            mid2: real <- v - vsf;
+		//            [R, G, B] = select sextant from
+		//                0: [v, mid1, min];
+		//                1: [mid2, v, min];
+		//                2: [min, v, min1];
+		//                3: [min, mid2, v];
+		//                4: [mid1, min, v];
+		//                5: [v, min, mid2];
+		//                endcase;
+		//            end;
+		private static Color ColorFromHSL(int hin, int sin, int lin)
+		{
+			float h = hin / 360.0f, s = sin / 360.0f, l = lin / 360.0f;
+			System.Diagnostics.Debug.Assert(h < 1.0f);
+			System.Diagnostics.Debug.Assert(s < 1.0f);
+			System.Diagnostics.Debug.Assert(l < 1.0f);
+
+			float r, g, b;
+
+			float v;
+
+			if (l <= 0.5f)
+				v = l * (1.0f + s);
+			else
+				v = l + s - l * s;
+
+			if (v == 0.0f)
+				r = g = b = 0.0f;
+			else
+			{
+				float min = 2 * l - v;
+				float sv = (v - min) / v;
+				h = 6.0f * h;
+				//System.Diagnostics.Debug.Assert(h <= 6.0f);
+				int sextant = (int)Math.Floor(h);
+				
+				float fract = h - sextant;
+				float vsf = v * sv * fract;
+				float mid1 = min + vsf;
+				float mid2 = v - vsf;
+				switch (sextant)
+				{
+					case 0:
+						r = v; g = mid1; b = min;
+						break;
+					case 1:
+						r = mid2; g = v; b = min;
+						break;
+					case 2:
+						r = min; g = v; b = mid1;
+						break;
+					case 3:
+						r = min; g = mid2; b = v;
+						break;
+					case 4:
+						r = mid1; g = min; b = v;
+						break;
+					case 5:
+						r = v; g = min; b = mid2;
+						break;
+					default:
+						throw new Exception();
+				}
+
+			}
+
+			return Color.FromArgb((int)(r * 255), (int)(g * 255), (int)(b * 255));
+		}
+
+#else
 		/// <summary>
 		/// A helper function for Remap that converts a hsl color to a Color
 		/// structure
@@ -383,5 +511,6 @@ namespace BomberStuff.Core.Utilities
 			else
 				return p;
 		}
+#endif
 	}
 }

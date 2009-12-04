@@ -47,6 +47,25 @@ namespace BomberStuff.WinFormsInterface
 		public event EventHandler<LoadSpritesEventArgs> LoadSprites;
 		/// <summary></summary>
 		public event EventHandler<RenderEventArgs> Render;
+		private event EventHandler<EventArgs> IdleEvent;
+		/// <summary></summary>
+		event EventHandler<EventArgs> IUserInterface.Idle
+		{
+			add
+			{
+				lock (IdleEvent)
+				{
+					IdleEvent += value;
+				}
+			}
+			remove
+			{
+				lock (IdleEvent)
+				{
+					IdleEvent -= value;
+				}
+			}
+		}
 
 		/// <summary>
 		/// 
@@ -67,6 +86,15 @@ namespace BomberStuff.WinFormsInterface
 			if (Render != null)
 				Render(this, e);
 		}
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="e"></param>
+		protected virtual void OnIdleEvent(EventArgs e)
+		{
+			if (IdleEvent != null)
+				IdleEvent(this, e);
+		}
 		#endregion
 
 		/// <summary></summary>
@@ -76,7 +104,7 @@ namespace BomberStuff.WinFormsInterface
 		/// 
 		/// </summary>
 		/// <returns></returns>
-		bool IUserInterface.Initialize()
+		bool IUserInterface.Initialize(BomberStuff.Core.Settings settings)
 		{
 			OnLoadSprites(new LoadSpritesEventArgs(new Device()));
 			Form = new BomberForm();
@@ -153,6 +181,7 @@ namespace BomberStuff.WinFormsInterface
 			Graphics = e.Graphics;
 			OnRender(new RenderEventArgs(this, new Device()));
 			Graphics = null;
+			OnIdleEvent(new EventArgs());
 			Form.Invalidate();
 		}
 	}

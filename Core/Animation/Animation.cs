@@ -218,7 +218,7 @@ namespace BomberStuff.Core.Animation
 		/// <returns></returns>
 		public ISprite GetSprite(IDevice device, bool videoMemory)
 		{
-			System.Diagnostics.Debug.Assert(RemappedCopies == null, "Getting original Sprite for remapped frame " + FileName);
+			//System.Diagnostics.Debug.Assert(RemappedCopies == null, "Getting original Sprite for remapped frame " + FileName);
 			if (Sprite == null)
 			{
 				Sprite = device.LoadSprite(BitmapBuilder, videoMemory, KeyColor);
@@ -239,10 +239,10 @@ namespace BomberStuff.Core.Animation
 		/// <returns></returns>
 		public ISprite GetSprite(IDevice device, bool videoMemory, int player)
 		{
-			if (RemappedCopies == null)
-				throw new System.InvalidOperationException("Requesting player copy of non-remapped frame");
+			//if (RemappedCopies == null)
+			//	throw new System.InvalidOperationException("Requesting player copy of non-remapped frame");
 
-			System.Diagnostics.Debug.Assert(player < RemappedCopies.Length);
+			//System.Diagnostics.Debug.Assert(player < RemappedCopies.Length);
 			return RemappedCopies[player].GetSprite(device, videoMemory);
 		}
 	}

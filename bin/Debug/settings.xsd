@@ -1,0 +1,123 @@
+<?xml version="1.0"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+		targetNamespace="BomberStuff"
+		xmlns="BomberStuff"
+		elementFormDefault="qualified">
+	
+	<xs:element name="Settings">
+		<xs:complexType>
+			<xs:choice maxOccurs="unbounded">
+				<xs:element name="String" type="String" />
+        <xs:element name="Int" type="Int" />
+        <xs:element name="UInt" type="UInt" />
+        <xs:element name="NInt" type="NInt" />
+				<xs:element name="Size" type="Size" />
+				<xs:element name="ColorRemapInfo" type="ColorRemapInfo" />
+        <xs:element name="PlayerControls" type="PlayerControls" />
+			</xs:choice>
+		</xs:complexType>
+	</xs:element>
+	
+	<xs:complexType name="String">
+		<xs:simpleContent>
+			<xs:extension base="xs:string">
+        <xs:attributeGroup ref="SettingsAttributes" />
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+
+  <xs:complexType name="Int">
+    <xs:simpleContent>
+      <xs:extension base="xs:integer">
+        <xs:attributeGroup ref="SettingsAttributes" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+
+  <xs:complexType name="UInt">
+    <xs:simpleContent>
+      <xs:extension base="xs:nonNegativeInteger">
+        <xs:attributeGroup ref="SettingsAttributes" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+
+  <xs:complexType name="NInt">
+    <xs:simpleContent>
+      <xs:extension base="xs:positiveInteger">
+        <xs:attributeGroup ref="SettingsAttributes" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+	
+	<xs:complexType name="Size">
+		<xs:sequence>
+			<xs:element name="Width" type="xs:nonNegativeInteger" />
+			<xs:element name="Height" type="xs:nonNegativeInteger" />
+		</xs:sequence>
+    <xs:attributeGroup ref="SettingsAttributes" />
+	</xs:complexType>
+	
+	<xs:complexType name="ColorRemapInfo">
+		<xs:sequence>
+			<xs:element name="Hue" minOccurs="0" default="135">
+				<xs:simpleType>
+					<xs:restriction base="xs:nonNegativeInteger">
+						<xs:minInclusive value="0" />
+						<xs:maxInclusive value="359" />
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="Saturation" minOccurs="0" default="">
+				<xs:simpleType>
+          <xs:union>
+            <xs:simpleType>
+					    <xs:restriction base="xs:nonNegativeInteger">
+						    <xs:minInclusive value="0" />
+						    <xs:maxInclusive value="359" />
+					    </xs:restriction>
+            </xs:simpleType>
+            <xs:simpleType>
+              <xs:restriction base="xs:string">
+                <xs:length value="0" />
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:union>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="LightnessDifference" minOccurs="0" default="0">
+				<xs:simpleType>
+					<xs:restriction base="xs:integer">
+						<xs:minInclusive value="-359" />
+						<xs:maxInclusive value="+359" />
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+		</xs:sequence>
+    <xs:attributeGroup ref="SettingsAttributes" />
+	</xs:complexType>
+
+  <xs:complexType name="PlayerControls">
+    <xs:sequence>
+      <xs:element name="Up" type="xs:string" minOccurs="0" />
+      <xs:element name="Down" type="xs:string" minOccurs="0" />
+      <xs:element name="Left" type="xs:string" minOccurs="0" />
+      <xs:element name="Right" type="xs:string" minOccurs="0" />
+      <xs:element name="Action1" type="xs:string" minOccurs="0" />
+      <xs:element name="Action2" type="xs:string" minOccurs="0" />
+    </xs:sequence>
+    <xs:attributeGroup ref="SettingsAttributes" />
+  </xs:complexType>
+	
+	<xs:simpleType name="Name">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="[A-Za-z]+([.][A-Za-z]+)?"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+  <xs:attributeGroup name="SettingsAttributes">
+    <xs:attribute name="name" type="Name" use="required" />
+    <xs:attribute name="index" type="xs:nonNegativeInteger" use="optional" />
+  </xs:attributeGroup>
+	
+</xs:schema>

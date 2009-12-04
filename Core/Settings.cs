@@ -20,13 +20,14 @@
 //
 
 using System.Collections.Generic;
+using System.Collections;
 
 namespace BomberStuff.Core
 {
 	/// <summary>
 	/// 
 	/// </summary>
-	public sealed class Settings
+	public sealed class Settings : IEnumerable<KeyValuePair<string, object>>
 	{
 		/// <summary>
 		/// 
@@ -37,16 +38,36 @@ namespace BomberStuff.Core
 			ABDirectory,
 
 			/// <summary></summary>
+			PlayerCount,
+
+			/// <summary></summary>
+			Tileset,
+
+			/// <summary></summary>
+			Scheme,
+
+			/// <summary></summary>
+			UserInterface,
+
+			/// <summary></summary>
 			WindowSize,
 
+			/// <summary></summary>
+			PlayerColor,
+
 			/// <summary>The last type of setting</summary>
-			Last = WindowSize
+			Last = PlayerColor
 		}
 
 		private System.Type[] DataTypes =
 		{
 			typeof(string),
-			typeof(System.Drawing.Size)
+			typeof(int),
+			typeof(int),
+			typeof(string),
+			typeof(string),
+			typeof(System.Drawing.Size),
+			typeof(BomberStuff.Core.Utilities.ColorRemapInfo[]),
 		};
 
 		private Dictionary<Types, object> CoreSettings;
@@ -69,7 +90,7 @@ namespace BomberStuff.Core
 		/// <returns></returns>
 		public T Get<T>(Types type)
 		{
-			System.Diagnostics.Debug.Assert(DataTypes[(int)type] == typeof(T));
+			System.Diagnostics.Debug.Assert(DataTypes[(int)type] == typeof(T) || typeof(T) == typeof(object));
 			try
 			{
 				return (T)CoreSettings[type];
@@ -119,6 +140,20 @@ namespace BomberStuff.Core
 		public void Set<T>(string type, T value)
 		{
 			CustomSettings[type] = value;
+		}
+
+		IEnumerator<KeyValuePair<string, object>> IEnumerable<KeyValuePair<string, object>>.GetEnumerator()
+		{
+			foreach (KeyValuePair<Types, object> obj in CoreSettings)
+				yield return new KeyValuePair<string, object>(obj.Key.ToString(), obj.Value);
+
+			foreach (KeyValuePair<string, object> obj in CustomSettings)
+				yield return obj;
+		}
+
+		IEnumerator IEnumerable.GetEnumerator()
+		{
+			return ((IEnumerable<KeyValuePair<string, object>>)this).GetEnumerator();
 		}
 	}
 

@@ -171,18 +171,32 @@ namespace BomberStuff.Core
 		/// unless the participant has authority) is changing its
 		/// movement
 		/// </summary>
-		public event EventHandler<ControlPlayerEventArgs> ControlPlayer;
+		public event EventHandler<MovePlayerEventArgs> MovePlayer;
 		/// <summary>
 		/// 
 		/// </summary>
 		/// <param name="e"></param>
-		protected virtual void OnControlPlayer(ControlPlayerEventArgs e)
+		protected virtual void OnMovePlayer(MovePlayerEventArgs e)
 		{
-			if (ControlPlayer != null)
-				ControlPlayer(this, e);
+			if (MovePlayer != null)
+				MovePlayer(this, e);
 		}
 
-
+		/// <summary>
+		/// Signales that the specified player (owned by the participant,
+		/// unless the participant has authority) is doing an action
+		/// (placing a bomb, pulling the trigger, ...)
+		/// </summary>
+		public event EventHandler<PlayerActionEventArgs> PlayerAction;
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="e"></param>
+		protected virtual void OnPlayerAction(PlayerActionEventArgs e)
+		{
+			if (PlayerAction != null)
+				PlayerAction(this, e);
+		}
 		#endregion
 	}
 
@@ -208,7 +222,7 @@ namespace BomberStuff.Core
 	/// <summary>
 	/// 
 	/// </summary>
-	public class ControlPlayerEventArgs : EventArgs
+	public class MovePlayerEventArgs : EventArgs
 	{
 		/// <summary>Specifies the index of the player being controlled</summary>
 		public readonly int PlayerIndex;
@@ -223,11 +237,57 @@ namespace BomberStuff.Core
 		/// <param name="playerIndex"></param>
 		/// <param name="direction"></param>
 		/// <param name="moving"></param>
-		public ControlPlayerEventArgs(int playerIndex, Directions direction, bool moving)
+		public MovePlayerEventArgs(int playerIndex, Directions direction, bool moving)
 		{
 			PlayerIndex = playerIndex;
 			Direction = direction;
 			Moving = moving;
+		}
+	}
+
+	/// <summary>
+	/// 
+	/// </summary>
+	public class PlayerActionEventArgs : EventArgs
+	{
+		/// <summary>
+		/// 
+		/// </summary>
+		public enum Types
+		{
+			/// <summary>
+			/// Player action 1:
+			/// - place a bomb
+			/// - pick up a bomb
+			/// - spooge
+			/// </summary>
+			Action1,
+			/// <summary>
+			/// Player action 2:
+			/// - stop moving bombs
+			/// - pull the trigger
+			/// - punch a bomb
+			/// </summary>
+			Action2
+		}
+
+		/// <summary>Specifies the index of the player being controlled</summary>
+		public readonly int PlayerIndex;
+
+		/// <summary>
+		/// Specifies the type of action the player is performing
+		/// </summary>
+		public readonly Types Type;
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="playerIndex"></param>
+		/// <param name="type"></param>
+		public PlayerActionEventArgs(int playerIndex, Types type)
+		{
+			PlayerIndex = playerIndex;
+			Type = type;
 		}
 	}
 }

@@ -58,8 +58,8 @@ namespace BomberStuff.Core
 			// ... okay... so the round is starting
 
 			// let's do something crazy... move in a random direction! :D
-			Directions direction = (Directions)new Random().Next(4);
-			OnControlPlayer(new ControlPlayerEventArgs(Players[0].PlayerIndex, direction, true));
+			//Directions direction = (Directions)Game.GetRandom(4);
+			//OnMovePlayer(new MovePlayerEventArgs(Players[0].PlayerIndex, direction, true));
 
 			foreach (PlayerControls control in Controls)
 			{
@@ -79,16 +79,22 @@ namespace BomberStuff.Core
 					switch (e.Type)
 					{
 						case PlayerControls.Types.Up:
-							OnControlPlayer(new ControlPlayerEventArgs(Players[i].PlayerIndex, Directions.Up, true));
+							OnMovePlayer(new MovePlayerEventArgs(Players[i].PlayerIndex, Directions.Up, true));
 							break;
 						case PlayerControls.Types.Down:
-							OnControlPlayer(new ControlPlayerEventArgs(Players[i].PlayerIndex, Directions.Down, true));
+							OnMovePlayer(new MovePlayerEventArgs(Players[i].PlayerIndex, Directions.Down, true));
 							break;
 						case PlayerControls.Types.Left:
-							OnControlPlayer(new ControlPlayerEventArgs(Players[i].PlayerIndex, Directions.Left, true));
+							OnMovePlayer(new MovePlayerEventArgs(Players[i].PlayerIndex, Directions.Left, true));
 							break;
 						case PlayerControls.Types.Right:
-							OnControlPlayer(new ControlPlayerEventArgs(Players[i].PlayerIndex, Directions.Right, true));
+							OnMovePlayer(new MovePlayerEventArgs(Players[i].PlayerIndex, Directions.Right, true));
+							break;
+						case PlayerControls.Types.Action1:
+							OnPlayerAction(new PlayerActionEventArgs(Players[i].PlayerIndex, PlayerActionEventArgs.Types.Action1));
+							break;
+						case PlayerControls.Types.Action2:
+							OnPlayerAction(new PlayerActionEventArgs(Players[i].PlayerIndex, PlayerActionEventArgs.Types.Action2));
 							break;
 						default:
 							break;
@@ -105,16 +111,16 @@ namespace BomberStuff.Core
 					switch (e.Type)
 					{
 						case PlayerControls.Types.Up:
-							OnControlPlayer(new ControlPlayerEventArgs(Players[i].PlayerIndex, Directions.Up, false));
+							OnMovePlayer(new MovePlayerEventArgs(Players[i].PlayerIndex, Directions.Up, false));
 							break;
 						case PlayerControls.Types.Down:
-							OnControlPlayer(new ControlPlayerEventArgs(Players[i].PlayerIndex, Directions.Down, false));
+							OnMovePlayer(new MovePlayerEventArgs(Players[i].PlayerIndex, Directions.Down, false));
 							break;
 						case PlayerControls.Types.Left:
-							OnControlPlayer(new ControlPlayerEventArgs(Players[i].PlayerIndex, Directions.Left, false));
+							OnMovePlayer(new MovePlayerEventArgs(Players[i].PlayerIndex, Directions.Left, false));
 							break;
 						case PlayerControls.Types.Right:
-							OnControlPlayer(new ControlPlayerEventArgs(Players[i].PlayerIndex, Directions.Right, false));
+							OnMovePlayer(new MovePlayerEventArgs(Players[i].PlayerIndex, Directions.Right, false));
 							break;
 						default:
 							break;

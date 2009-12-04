@@ -35,10 +35,11 @@ namespace BomberStuff.Core
 		/// </summary>
 		/// <param name="x"></param>
 		/// <param name="y"></param>
-		public Stone(int x, int y)
+		/// <param name="tileset"></param>
+		public Stone(int x, int y, int tileset)
 			: base(x, y, 1.0f, 1.0f)
 		{
-			Animation = new TilesetAnimationIndex(TilesetAnimationIndex.Types.Stone, 0);
+			Animation = new TilesetAnimationIndex(TilesetAnimationIndex.Types.Stone, tileset);
 		}
 
 		/// <summary>
@@ -48,10 +49,13 @@ namespace BomberStuff.Core
 		/// <returns></returns>
 		public override SizeF GetOffset(AnimationList aniList)
 		{
-			// HACKHACK: Stone offset seems not completely ridiculous.
-			// How did I make it work in the old version without
-			// manual adjustment? :(
-			return new SizeF(-1.0f / 40.0f, -1.0f / 40.0f);
+			//SizeF offset = aniList[Animation].GetOffset(AnimationState);
+
+			//offset.Width += 0.0f / 40.0f;
+			//offset.Height -= 10.0f / 36.0f;
+
+			//return offset;
+			return new SizeF();
 		}
 
 		/// <summary>

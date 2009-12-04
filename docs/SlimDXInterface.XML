@@ -4,16 +4,6 @@
         <name>SlimDXInterface</name>
     </assembly>
     <members>
-        <member name="T:BomberStuff.SlimDXInterface.SlimDXForm">
-            <summary>
-            
-            </summary>
-        </member>
-        <member name="M:BomberStuff.SlimDXInterface.SlimDXForm.#ctor">
-            <summary>
-            
-            </summary>
-        </member>
         <member name="T:BomberStuff.SlimDXInterface.SlimDXInterface">
             <summary>
             Bomber Stuff user interface implemented using System.Windows.Forms
@@ -53,7 +43,13 @@
             </summary>
             <param name="e"></param>
         </member>
-        <member name="M:BomberStuff.SlimDXInterface.SlimDXInterface.BomberStuff#Core#UserInterface#IUserInterface#Initialize">
+        <member name="M:BomberStuff.SlimDXInterface.SlimDXInterface.OnIdleEvent(System.EventArgs)">
+            <summary>
+            
+            </summary>
+            <param name="e"></param>
+        </member>
+        <member name="M:BomberStuff.SlimDXInterface.SlimDXInterface.BomberStuff#Core#UserInterface#IUserInterface#Initialize(BomberStuff.Core.Settings)">
             <summary>
             
             </summary>
@@ -136,6 +132,14 @@
         <member name="E:BomberStuff.SlimDXInterface.SlimDXInterface.Render">
             <summary></summary>
         </member>
+        <member name="E:BomberStuff.SlimDXInterface.SlimDXInterface.IdleEvent">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="E:BomberStuff.SlimDXInterface.SlimDXInterface.BomberStuff#Core#UserInterface#IUserInterface#Idle">
+            <summary></summary>
+        </member>
         <member name="P:BomberStuff.SlimDXInterface.SlimDXInterface.CacheAllSprites">
             <summary></summary>
         </member>
@@ -208,6 +212,16 @@
             </summary>
         </member>
         <member name="M:BomberStuff.SlimDXInterface.SDXDevice.Finalize">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:BomberStuff.SlimDXInterface.SlimDXForm">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:BomberStuff.SlimDXInterface.SlimDXForm.#ctor">
             <summary>
             
             </summary>

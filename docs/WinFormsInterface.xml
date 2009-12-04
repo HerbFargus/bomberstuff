@@ -105,7 +105,13 @@
             </summary>
             <param name="e"></param>
         </member>
-        <member name="M:BomberStuff.WinFormsInterface.WinFormsInterface.BomberStuff#Core#UserInterface#IUserInterface#Initialize">
+        <member name="M:BomberStuff.WinFormsInterface.WinFormsInterface.OnIdleEvent(System.EventArgs)">
+            <summary>
+            
+            </summary>
+            <param name="e"></param>
+        </member>
+        <member name="M:BomberStuff.WinFormsInterface.WinFormsInterface.BomberStuff#Core#UserInterface#IUserInterface#Initialize(BomberStuff.Core.Settings)">
             <summary>
             
             </summary>
@@ -149,6 +155,9 @@
             <summary></summary>
         </member>
         <member name="E:BomberStuff.WinFormsInterface.WinFormsInterface.Render">
+            <summary></summary>
+        </member>
+        <member name="E:BomberStuff.WinFormsInterface.WinFormsInterface.BomberStuff#Core#UserInterface#IUserInterface#Idle">
             <summary></summary>
         </member>
         <member name="P:BomberStuff.WinFormsInterface.WinFormsInterface.CacheAllSprites">

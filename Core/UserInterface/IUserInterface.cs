@@ -39,8 +39,11 @@ namespace BomberStuff.Core.UserInterface
 		/// <summary>
 		/// Initialize the user interface
 		/// </summary>
-		/// <returns></returns>
-		bool Initialize();
+		/// <param name="settings"></param>
+		/// <returns>
+		/// <c>true</c> on success, <c>false</c> otherwise
+		/// </returns>
+		bool Initialize(Settings settings);
 
 		/// <summary>
 		/// 
@@ -69,7 +72,7 @@ namespace BomberStuff.Core.UserInterface
 		/// <param name="position"></param>
 		/// <param name="size"></param>
 		/// <param name="color"></param>
-		void Draw(ISprite sprite, BomberStuff.Core.Drawing.PointF position, BomberStuff.Core.Drawing.SizeF size, System.Drawing.Color color);
+		void Draw(ISprite sprite, PointF position, SizeF size, System.Drawing.Color color);
 
 		/// <summary>
 		/// 
@@ -87,5 +90,10 @@ namespace BomberStuff.Core.UserInterface
 		/// 
 		/// </summary>
 		event EventHandler<RenderEventArgs> Render;
+
+		/// <summary>
+		/// 
+		/// </summary>
+		event EventHandler<EventArgs> Idle;
 	}
 }

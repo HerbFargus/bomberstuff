@@ -64,6 +64,31 @@ namespace BomberStuff.SlimDXInterface
 		public event EventHandler<LoadSpritesEventArgs> LoadSprites;
 		/// <summary></summary>
 		public event EventHandler<RenderEventArgs> Render;
+		/// <summary>
+		/// 
+		/// </summary>
+		protected event EventHandler<EventArgs> IdleEvent;
+		/// <summary></summary>
+		event EventHandler<EventArgs> IUserInterface.Idle
+		{
+			add
+			{
+				if (IdleEvent == null)
+					IdleEvent = value;
+				else lock (IdleEvent)
+				{
+					IdleEvent += value;
+				}
+			}
+			remove
+			{
+				if (IdleEvent != null)
+					lock (IdleEvent)
+					{
+						IdleEvent -= value;
+					}
+			}
+		}
 
 		/// <summary>
 		/// 
@@ -84,6 +109,16 @@ namespace BomberStuff.SlimDXInterface
 			if (Render != null)
 				Render(this, e);
 		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="e"></param>
+		protected virtual void OnIdleEvent(EventArgs e)
+		{
+			if (IdleEvent != null)
+				IdleEvent(this, e);
+		}
 		#endregion
 
 		/// <summary></summary>
@@ -93,11 +128,11 @@ namespace BomberStuff.SlimDXInterface
 		/// 
 		/// </summary>
 		/// <returns></returns>
-		bool IUserInterface.Initialize()
+		bool IUserInterface.Initialize(BomberStuff.Core.Settings settings)
 		{
 			Form = new SlimDXForm();
 
-			Form.ClientSize = new Size(1280, 960);
+			Form.ClientSize = settings.Get<Size>(BomberStuff.Core.Settings.Types.WindowSize);
 			Form.Text = "Bomber Stuff, SlimDX interface";
 			Form.Load += Form_Load;
 			Form.Resize += Form_Resize;
@@ -217,6 +252,8 @@ namespace BomberStuff.SlimDXInterface
 				System.Diagnostics.Debug.Assert(d3dFont == null);
 				d3dFont = new Font(Device, baseFont);
 			}
+
+			Application.Idle += OnApplicationIdle;
 		}
 
 		/// <summary>
@@ -240,7 +277,6 @@ namespace BomberStuff.SlimDXInterface
 		/// </summary>
 		public void MainLoop()
 		{
-			Application.Idle += OnApplicationIdle;
 			Application.Run(Form);
 		}
 
@@ -345,6 +381,8 @@ namespace BomberStuff.SlimDXInterface
 
 			// ... so show the result on screen
 			device.Present();
+
+			OnIdleEvent(new EventArgs());
 		}
 
 		/// <summary>

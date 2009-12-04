@@ -44,9 +44,17 @@ namespace BomberStuff.Core
 		public readonly SizeF Size;
 
 		/// <summary></summary>
-		public float X { get { return Position.X; } }
+		public float X
+		{
+			get { return Position.X; }
+			protected set { Position.X = value; }
+		}
 		/// <summary></summary>
-		public float Y { get { return Position.Y; } }
+		public float Y
+		{
+			get { return Position.Y; }
+			protected set { Position.Y = value; }
+		}
 
 		/// <summary></summary>
 		public float Width { get { return Size.Width; } }
@@ -132,12 +140,12 @@ namespace BomberStuff.Core
 		/// <param name="aniList"></param>
 		/// <param name="device"></param>
 		/// <returns></returns>
-		public ISprite GetSprite(AnimationList aniList, IDevice device)
+		public virtual ISprite GetSprite(AnimationList aniList, IDevice device)
 		{
-			if (PlayerIndex == -1)
+			//if (PlayerIndex == -1)
 				return aniList[Animation].GetSprite(device, AnimationState);
-			else
-				return aniList[Animation].GetSprite(device, AnimationState, PlayerIndex);
+			//else
+			//	return aniList[Animation].GetSprite(device, AnimationState, PlayerIndex);
 		}
 
 		/// <summary>
@@ -192,11 +200,18 @@ namespace BomberStuff.Core
 		/// </summary>
 		/// <param name="board"></param>
 		/// <param name="ticks"></param>
-		public void Move(Board board, int ticks)
+		public virtual void Tick(Board board, int ticks)
 		{
-			float newX = X;
-			float newY = Y;
+			Move(board, ticks);
+		}
 
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="board"></param>
+		/// <param name="ticks"></param>
+		protected void Move(Board board, int ticks)
+		{
 			if (m_SpeedX == 0 && m_SpeedY == 0)
 			{
 				//System.Console.WriteLine(this + " not moving");
@@ -210,78 +225,86 @@ namespace BomberStuff.Core
 
 			while (ticks-- > 0)
 			{
+				// move. the direction with the higher speed goes first
 				if (Math.Abs(m_SpeedX) >= Math.Abs(m_SpeedY))
 				{
-					newX = X + SpeedX;
-					if (newX < 0.0f)
-					{
-						BorderCollide();
-						m_SpeedX = 0.0f;
-						newX = 0.0f;
-					}
-					else if (newX > board.Width - 1.0f)
-					{
-						BorderCollide();
-						m_SpeedX = 0.0f;
-						newX = board.Width - 1.0f;
-					}
-					if (IsCollision(board, newX, newY))
-						m_SpeedX = 0.0f;
-
-					newY = Y + SpeedY;
-					if (newY < 0.0f)
-					{
-						BorderCollide();
-						m_SpeedY = 0.0f;
-						newY = 0.0f;
-					}
-					else if (newY > board.Height - 1.0f)
-					{
-						BorderCollide();
-						m_SpeedY = 0.0f;
-						newY = board.Height - 1.0f;
-					}
-					if (IsCollision(board, newX, newY))
-						m_SpeedY = 0.0f;
+					X = MoveX(board);
+					Y = MoveY(board);
 				}
 				else
 				{
-					newY = Y + SpeedY;
-					if (newY < 0.0f)
-					{
-						BorderCollide();
-						m_SpeedY = 0.0f;
-						newY = 0.0f;
-					}
-					else if (newY > board.Height - 1.0f)
-					{
-						BorderCollide();
-						m_SpeedY = 0.0f;
-						newY = board.Height - 1.0f;
-					}
-					if (IsCollision(board, newX, newY))
-						m_SpeedY = 0.0f;
-
-					newX = X + SpeedX;
-					if (newX < 0.0f)
-					{
-						BorderCollide();
-						m_SpeedX = 0.0f;
-						newX = 0.0f;
-					}
-					else if (newX > board.Width - 1.0f)
-					{
-						BorderCollide();
-						m_SpeedX = 0.0f;
-						newX = board.Width - 1.0f;
-					}
-					if (IsCollision(board, newX, newY))
-						m_SpeedX = 0.0f;
+					Y = MoveY(board);
+					X = MoveX(board);
 				}
-				
 			}
 
-			Position = new PointF(newX, newY);
+			//System.Console.WriteLine(this + " at ({0}, {1}), speed ({2}, {3})", X, Y, SpeedX, SpeedY);
+		}
+
+		/// <summary>
+		/// Try to move the object in X direction
+		/// </summary>
+		/// <param name="board"></param>
+		/// <returns>the new X coordinate</returns>
+		protected float MoveX(Board board)
+		{
+			float newX = X + SpeedX;
+			
+			// make sure the new position is still on the board
+			if (newX < 0.0f)
+			{
+				BorderCollide();
+				m_SpeedX = 0.0f;
+				newX = 0.0f;
+			}
+			else if (newX > board.Width - 1.0f)
+			{
+				BorderCollide();
+				m_SpeedX = 0.0f;
+				newX = board.Width - 1.0f;
+			}
+
+			// check if the new position is blocked
+			if (IsCollision(board, newX, Y))
+			{
+				//m_SpeedX = 0.0f;
+				newX = X;
+			}
+
+			return newX;
+		}
+
+		/// <summary>
+		/// Try to move the object in Y direction
+		/// </summary>
+		/// <param name="board"></param>
+		/// <returns></returns>
+		protected float MoveY(Board board)
+		{
+			float newY = Y + SpeedY;
+
+			// make sure the new position is still on the board
+			if (newY < 0.0f)
+			{
+				BorderCollide();
+				m_SpeedY = 0.0f;
+				newY = 0.0f;
+			}
+			else if (newY > board.Height - 1.0f)
+			{
+				BorderCollide();
+				m_SpeedY = 0.0f;
+				newY = board.Height - 1.0f;
+			}
+
+			// check if the new position is blocked
+			if (IsCollision(board, X, newY))
+			{
+				//m_SpeedY = 0.0f;
+				newY = Y;
+			}
+
+			return newY;
 		}
 
 		/// <summary>
@@ -292,18 +315,21 @@ namespace BomberStuff.Core
 		/// <param name="newY"></param>
 		protected bool IsCollision(Board board, float newX, float newY)
 		{
+			RectangleF newRect = new RectangleF(new PointF(newX, newY), Size);
+			RectangleF oldRect = new RectangleF(Position, Size);
+
 			foreach (MobileObject obj in board.Items)
 			{
-				if (new RectangleF(new PointF(newX, newY), Size).IntersectsWith(new RectangleF(obj.Position, obj.Size))
-						&& !new RectangleF(Position, Size).IntersectsWith(new RectangleF(obj.Position, obj.Size)))
-				{
-					Console.WriteLine("Possible collision between " + this + " and " + obj);
-					if (Collide(obj))
-					{
-						return true;
-					}
-				}
+				RectangleF objRect = new RectangleF(obj.Position, obj.Size);
 
+				if (newRect.IntersectsWith(objRect) && !oldRect.IntersectsWith(objRect))
+					//if (Collide(obj))
+					//	return true;
+				// this means if there's a player (you can walk through) AND a
+				// stone (can't walk through) on the field, you might be able to
+				// go there. As this shouldn't happen, we use this (because it saves
+				// the rest of the loop)
+					return Collide(obj);
 			}
 
 			return false;

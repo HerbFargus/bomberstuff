@@ -26,6 +26,7 @@ using System.Collections.Generic;
 
 using BomberStuff.Core.UserInterface;
 using BomberStuff.Core.Input;
+using BomberStuff.Core.Utilities;
 
 namespace BomberStuff.Core
 {
@@ -56,7 +57,43 @@ namespace BomberStuff.Core
 		/// <param name="args">Program arguments</param>
 		private static void Main(string/*^!^*/[]/*^!^*/ args)
 		{
-			string/*^!^*/ uiName = "SlimDXInterface";
+			// load settings
+			Settings settings;
+
+			settings = BomberStuff.Files.SettingsReader.ReadFile("settings.xml");
+
+			if (settings.Get<string>("GotSettings") != "true")
+				return;
+
+			if (settings.Get<string>(Settings.Types.ABDirectory) == null)
+				settings.Set<string>(Settings.Types.ABDirectory, @"C:\Temp\atomic_bomberman\bomber");
+
+			if (settings.Get<ColorRemapInfo[]>(Settings.Types.PlayerColor) == null)
+			{
+				ColorRemapInfo[] remapInfo = new ColorRemapInfo[10];
+				for (int i = 0; i < remapInfo.Length; ++i)
+					remapInfo[i] = PlayerColor(i);
+				settings.Set<ColorRemapInfo[]>(Settings.Types.PlayerColor, remapInfo);
+			}
+			
+			if (settings.Get<string>(Settings.Types.UserInterface) == null)
+				settings.Set<string>(Settings.Types.UserInterface, "SlimDXInterface");
+
+			if (settings.Get<object>(Settings.Types.Tileset) == null)
+				settings.Set<int>(Settings.Types.Tileset, -1);
+
+			if (settings.Get<object>(Settings.Types.PlayerCount) == null)
+				settings.Set<int>(Settings.Types.PlayerCount, 1);
+
+			if (settings.Get<string>(Settings.Types.Scheme) == null)
+				settings.Set<string>(Settings.Types.Scheme, "BASIC");
+
+			System.Console.WriteLine("Settings found:");
+			foreach (KeyValuePair<string, object> setting in settings)
+				System.Console.WriteLine("{0}: {1}", setting.Key, setting.Value);
+			System.Console.WriteLine();
+
+			string uiName = settings.Get<string>(Settings.Types.UserInterface);
 
 			try
 			{
@@ -68,36 +105,58 @@ namespace BomberStuff.Core
 				if (uiObject == null)
 					throw new MissingMethodException();
 
-				// TODO/TRYTRY: start with some kind of menu?
-
-				// load settings
-				Settings settings = new Settings();
-				settings.Set<string>(Settings.Types.ABDirectory, @"H:\Lappy\Temp\atomic_bomberman\bomber");
-
 				// start a new game
 				Game = new Game(settings);
 
 				ui.LoadSprites += Game.LoadSprites;
 				ui.Render += Game.Render;
+				ui.Idle += Game.Idle;
 
-				PlayerControls[] playerControls = new PlayerControls[2];
-
-				List<KeyValuePair<PlayerControls.Types, Control>> controls = new List<KeyValuePair<PlayerControls.Types, Control>>();
+				PlayerControls[] playerControls = new PlayerControls[settings.Get<int>(Settings.Types.PlayerCount)];
 
 				IInputMethod im = uiObject as IInputMethod;
 
 				Dictionary<string, Control> imControls = im.GetControls();
 
-				controls.Add(new KeyValuePair<PlayerControls.Types, Control>(PlayerControls.Types.Up, imControls["W"]));
-				controls.Add(new KeyValuePair<PlayerControls.Types, Control>(PlayerControls.Types.Down, imControls["S"]));
-				controls.Add(new KeyValuePair<PlayerControls.Types, Control>(PlayerControls.Types.Left, imControls["A"]));
-				controls.Add(new KeyValuePair<PlayerControls.Types, Control>(PlayerControls.Types.Right, imControls["D"]));
-				//System.Windows.Forms.Keys.Up;
+				for (int i = 0; i < settings.Get<int>(Settings.Types.PlayerCount); ++i)
+				{
+					List<KeyValuePair<PlayerControls.Types, Control>> controls = new List<KeyValuePair<PlayerControls.Types, Control>>();
 
-				foreach (KeyValuePair<PlayerControls.Types, Control> control in controls)
-					im.RegisterControl(control.Value);
+					string key = settings.Get<string>("Player" + i + ".Up");
+					if (key != null && imControls.ContainsKey(key))
+						controls.Add(new KeyValuePair<PlayerControls.Types, Control>(PlayerControls.Types.Up, imControls[key]));
+
+					key = settings.Get<string>("Player" + i + ".Down");
+					if (key != null && imControls.ContainsKey(key))
+						controls.Add(new KeyValuePair<PlayerControls.Types, Control>(PlayerControls.Types.Down, imControls[key]));
+
+					key = settings.Get<string>("Player" + i + ".Left");
+					if (key != null && imControls.ContainsKey(key))
+						controls.Add(new KeyValuePair<PlayerControls.Types, Control>(PlayerControls.Types.Left, imControls[key]));
+
+					key = settings.Get<string>("Player" + i + ".Right");
+					if (key != null && imControls.ContainsKey(key))
+						controls.Add(new KeyValuePair<PlayerControls.Types, Control>(PlayerControls.Types.Right, imControls[key]));
+
+					key = settings.Get<string>("Player" + i + ".Action1");
+					if (key != null && imControls.ContainsKey(key))
+						controls.Add(new KeyValuePair<PlayerControls.Types, Control>(PlayerControls.Types.Action1, imControls[key]));
+
+					key = settings.Get<string>("Player" + i + ".Action2");
+					if (key != null && imControls.ContainsKey(key))
+						controls.Add(new KeyValuePair<PlayerControls.Types, Control>(PlayerControls.Types.Action2, imControls[key]));
+
+					playerControls[i] = new PlayerControls(controls);
+
+					foreach (KeyValuePair<PlayerControls.Types, Control> control in controls)
+						im.RegisterControl(control.Value);
+				}
+
+
+				im.RegisterControl(imControls["Escape"]);
+				imControls["Escape"].Pressed += (sender, e) => ui.Terminate();
 				
-				playerControls[0] = new PlayerControls(controls);
+				
 
 				Game.Participants.Add(new LocalParticipant(playerControls));
 				nParticipantsNegotiating = 1;
@@ -126,7 +185,7 @@ namespace BomberStuff.Core
 
 
 				// start up the game UI
-				ui.Initialize();
+				ui.Initialize(settings);
 				ui.MainLoop();
 				ui.Terminate();
 
@@ -160,6 +219,51 @@ namespace BomberStuff.Core
 			{
 				ErrorHandling.UnexpectedError(e, @"while trying to load the interface module {0}:",
 														uiName);
+			}
+		}
+
+		/// <summary>
+		/// Creates a ColorRemapInfo structure defining the color of the
+		/// specified player
+		/// </summary>
+		/// <param name="player">player number to retrieve color for</param>
+		/// <returns>a ColorRemapInfo specifying the player's color</returns>
+		private static ColorRemapInfo PlayerColor(int player)
+		{
+			// HSL scales are in [0, 360[. Some nice values are:
+			// 0 = red
+			// 45 = orange
+			// 75 = yellow
+			// 135 = green (original)
+			// 195 = turquoise
+			// 225 = light blue
+			// 240 = dark blue
+			// 285 = purple
+			// 315 = pink
+			// 0, -120 = black
+			// 0, +150 = (a little too) white
+			switch (player)
+			{
+				case 0:
+					return new ColorRemapInfo(135); // the green bomber (unmodified)
+				case 1:
+					return new ColorRemapInfo(225); // light blue
+				case 2:
+					return new ColorRemapInfo(75, 240, +20); // some kind of yellow
+				case 3:
+					return new ColorRemapInfo(0); // red
+				case 4:
+					return new ColorRemapInfo(45); // orange
+				case 5:
+					return new ColorRemapInfo(315); // pink
+				case 6:
+					return new ColorRemapInfo(195); // turquoise
+				case 7:
+					return new ColorRemapInfo(0, +150); // white
+				case 8:
+					return new ColorRemapInfo(0, -120); // black
+				default:
+					return new ColorRemapInfo(285); // all others are purple for now
 			}
 		}
 	}

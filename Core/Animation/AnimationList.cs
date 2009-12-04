@@ -37,8 +37,8 @@ namespace BomberStuff.Core.Animation
 		private Animation[] TilesetAnimations;
 		/// <summary></summary>
 		private List<Animation>[] DeathAnimations;
-		/// <summary>Number of players that animations exist for</summary>
-		private int PlayerCount;
+		///// <summary>Number of players that animations exist for</summary>
+		//private int PlayerCount;
 		/// <summary>Player Colors</summary>
 		private ColorRemapInfo[] RemapInfo;
 
@@ -47,10 +47,10 @@ namespace BomberStuff.Core.Animation
 		/// Initialize an AnimationList for the specified
 		/// number of players
 		/// </summary>
-		/// <param name="playerCount"></param>
-		public AnimationList(int playerCount)
+		/// <param name="remapInfo"></param>
+		public AnimationList(ColorRemapInfo[] remapInfo)
 		{
-			PlayerCount = playerCount;
+			//PlayerCount = playerCount;
 			Animations = new Animation[SimpleAnimationIndex.Count
 									+ PowerupAnimationIndex.Count
 									+ 4 * DirectionAnimationIndex.Count
@@ -61,9 +61,9 @@ namespace BomberStuff.Core.Animation
 			DeathAnimations = new List<Animation>[1/*playerCount*/];
 			for (int i = 0; i < 1/*playerCount*/; ++i)
 				DeathAnimations[i] = new List<Animation>();
-			RemapInfo = new ColorRemapInfo[playerCount];
+			RemapInfo = remapInfo;/* new ColorRemapInfo[playerCount];
 			for (int i = 0; i < playerCount; ++i)
-				RemapInfo[i] = PlayerColor(i);
+				RemapInfo[i] = PlayerColor(i);*/
 		}
 		#endregion
 
@@ -90,54 +90,6 @@ namespace BomberStuff.Core.Animation
 					return Animations[i.Value];
 			}
 		}
-
-		/// <summary>
-		/// Creates a ColorRemapInfo structure defining the color of the
-		/// specified player
-		/// </summary>
-		/// <param name="player">player number to retrieve color for</param>
-		/// <returns>a ColorRemapInfo specifying the player's color</returns>
-		/// <remarks>TODO: put this somewhere sensible</remarks>
-		public static ColorRemapInfo PlayerColor(int player)
-		{
-			// HSL scales are in [0, 360[. Some nice values are:
-			// 0 = red
-			// 45 = orange
-			// 75 = yellow
-			// 135 = green (original)
-			// 195 = turquoise
-			// 225 = light blue
-			// 240 = dark blue
-			// 285 = purple
-			// 315 = pink
-			// 0, -120 = black
-			// 0, +150 = (a little too) white
-			switch (player)
-			{
-				case 0:
-					return new ColorRemapInfo(135); // the green bomber (unmodified)
-				case 1:
-					return new ColorRemapInfo(225); // light blue
-				case 2:
-					return new ColorRemapInfo(75, 240, +20); // some kind of yellow
-				case 3:
-					return new ColorRemapInfo(0); // red
-				case 4:
-					return new ColorRemapInfo(45); // orange
-				case 5:
-					return new ColorRemapInfo(315); // pink
-				case 6:
-					return new ColorRemapInfo(195); // turquoise
-				case 7:
-					return new ColorRemapInfo(0, +150); // white
-				case 8:
-					return new ColorRemapInfo(0, -120); // black
-				default:
-					return new ColorRemapInfo(285); // all others are purple for now
-			}
-		}
-
-		
 
 		/// <summary>
 		/// 

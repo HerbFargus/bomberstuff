@@ -281,10 +281,6 @@ public class BitmapBuilder : IDisposable
 			//Console.WriteLine("Reading line {0}, read {1} bytes so far", y, bytesRead);
 			for (int x = 0; x < Width; ++x)
 			{
-				if (y == 107)
-				{
-					//Console.WriteLine("Reading column {0}, read {1} bytes so far, rle mode {2}, count is {3}", y, bytesRead, rle, count);
-				}
 				// if count is zero, a new block starts, either raw or RLE
 				if (count == 0)
 				{
@@ -297,19 +293,20 @@ public class BitmapBuilder : IDisposable
 					++bytesRead;
 					
 					// if bit 7 is set, this denotes the start of an RLE block
-					if ((count & 0x80) == 0x80)
+					if ((count & 0x80) != 0)
 					{
 						// unset bit 7 to get the repeat count minus one
 						// the one unit will be added right below in this loop
-						count -= 0x80;
+						count &= ~0x80U;
 						rle = true;
 						
 						// check whether we can still read a unit
 						if ((ulong)bytesRead + bytesPerUnit > maxLength)
 							return -bytesRead;
 						
-						for (int j = 0; j < bytesPerUnit; ++j)
-							data[j] = r.ReadByte();
+						//for (int j = 0; j < bytesPerUnit; ++j)
+						//	data[j] = r.ReadByte();
+						r.Read(data, 0, (int)bytesPerUnit);
 						
 						bytesRead += bytesPerUnit;
 					}
@@ -332,14 +329,20 @@ public class BitmapBuilder : IDisposable
 				
 				// in RLE mode we just add the saved data unit once
 				if (rle)
-					for (int j = 0; j < bytesPerUnit; ++j)
-						m_BitmapData[i++] = data[j];
+				{
+					//for (int j = 0; j < bytesPerUnit; ++j)
+					//	m_BitmapData[i++] = data[j];
+					Array.Copy(data, 0, m_BitmapData, (int)i, (int)bytesPerUnit);
+					i += bytesPerUnit;
+				}
 				// in raw mode, we copy one unit
 				else
 				{
-					for (int j = 0; j < bytesPerUnit; ++j)
-						m_BitmapData[i++] = r.ReadByte();
-					
+					//for (int j = 0; j < bytesPerUnit; ++j)
+					//	m_BitmapData[i++] = r.ReadByte();
+
+					r.Read(m_BitmapData, (int)i, (int)bytesPerUnit);
+					i += bytesPerUnit;
 					bytesRead += bytesPerUnit;
 				}
 			}
@@ -352,7 +355,7 @@ public class BitmapBuilder : IDisposable
 		// success. we return the new position
 		return bytesRead;
 	}
-#if DEBUG
+#if XDEBUG
 	private static long texturesCropped = 0;
 	private static long m_TexturesCropped = 0;
 	private static long m_RTexturesCropped = 0;
@@ -461,7 +464,7 @@ public class BitmapBuilder : IDisposable
 					
 					newBB.BitmapData[BitmapHeaderSize] = (byte)(rawKeyColor & 0xFF);
 					newBB.BitmapData[BitmapHeaderSize] = (byte)((rawKeyColor >> 8) & 0xFF);
-#if DEBUG
+#if XDEBUG
 					rowsCropped += m_Height - 1;
 					columnsCropped += m_Width - 1;
 #endif
@@ -568,7 +571,7 @@ public class BitmapBuilder : IDisposable
 				else
 					newBB = this;
 				
-#if DEBUG
+#if XDEBUG
 				rowsCropped += cropTop + cropBottom;
 				columnsCropped += cropLeft + cropRight;
 #endif
@@ -589,10 +592,10 @@ public class BitmapBuilder : IDisposable
 											+ BitsPerPixel + " bpp");
 		}
 
-#if DEBUG
+#if XDEBUG
 		bytesSavedByCropping += BitmapData.Length - newBB.BitmapData.Length;
-#endif
 		++texturesCropped;
+#endif
 		return newBB;
 	}
 

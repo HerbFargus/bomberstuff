@@ -29,7 +29,16 @@ namespace BomberStuff.Core.Animation
 		/// <summary>
 		/// 
 		/// </summary>
-		public abstract int Value { get; }
+		public readonly int Value;
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="value"></param>
+		protected AnimationIndex(int value)
+		{
+			Value = value;
+		}
 	}
 
 
@@ -76,15 +85,16 @@ namespace BomberStuff.Core.Animation
 		/// </summary>
 		/// <param name="type"></param>
 		public SimpleAnimationIndex(Types type)
+			: base(First + (int)type)
 		{
 			Type = type;
 		}
 
-		/// <summary></summary>
-		public override int Value
-		{
+		///// <summary></summary>
+		//public readonly int Value;
+		/*{
 			get { return First + (int)Type; }
-		}
+		}*/
 
 		/// <summary>
 		/// Returns a string representation of the object
@@ -115,15 +125,16 @@ namespace BomberStuff.Core.Animation
 		/// </summary>
 		/// <param name="type"></param>
 		public PowerupAnimationIndex(PowerupTypes type)
+			: base(First + (int)type)
 		{
 			Type = type;
 		}
 
-		/// <summary></summary>
-		public override int Value
-		{
+		///// <summary></summary>
+		//public readonly int Value;
+		/*{
 			get { return First + (int)Type; }
-		}
+		}*/
 
 		/// <summary>
 		/// Returns a string representation of the object
@@ -174,16 +185,17 @@ namespace BomberStuff.Core.Animation
 		/// <param name="type"></param>
 		/// <param name="direction"></param>
 		public DirectionAnimationIndex(Types type, Directions direction)
+			: base(First + (int)direction * Count + (int)type)
 		{
 			Type = type;
 			Direction = direction;
 		}
 
-		/// <summary></summary>
-		public override int Value
-		{
+		///// <summary></summary>
+		//public readonly int Value;
+		/*{
 			get { return First + (int)Direction * Count + (int)Type; }
-		}
+		}*/
 		
 		/// <summary>
 		/// Returns a string representation of the object
@@ -243,21 +255,24 @@ namespace BomberStuff.Core.Animation
 		/// <param name="type"></param>
 		/// <param name="player"></param>
 		public PlayerAnimationIndex(Types type, int player)
+			: base(First
+						+ player * (Count + 4 * PlayerDirectionAnimationIndex.Count)
+						+ (int)type)
 		{
 			Type = type;
 			Player = player;
 		}
 
-		/// <summary></summary>
-		public override int Value
-		{
+		///// <summary></summary>
+		//public readonly int Value;
+		/*{
 			get
 			{
 				return First
 						+ Player * (Count + 4 * PlayerDirectionAnimationIndex.Count)
 						+ (int)Type;
 			}
-		}
+		}*/
 
 		/// <summary>
 		/// Returns a string representation of the object
@@ -322,15 +337,19 @@ namespace BomberStuff.Core.Animation
 		/// <param name="direction"></param>
 		/// <param name="player"></param>
 		public PlayerDirectionAnimationIndex(Types type, Directions direction, int player)
+			: base(PlayerAnimationIndex.First
+						+ player * (PlayerAnimationIndex.Count + 4 * Count)
+						+ PlayerAnimationIndex.Count
+						+ Count * (int)direction + (int)type)
 		{
 			Type = type;
 			Direction = direction;
 			Player = player;
 		}
 
-		/// <summary></summary>
-		public override int Value
-		{
+		///// <summary></summary>
+		//public readonly int Value;
+		/*{
 			get
 			{
 				return PlayerAnimationIndex.First
@@ -338,7 +357,7 @@ namespace BomberStuff.Core.Animation
 						+ PlayerAnimationIndex.Count
 						+ Count * (int)Direction + (int)Type;
 			}
-		}
+		}*/
 
 		/// <summary>
 		/// Returns a string representation of the object
@@ -387,16 +406,17 @@ namespace BomberStuff.Core.Animation
 		/// <param name="type"></param>
 		/// <param name="tileset"></param>
 		public TilesetAnimationIndex(Types type, int tileset)
+			: base(tileset * Count + (int)type)
 		{
 			Type = type;
 			Tileset = tileset;
 		}
 
-		/// <summary></summary>
-		public override int Value
-		{
+		///// <summary></summary>
+		//public readonly int Value;
+		/*{
 			get { return Tileset * Count + (int)Type; }
-		}
+		}*/
 
 		/// <summary>
 		/// Returns a string representation of the object
@@ -429,19 +449,20 @@ namespace BomberStuff.Core.Animation
 		/// <param name="type"></param>
 		/// <param name="player"></param>
 		public PlayerDeathAnimationIndex(int type, int player)
+			: base(-1)
 		{
 			Type = type;
 			Player = player;
 		}
 
-		/// <summary></summary>
-		public override int Value
+		///// <summary></summary>
+		/*public override int Value
 		{
 			get
 			{
 				throw new System.InvalidOperationException("A death animation index has no value");
 			}
-		}
+		}*/
 
 		/// <summary>
 		/// Returns a string representation of the object

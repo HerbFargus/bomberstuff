@@ -36,8 +36,6 @@ namespace BomberStuff.Files
 	/// </summary>
 	public static class SchemeReader
 	{
-		private static Random Random = new Random();
-
 		private static bool TryParse(/*this int i,*/ string s, out int value)
 		{
 			try
@@ -60,13 +58,13 @@ namespace BomberStuff.Files
 		/// <param name="startPositions"></param>
 		/// <param name="boardWidth"></param>
 		/// <param name="boardHeight"></param>
+		/// <param name="tileset"></param>
 		/// <returns>
-		/// An array of FieldContents values representing a new board filled
+		/// A List of MobileObjects representing a new board filled
 		/// according to the specified scheme
 		/// </returns>
-		public static List<MobileObject> GetScheme(string filename, ref Point[] startPositions, int boardWidth, int boardHeight)
+		public static List<MobileObject> GetScheme(string filename, ref Point[] startPositions, int boardWidth, int boardHeight, int tileset)
 		{
-			//FieldContents[, ] field = new FieldContents[Board.Width, Board.Height];
 			List<MobileObject> objs = new List<MobileObject>();
 			StreamReader r = new StreamReader(filename, Encoding.ASCII);
 			
@@ -129,18 +127,15 @@ namespace BomberStuff.Files
 							case ':':
 								// random is in [0, 99], this is always < 100
 								// and only < 1 in 1/100 of cases
-								if (Random.Next(100) < density)
-									//field[x, y] = FieldContents.Wall;
-									objs.Add(new Wall(x, y));
-								/*else
-									field[x, y] = FieldContents.Empty;*/
+								if (Game.GetRandom(100) < density)
+									objs.Add(new Wall(x, y, tileset));
+								// else: empty field
 								break;
 							case '.':
-								//field[x, y] = FieldContents.Empty;
+								// empty field
 								break;
 							case '#':
-								//field[x, y] = FieldContents.Stone;
-								objs.Add(new Stone(x, y)); 
+								objs.Add(new Stone(x, y, tileset)); 
 								
 								break;
 						}

@@ -22,6 +22,7 @@
 using BomberStuff.Core.Animation;
 
 using BomberStuff.Core.UserInterface;
+using BomberStuff.Core.Drawing;
 
 namespace BomberStuff.Core
 {
@@ -33,13 +34,61 @@ namespace BomberStuff.Core
 		/// <summary>
 		/// 
 		/// </summary>
+		public bool Alive
+		{
+			get;
+			protected set;
+		}
+		/// <summary>
+		/// 
+		/// </summary>
 		/// <param name="x"></param>
 		/// <param name="y"></param>
 		/// <param name="player"></param>
 		public Player(int x, int y, int player)
 			: base(x, y, 1.0f, 1.0f, player)
 		{
+			Alive = true;
 			Animation = new PlayerDirectionAnimationIndex(PlayerDirectionAnimationIndex.Types.Stand, Directions.Down, 0);
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		public void Die()
+		{
+			if (!Alive)
+				return;
+			Alive = false;
+			
+			System.Console.WriteLine("That's it, you're dead " + ToString());
+			//board.Items.Remove(this);
+			Animation = new PlayerDeathAnimationIndex(Game.GetRandom(9), 0);
+			Loop = false;
+			m_SpeedX = m_SpeedY = 0.0f;
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <remarks>TODO: sensible in Player class?</remarks>
+		public void PlaceBomb(Board board)
+		{
+			board.Items.Add(new Bomb((int)System.Math.Round(X), (int)System.Math.Round(Y), PlayerIndex, 3));
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="aniList"></param>
+		/// <param name="device"></param>
+		/// <returns></returns>
+		public override ISprite GetSprite(AnimationList aniList, IDevice device)
+		{
+			//if (PlayerIndex == -1)
+			//return aniList[Animation].GetSprite(device, AnimationState);
+			//else
+			return aniList[Animation].GetSprite(device, AnimationState, PlayerIndex);
 		}
 
 		/// <summary>
@@ -67,6 +116,8 @@ namespace BomberStuff.Core
 		/// <param name="speed"></param>
 		public override void SetMoveState(Directions direction, float speed)
 		{
+			if (!Alive)
+				return;
 			base.SetMoveState(direction, speed);
 
 			if (speed == 0)
@@ -85,12 +136,46 @@ namespace BomberStuff.Core
 		/// <returns></returns>
 		protected override bool Collide(MobileObject other)
 		{
+			// Players can walk through each other
+			if (other is Player)
+				return false;
+
+
+			else if (other is Bomb)
+			{
+				// TODO: kicking/punching
+				return true;
+			}
+
+			else if (other is Explosion)
+			{
+				// Players shouldn't die on the tiniest touch of the explosion.
+				// Leave them half a field of room in each direction
+
+				// NOTE: an analogous check has to happen in Bomb.Explode
+				if (new RectangleF(other.Position, other.Size).Contains(X + 0.5f, Y + 0.5f))
+					Die();
+				else
+					System.Console.WriteLine("Explosion at ({2}, {3}) not killing player at ({0}, {1})", X, Y, other.X, other.Y);
+
+				return false;
+			}
+			
+			else if (other is Powerup)
+			{
+				// TODO: pick up powerup
+				return false;
+			}
+
 			return true;
 		}
 
 		/// <summary>
-		/// 
+		/// Handle a collision of the Player with a border.
 		/// </summary>
+		/// <remarks>
+		/// Nothing happens when a Player runs against the border.
+		/// </remarks>
 		protected override void BorderCollide()
 		{
 		}

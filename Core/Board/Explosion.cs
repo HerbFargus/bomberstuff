@@ -1,5 +1,5 @@
 ﻿//
-// Wall.cs - Stone class
+// Explosion.cs - Explosion class
 //
 // Copyright © 2009  Thomas Faber
 //
@@ -20,6 +20,7 @@
 //
 
 using BomberStuff.Core.Animation;
+
 using BomberStuff.Core.Drawing;
 
 namespace BomberStuff.Core
@@ -27,36 +28,54 @@ namespace BomberStuff.Core
 	/// <summary>
 	/// 
 	/// </summary>
-	public sealed class Wall : MobileObject
+	public class Explosion : MobileObject
 	{
 		/// <summary>
 		/// 
 		/// </summary>
-		private const long ExplosionTicks = 20;
+		public const long ExplosionTicks = 20;
 		/// <summary>
 		/// 
 		/// </summary>
-		private long TicksLeft = ExplosionTicks;
-
-		/// <summary>
-		/// 
-		/// </summary>
-		private bool Exploding = false;
-
-		/// <summary>The tileset number</summary>
-		private int Tileset;
+		public long TicksLeft = ExplosionTicks;
 
 		/// <summary>
 		/// 
 		/// </summary>
 		/// <param name="x"></param>
 		/// <param name="y"></param>
-		/// <param name="tileset"></param>
-		public Wall(int x, int y, int tileset)
-			: base(x, y, 1.0f, 1.0f)
+		/// <param name="player"></param>
+		/// <param name="direction"></param>
+		public Explosion(int x, int y, int player, Directions direction)
+			: this(x, y, player, direction, false) { }
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="x"></param>
+		/// <param name="y"></param>
+		/// <param name="player"></param>
+		/// <param name="direction"></param>
+		/// <param name="isTip"></param>
+		public Explosion(int x, int y, int player, Directions direction, bool isTip)
+			: base(x, y, 1.0f, 1.0f, player)
 		{
-			Tileset = tileset;
-			Animation = new TilesetAnimationIndex(TilesetAnimationIndex.Types.Wall, tileset);
+			if (isTip)
+				Animation = new PlayerDirectionAnimationIndex(PlayerDirectionAnimationIndex.Types.ExplosionTip, direction, 0);
+			else
+				Animation = new PlayerDirectionAnimationIndex(PlayerDirectionAnimationIndex.Types.ExplosionMid, direction, 0);
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="x"></param>
+		/// <param name="y"></param>
+		/// <param name="player"></param>
+		public Explosion(int x, int y, int player)
+			: base(x, y, 0.0f, 0.0f, player)
+		{
+			Animation = new PlayerAnimationIndex(PlayerAnimationIndex.Types.ExplosionCenter, 0);
 		}
 
 		/// <summary>
@@ -68,28 +87,33 @@ namespace BomberStuff.Core
 		{
 			base.Tick(board, ticks);
 
-			if (Exploding && (TicksLeft -= ticks) <= 0)
+			if ((TicksLeft -= ticks) <= 0)
 				board.Items.Remove(this);
-		}
-
-		/// <summary>
-		/// Lets the wall explode
-		/// </summary>
-		public void Explode()
-		{
-			Animation = new TilesetAnimationIndex(TilesetAnimationIndex.Types.ExplodingWall, Tileset);
-			Exploding = true;
 		}
 
 		/// <summary>
 		/// 
 		/// </summary>
 		/// <param name="aniList"></param>
+		/// <param name="device"></param>
+		/// <returns></returns>
+		public override BomberStuff.Core.UserInterface.ISprite GetSprite(AnimationList aniList, BomberStuff.Core.UserInterface.IDevice device)
+		{
+			return aniList[Animation].GetSprite(device, AnimationState, PlayerIndex);
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
 		/// <returns></returns>
 		public override SizeF GetOffset(AnimationList aniList)
 		{
-			// Wall offset is completely weird. They shouldn't have any.
-			return new SizeF();
+			SizeF offset = aniList[Animation].GetOffset(AnimationState);
+			// HACKHACK: this belongs to the animation, not the object
+			offset.Width -= 2.0f / 40.0f;
+			offset.Height -= 1.0f / 36.0f;
+
+			return offset;
 		}
 
 		/// <summary>

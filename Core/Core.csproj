@@ -61,6 +61,8 @@
     <Compile Include="Animation\AnimationIndex.cs" />
     <Compile Include="Animation\AnimationList.cs" />
     <Compile Include="Board\Board.cs" />
+    <Compile Include="Board\Bomb.cs" />
+    <Compile Include="Board\Explosion.cs" />
     <Compile Include="Board\Player.cs" />
     <Compile Include="Board\Stone.cs" />
     <Compile Include="Board\Wall.cs" />
@@ -73,6 +75,7 @@
     <Compile Include="Files\SchemeReader.cs" />
     <Compile Include="Board\MobileObject.cs" />
     <Compile Include="ErrorHandling.cs" />
+    <Compile Include="Files\SettingsReader.cs" />
     <Compile Include="Game.cs" />
     <Compile Include="Board\Powerup.cs" />
     <Compile Include="Input\Control.cs" />
@@ -104,6 +107,7 @@
     </Reference>
     <Reference Include="System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=969db8053d3322ac, processorArchitecture=MSIL" />
     <Reference Include="System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=969db8053d3322ac, processorArchitecture=MSIL" />
+    <Reference Include="System.Xml, Version=2.0.0.0, Culture=neutral, PublicKeyToken=969db8053d3322ac, processorArchitecture=MSIL" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">

@@ -92,7 +92,7 @@ namespace BomberStuff.SlimDXInterface
 				s.Seek(0, SeekOrigin.Begin);
 
 				return new SDXSprite(Texture.FromStream(Device, s, w, h, 0, Usage.None, format,
-						storeInVideoMemory ? Pool.Default : Pool.Managed, Filter.None, Filter.None, keyColor.ToArgb()));
+						storeInVideoMemory ? Pool.Managed : Pool.Managed, Filter.None, Filter.None, keyColor.ToArgb()));
 			}
 			//return new SDXSprite(Texture.FromMemory(Device, b.BitmapData, (int)b.Width, (int)b.Height, 0, Usage.None, format,
 			//		storeInVideoMemory ? Pool.Default : Pool.Managed, Filter.None, Filter.None, keyColor.ToArgb()));
