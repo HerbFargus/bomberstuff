@@ -1,7 +1,7 @@
 ﻿//
 // Player.cs - Player class
 //
-// Copyright © 2009  Thomas Faber
+// Copyright © 2009-2010  Thomas Faber
 //
 // This file is part of Bomber Stuff.
 //
@@ -23,6 +23,7 @@ using BomberStuff.Core.Animation;
 
 using BomberStuff.Core.UserInterface;
 using BomberStuff.Core.Drawing;
+using BomberStuff.Core.Game;
 
 namespace BomberStuff.Core
 {
@@ -39,6 +40,27 @@ namespace BomberStuff.Core
 			get;
 			protected set;
 		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		public int Range;
+		/// <summary>
+		/// 
+		/// </summary>
+		public int MaxBombs;
+
+		/// <summary>
+		/// 
+		/// </summary>
+		public int CurrentBombs;
+
+		/// <summary>
+		/// 
+		/// </summary>
+		public float Speed;
+
+		private int DeathAnimationIndex;
 		/// <summary>
 		/// 
 		/// </summary>
@@ -49,23 +71,33 @@ namespace BomberStuff.Core
 			: base(x, y, 1.0f, 1.0f, player)
 		{
 			Alive = true;
+			DeathAnimationIndex = Game.Game.GetRandom(9);
+			Range = 2;
+			MaxBombs = 1;
+			CurrentBombs = 0;
+			Speed = 0.125f;
 			Animation = new PlayerDirectionAnimationIndex(PlayerDirectionAnimationIndex.Types.Stand, Directions.Down, 0);
 		}
 
 		/// <summary>
-		/// 
+		/// Die
 		/// </summary>
 		public void Die()
 		{
 			if (!Alive)
 				return;
+
 			Alive = false;
 			
 			System.Console.WriteLine("That's it, you're dead " + ToString());
-			//board.Items.Remove(this);
-			Animation = new PlayerDeathAnimationIndex(Game.GetRandom(9), 0);
+			
+			// set death animation. This is non-looping, so the player object
+			// will be removed when it's finished
+			Animation = new PlayerDeathAnimationIndex(DeathAnimationIndex, 0);
 			Loop = false;
-			m_SpeedX = m_SpeedY = 0.0f;
+
+			SpeedX = 0f;
+			SpeedY = 0f;
 		}
 
 		/// <summary>
@@ -74,7 +106,24 @@ namespace BomberStuff.Core
 		/// <remarks>TODO: sensible in Player class?</remarks>
 		public void PlaceBomb(Board board)
 		{
-			board.Items.Add(new Bomb((int)System.Math.Round(X), (int)System.Math.Round(Y), PlayerIndex, 3));
+			// dead players shouldn't place bombs. TRYTRY: is there a more senible place
+			// to check this? See SetMoveState
+			if (!Alive)
+				return;
+
+			int x = (int)System.Math.Round(X);
+			int y = (int)System.Math.Round(Y);
+
+			foreach (MobileObject bomb in board.Items)
+				if (bomb is Bomb)
+					if (new RectangleF(bomb.Position, bomb.Size).IntersectsWith(new RectangleF(x, y, 1.0f, 1.0f)))
+					{
+						System.Console.WriteLine("Already a bomb at {0}, {1}!", x, y);
+						return;
+					}
+
+			board.Items.Add(new Bomb(x, y, PlayerIndex, Range));
+			++CurrentBombs;
 		}
 
 		/// <summary>
@@ -112,20 +161,23 @@ namespace BomberStuff.Core
 		/// <summary>
 		/// 
 		/// </summary>
-		/// <param name="direction"></param>
-		/// <param name="speed"></param>
-		public override void SetMoveState(Directions direction, float speed)
+		/// <param name="primary"></param>
+		/// <param name="secondary"></param>
+		/// <param name="moving"></param>
+		public override void SetMoveState(Directions primary, Directions secondary, bool moving)
 		{
 			if (!Alive)
 				return;
-			base.SetMoveState(direction, speed);
 
-			if (speed == 0)
+			base.SetMoveState(primary, secondary, moving);
+
+			if (!moving)
 			{
-				Animation = new PlayerDirectionAnimationIndex(PlayerDirectionAnimationIndex.Types.Stand, direction, 0);
+				Animation = new PlayerDirectionAnimationIndex(PlayerDirectionAnimationIndex.Types.Stand, primary, 0);
 			}
 			else
-				Animation = new PlayerDirectionAnimationIndex(PlayerDirectionAnimationIndex.Types.Walk, direction, 0);
+				Animation = new PlayerDirectionAnimationIndex(PlayerDirectionAnimationIndex.Types.Walk, primary, 0);
+
 			AnimationState = 0;
 		}
 
@@ -151,19 +203,21 @@ namespace BomberStuff.Core
 			{
 				// Players shouldn't die on the tiniest touch of the explosion.
 				// Leave them half a field of room in each direction
+				// -> this is respected here. The explosion itself is only in the
+				//    center of the field, so a collision is only raised if
+				//    we actually walk through the center!
 
-				// NOTE: an analogous check has to happen in Bomb.Explode
-				if (new RectangleF(other.Position, other.Size).Contains(X + 0.5f, Y + 0.5f))
-					Die();
-				else
-					System.Console.WriteLine("Explosion at ({2}, {3}) not killing player at ({0}, {1})", X, Y, other.X, other.Y);
+				// see also Bomb.Explode
+				Die();
 
 				return false;
 			}
 			
 			else if (other is Powerup)
 			{
-				// TODO: pick up powerup
+				Powerup pup = (Powerup)other;
+				pup.Affect(this);
+				
 				return false;
 			}
 

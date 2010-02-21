@@ -27,6 +27,7 @@ using System.Text;
 using System.Collections.Generic;
 
 using BomberStuff.Core;
+using BomberStuff.Core.Game;
 using System.Drawing;
 
 namespace BomberStuff.Files

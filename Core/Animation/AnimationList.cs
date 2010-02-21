@@ -91,11 +91,15 @@ namespace BomberStuff.Core.Animation
 			}
 		}
 
+		#region AddAnimation
 		/// <summary>
-		/// 
+		/// Add an animation to the animation list
 		/// </summary>
-		/// <param name="i"></param>
-		/// <param name="ani"></param>
+		/// <param name="i">index of the animation</param>
+		/// <param name="ani">animation to add</param>
+		/// <remarks>
+		/// 
+		/// </remarks>
 		public bool AddAnimation(AnimationIndex i, Animation ani)
 		{
 			//Console.WriteLine("Trying to load animation " + i.Value + ": " + i);
@@ -104,6 +108,7 @@ namespace BomberStuff.Core.Animation
 				for (int iPlayer = 0; iPlayer < 1/*PlayerCount*/; ++iPlayer)
 				{
 					DeathAnimations[iPlayer].Add(ani);
+					// TODO remap on the fly, reduce death remapping
 					ani.Remap(RemapInfo);
 				}
 			}
@@ -145,6 +150,7 @@ namespace BomberStuff.Core.Animation
 			}
 			return true;
 		}
+		#endregion
 
 		/// <summary>
 		/// Check whether all animations are properly loaded

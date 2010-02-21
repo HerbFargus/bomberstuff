@@ -639,7 +639,7 @@ namespace BomberStuff.Files
 			// Run-Length-Decode the image data and insert as bitmap data
 			// this is tga-type RLE
 			//
-			long imageDataBytes = b.ReadDataFromAni(r, (ulong)(frameItemEnd - bytesRead));
+			long imageDataBytes = b.ReadDataFromAni(s, (ulong)(frameItemEnd - bytesRead));
 
 			bytesRead += Math.Abs(imageDataBytes);
 
@@ -674,7 +674,7 @@ namespace BomberStuff.Files
 			frame.Offset.Height -= dTop;
 
 			// normalize size and offset to field width/height
-			// HACKHACK/TRYTRY: I believe this is the only location where those numbers
+			// HACKHACK/TRYTRY: I believe (WRONG! TODO) this is the only location where those numbers
 			// (40 = field width in pixels, 36 = field height in pixels) are ever
 			// needed. If not, put them somewhere sensible as constants
 			frame.Size = new BomberStuff.Core.Drawing.SizeF(frame.BitmapBuilder.Width / 40.0f,
@@ -1359,43 +1359,43 @@ namespace BomberStuff.Files
 							throw new FormatException();
 
 						if (words[1] == "bomb")
-							index = new PowerupAnimationIndex(PowerupTypes.Bomb);
+							index = new PowerupAnimationIndex(Powerup.Types.Bomb);
 
 						else if (words[1] == "flame")
-							index = new PowerupAnimationIndex(PowerupTypes.Range);
+							index = new PowerupAnimationIndex(Powerup.Types.Range);
 
 						else if (words[1] == "skate")
-							index = new PowerupAnimationIndex(PowerupTypes.Speed);
+							index = new PowerupAnimationIndex(Powerup.Types.Speed);
 
 						else if (words[1] == "kicker")
-							index = new PowerupAnimationIndex(PowerupTypes.Kick);
+							index = new PowerupAnimationIndex(Powerup.Types.Kick);
 
 						else if (words[1] == "jelly")
-							index = new PowerupAnimationIndex(PowerupTypes.Jelly);
+							index = new PowerupAnimationIndex(Powerup.Types.Jelly);
 
 						else if (words[1] == "trigger")
-							index = new PowerupAnimationIndex(PowerupTypes.Trigger);
+							index = new PowerupAnimationIndex(Powerup.Types.Trigger);
 
 						else if (words[1] == "punch")
-							index = new PowerupAnimationIndex(PowerupTypes.Punch);
+							index = new PowerupAnimationIndex(Powerup.Types.Punch);
 
 						else if (words[1] == "grab")
-							index = new PowerupAnimationIndex(PowerupTypes.Grab);
+							index = new PowerupAnimationIndex(Powerup.Types.Grab);
 
 						else if (words[1] == "spooge")
-							index = new PowerupAnimationIndex(PowerupTypes.Spooge);
+							index = new PowerupAnimationIndex(Powerup.Types.Spooge);
 
 						else if (words[1] == "goldflame")
-							index = new PowerupAnimationIndex(PowerupTypes.Goldflame);
+							index = new PowerupAnimationIndex(Powerup.Types.Goldflame);
 
 						else if (words[1] == "disease")
-							index = new PowerupAnimationIndex(PowerupTypes.Virus);
+							index = new PowerupAnimationIndex(Powerup.Types.Virus);
 
 						else if (words[1] == "disease3")
-							index = new PowerupAnimationIndex(PowerupTypes.BadVirus);
+							index = new PowerupAnimationIndex(Powerup.Types.BadVirus);
 
 						else if (words[1] == "random")
-							index = new PowerupAnimationIndex(PowerupTypes.Random);
+							index = new PowerupAnimationIndex(Powerup.Types.Random);
 
 						else
 							throw new FormatException();

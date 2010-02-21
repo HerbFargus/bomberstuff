@@ -1,7 +1,7 @@
 ﻿//
 // Game.cs - Game class
 //
-// Copyright © 2009  Thomas Faber
+// Copyright © 2009-2010  Thomas Faber
 //
 // This file is part of Bomber Stuff.
 //
@@ -27,7 +27,7 @@ using BomberStuff.Core.Drawing;
 
 using BomberStuff.Files;
 
-namespace BomberStuff.Core
+namespace BomberStuff.Core.Game
 {
 	/// <summary>
 	/// Represents a game, that is, a series of rounds
@@ -63,6 +63,9 @@ namespace BomberStuff.Core
 		{
 			Settings = settings;
 			Participants = new List<Participant>();
+
+			System.Version ver = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
+			LogoString = "Bomber Stuff " + ver.Major + "." + ver.Minor + "." + ver.Build + " (Build " + ver.Revision + ")";
 		}
 
 		private static System.Security.Cryptography.RandomNumberGenerator Random = new System.Security.Cryptography.RNGCryptoServiceProvider();
@@ -137,11 +140,16 @@ namespace BomberStuff.Core
 				Board.AddPlayer(Players[i]);
 			}
 
+			Board.Items.Add(new Powerup(8, 6, Powerup.Types.Bomb));
+			Board.Items.Add(new Powerup(9, 6, Powerup.Types.Range));
+
 			foreach (Participant p in Participants)
 			{
 				p.MovePlayer += Participant_MovePlayer;
 				p.PlayerAction += Participant_PlayerAction;
 			}
+
+
 		}
 
 		/// <summary>
@@ -154,7 +162,7 @@ namespace BomberStuff.Core
 			Participant p = (Participant)sender;
 
 			if (p.HasAuthority || p.ControlsPlayer(e.PlayerIndex))
-				Players[e.PlayerIndex].SetMoveState(e.Direction, e.Moving ? 0.125f : 0);
+				Players[e.PlayerIndex].SetMoveState(e.Direction, e.SecondaryDirection, e.Moving);
 			else
 				System.Diagnostics.Debug.Assert(false);
 		}
@@ -168,10 +176,14 @@ namespace BomberStuff.Core
 		{
 			Participant p = (Participant)sender;
 
-			if (p.HasAuthority || p.ControlsPlayer(e.PlayerIndex))
-				Players[e.PlayerIndex].PlaceBomb(Board);
-			else
-				System.Diagnostics.Debug.Assert(false);
+			// action 1: place bomb
+			if (e.Type == PlayerActionEventArgs.Types.Action1)
+			{
+				if (p.HasAuthority || p.ControlsPlayer(e.PlayerIndex))
+					Players[e.PlayerIndex].PlaceBomb(Board);
+				else
+					System.Diagnostics.Debug.Assert(false, "Unauthorized Participant trying to control Player" + e.PlayerIndex);
+			}
 		}
 
 		private ISprite background;
@@ -195,8 +207,9 @@ namespace BomberStuff.Core
 
 			Animations = new AnimationList(Settings.Get<BomberStuff.Core.Utilities.ColorRemapInfo[]>(Settings.Types.PlayerColor));
 			System.Console.WriteLine("Loading animations...");
+			//long ticks = System.DateTime.Now.Ticks;
 			AniFileReader.AddAliFile(Animations, Settings.Get<string>(Settings.Types.ABDirectory) + @"\DATA\ANI\master.ali");
-			System.Console.WriteLine("Done loading animations...");
+			System.Console.WriteLine("Done loading animations..."/* took {0} µs", (System.DateTime.Now.Ticks - ticks) / 10.0*/);
 			Animations.Check();
 			System.Console.WriteLine("Animation check succeeded. All animations accounted for.");
 
@@ -233,6 +246,7 @@ namespace BomberStuff.Core
 		long lastSec;
 		int framesThisSec;
 		string fps = "? FPS";
+		string LogoString;
 
 		/// <summary>
 		/// 
@@ -250,9 +264,7 @@ namespace BomberStuff.Core
 			// Draw text
 			//
 			e.UserInterface.Draw(fps, new PointF(0.1f, 0.05f), System.Drawing.Color.White);
-			e.UserInterface.Draw("Bomber Stuff 0.1.0", new PointF(0.5f, 0.05f), System.Drawing.Color.YellowGreen);
-
-			
+			e.UserInterface.Draw(LogoString, new PointF(0.5f, 0.05f), System.Drawing.Color.YellowGreen);
 
 			//
 			// Draw player shadows (only living players cast a shadow)
@@ -278,8 +290,8 @@ namespace BomberStuff.Core
 		/// </summary>
 		public void Idle(object sender, System.EventArgs e)
 		{
-			const int TicksPerAniTick = 500000;
-			const int TicksPerGameTick = 500000;
+			const int TicksPerAniTick = 250000;
+			const int TicksPerGameTick = 250000;
 
 			long ticks = System.DateTime.Now.Ticks;
 			if (ticks - lastSec > 10000000)

@@ -60,6 +60,7 @@ namespace BomberStuff.Core.Utilities
 		/// <summary>The lightness difference to apply during remapping</summary>
 		public readonly int DiffLightness;
 
+		#region Constructors
 		/// <summary>
 		/// Initializes a new ColorRemapInfo specifying that hue should be
 		/// remapped to the specified value
@@ -120,6 +121,7 @@ namespace BomberStuff.Core.Utilities
 			NewSaturation = newSaturation;
 			DiffLightness = diffLightness;
 		}
+		#endregion
 
 #if DEBUG
 		/// <summary>
@@ -158,6 +160,7 @@ namespace BomberStuff.Core.Utilities
 		/// <value>the hue value for green</value>
 		public const int OriginalHue = 135;
 
+		#region Remap
 		/// <summary>
 		/// Remaps all pixels in the specified sequence state's frame that have
 		/// a hue value of OriginalHue ± 45 (and a lightness less than 340) to the
@@ -183,6 +186,7 @@ namespace BomberStuff.Core.Utilities
 		{
 			AnimationFrame destFrame = new AnimationFrame(srcFrame);
 
+			// if nothing has to be changed, just use the original BB
 			if (!changes.SetSaturation && changes.DiffLightness == 0
 					&& (!changes.SetHue || changes.NewHue == OriginalHue))
 			{
@@ -190,10 +194,12 @@ namespace BomberStuff.Core.Utilities
 				return destFrame;
 			}
 
-			
 			BitmapBuilder src = srcFrame.BitmapBuilder;
 			BitmapBuilder dest =  new BitmapBuilder(src.BitsPerPixel, src.Width, src.Height);
 			destFrame.BitmapBuilder = dest;
+
+			// choose a new key color to make sure our remapped values don't end up transparent
+			// these are empirical values that seem to work well, but can be changed if any problems arise
 			ushort newRawKeyColor = 0x7A38;
 			Color newKeyColor = Color.FromArgb(247, 140, 198);
 			if (changes.SetHue && (changes.NewHue > 220 || changes.NewHue < 60))
@@ -201,8 +207,10 @@ namespace BomberStuff.Core.Utilities
 				newRawKeyColor = 0x47D8;
 				newKeyColor = Color.FromArgb(140, 247, 198);
 			}
+			System.Diagnostics.Debug.Assert(newRawKeyColor == ColorToShort(newKeyColor));
 			byte newKeyColorL = (byte)(newRawKeyColor & 0xFF);
 			byte newKeyColorH = (byte)(newRawKeyColor >> 8);
+			destFrame.SetKeyColor(newRawKeyColor, newKeyColor);
 
 			switch (src.BitsPerPixel)
 			{
@@ -219,6 +227,7 @@ namespace BomberStuff.Core.Utilities
 
 						uint padding = (lineSize - src.Width) << 1;
 
+						// TODO: finish optimizing Remap
 						// copy everything that's not image data
 						//Array.Copy(src.BitmapData, dest.BitmapData, (int)src.DataLocation);
 						
@@ -293,22 +302,18 @@ namespace BomberStuff.Core.Utilities
 						break;
 					}
 
-				// TODO
-				// we can and need currently only remap 16 bpp images
-				// This might change when using custom animations
-				case 4:
-				case 8:
-				case 24:
+				// images that are not 16 bpp are not supported and it is unlikely
+				// they ever will, as the original graphics use only 16 bpp, and
+				// new ones will use completely different formats (and probably 32 bpp)
 				default:
 					throw new FormatException("Cannot remap unexpected"
 												+ " bitmap format "
 												+ src.BitsPerPixel + " bpp");
 			}
 
-			destFrame.SetKeyColor(newRawKeyColor, newKeyColor);
-
 			return destFrame;
 		}
+		#endregion
 
 		/// <summary>
 		/// A helper function for Remap that converts a Color to its 16 bit
@@ -377,7 +382,7 @@ namespace BomberStuff.Core.Utilities
 			}
 		}
 
-#if OLDHSL
+#if !OLDHSL
 		//Source:
 		//A Fast HSL-to-RGB Transform
 		//by Ken Fishkin
@@ -408,6 +413,13 @@ namespace BomberStuff.Core.Utilities
 		//                5: [v, min, mid2];
 		//                endcase;
 		//            end;
+		/// <summary>
+		/// A helper function for Remap that converts a HSL color to a <see cref="System.Drawing.Color" />
+		/// </summary>
+		/// <param name="hin"></param>
+		/// <param name="sin"></param>
+		/// <param name="lin"></param>
+		/// <returns></returns>
 		private static Color ColorFromHSL(int hin, int sin, int lin)
 		{
 			float h = hin / 360.0f, s = sin / 360.0f, l = lin / 360.0f;
@@ -431,7 +443,7 @@ namespace BomberStuff.Core.Utilities
 				float min = 2 * l - v;
 				float sv = (v - min) / v;
 				h = 6.0f * h;
-				//System.Diagnostics.Debug.Assert(h <= 6.0f);
+				System.Diagnostics.Debug.Assert(h <= 6.0f);
 				int sextant = (int)Math.Floor(h);
 				
 				float fract = h - sextant;

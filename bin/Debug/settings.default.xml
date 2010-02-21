@@ -1,0 +1,122 @@
+<?xml version="1.0"?>
+<Settings xmlns="BomberStuff"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xsi:schemaLocation="BomberStuff settings.xsd">
+	
+  <!-- Set your Atomic Bomberman path here. It should contain a DATA subdirectory-->
+  <String name="ABDirectory">
+		C:\Temp\atomic_bomberman\bomber
+	</String>
+
+  <!-- Currently available option(s): SlimDXInterface, WinFormsInterface -->
+  <String name="UserInterface">
+    SlimDXInterface
+  </String>
+
+  <!-- Window size. You can try other than the suggested values,
+       but it might look crappy (gaps and such) -->
+  <Size name="WindowSize">
+    <!--<Width>640</Width><Height>480</Height>-->
+    <Width>1280</Width><Height>960</Height>
+    <!--<Width>1600</Width><Height>1200</Height>-->
+	</Size>
+
+  
+  <!-- No value means random -->
+  <!--<UInt name="Tileset">
+    0
+  </UInt>-->
+
+  <!-- Anything in the SCHEMES directory. Default is BASIC -->
+  <String name="Scheme">
+    X
+  </String>
+  
+  <!-- NOTE: most (all?) schemes are limited to 10 players, so
+             don't be surprised if large numbers don't work -->
+  <NInt name="PlayerCount">
+    2
+  </NInt>
+  
+  
+  <!-- This is a debug thing. Don't change it or the game won't start -->
+	<String name="GotSettings">true</String>
+  
+  <!--
+    Player key bindings
+  -->
+  <!-- green dude -->
+  <PlayerControls name="PlayerControls" index="0">
+    <Up>Up</Up>
+    <Down>Down</Down>
+    <Left>Left</Left>
+    <Right>Right</Right>
+    <Action1>N</Action1>
+    <Action2>M</Action2>
+  </PlayerControls>
+
+  <!-- pink dude -->
+  <PlayerControls name="PlayerControls" index="1">
+    <Up>W</Up>
+    <Down>S</Down> <!-- Semicolon/Ö key-->
+    <Left>A</Left>
+    <Right>D</Right> <!-- Quotes/Ä key -->
+    <Action1>Q</Action1>
+    <Action2>E</Action2>
+  </PlayerControls>
+
+  <!--
+    Player Colors
+    
+    A HSL system is used with H, S and L each in [0,359]
+    
+    You can set the following:
+    - a Hue value (default: 135 = green)
+    - Saturation and Lightness difference values (to create bright/dark green, white/black/grey)
+    - Hue, Saturation AND Lightness difference (if a color needs S/L adjustment to look good)
+  -->
+  <ColorRemapInfo name="PlayerColor" index="0">
+    <!-- Player 0: unmodified green bomber -->
+  </ColorRemapInfo>
+  <ColorRemapInfo name="PlayerColor" index="1">
+    <!-- Player 1: light blue -->
+    <Hue>225</Hue>
+  </ColorRemapInfo>
+  <ColorRemapInfo name="PlayerColor" index="2">
+    <!-- Player 2: yellow -->
+    <Hue>75</Hue>
+    <Saturation>240</Saturation>
+    <LightnessDifference>+20</LightnessDifference>
+  </ColorRemapInfo>
+  <ColorRemapInfo name="PlayerColor" index="3">
+    <!-- Player 3: red -->
+    <Hue>0</Hue>
+  </ColorRemapInfo>
+  <ColorRemapInfo name="PlayerColor" index="4">
+    <!-- Player 4: orange -->
+    <Hue>45</Hue>
+  </ColorRemapInfo>
+  <ColorRemapInfo name="PlayerColor" index="5">
+    <!-- Player 5: pink -->
+    <Hue>315</Hue>
+  </ColorRemapInfo>
+  <ColorRemapInfo name="PlayerColor" index="6">
+    <!-- Player 6: turquoise -->
+    <Hue>195</Hue>
+  </ColorRemapInfo>
+  <ColorRemapInfo name="PlayerColor" index="7">
+    <!-- Player 7: white -->
+    <Saturation>0</Saturation>
+    <LightnessDifference>+150</LightnessDifference>
+  </ColorRemapInfo>
+  <ColorRemapInfo name="PlayerColor" index="8">
+    <!-- Player 8: black -->
+    <Saturation>0</Saturation>
+    <LightnessDifference>-120</LightnessDifference>
+  </ColorRemapInfo>
+  <ColorRemapInfo name="PlayerColor" index="9">
+    <!-- Player 9: purple -->
+    <!-- NOTE: The last entry will be repeated for any additional players -->
+    <Hue>285</Hue>
+  </ColorRemapInfo>
+</Settings>

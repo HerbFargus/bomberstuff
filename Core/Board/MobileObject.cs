@@ -1,7 +1,7 @@
 ﻿//
 // MobileObject.cs - MobileObject class
 //
-// Copyright © 2009  Thomas Faber
+// Copyright © 2009-2010  Thomas Faber
 //
 // This file is part of Bomber Stuff.
 //
@@ -33,81 +33,147 @@ namespace BomberStuff.Core
 	/// </summary>
 	public abstract class MobileObject
 	{
+		#region Basic properties (Position, Size, Player)
 		/// <summary>
-		/// 
+		/// Coordinates of the object's top left corner
 		/// </summary>
-		public PointF Position;
+		/// <remarks>
+		/// Note that these are game, not animation coordinates.
+		/// A player's "Position" will thus be somewhere around
+		/// his waist.
+		/// </remarks>
+		public PointF Position
+		{
+			get { return new PointF(X, Y); }
+			protected set
+			{
+				X = value.X;
+				Y = value.Y;
+			}
+		}
 
 		/// <summary>
-		/// 
+		/// Size of the object on the board
 		/// </summary>
+		/// <remarks>
+		/// Note that these are game, not animation coordinates.
+		/// A player's size will thus be (1, 1), even though it
+		/// is probably displayed larger.
+		/// </remarks>
 		public readonly SizeF Size;
 
-		/// <summary></summary>
+		/// <summary>
+		/// The object's Left coordinate
+		/// </summary>
 		public float X
 		{
-			get { return Position.X; }
-			protected set { Position.X = value; }
-		}
-		/// <summary></summary>
-		public float Y
-		{
-			get { return Position.Y; }
-			protected set { Position.Y = value; }
+			get;
+			protected set;
 		}
 
-		/// <summary></summary>
+		/// <summary>
+		/// The object's top coordinate
+		/// </summary>
+		public float Y
+		{
+			get;
+			protected set;
+		}
+
+		/// <summary>
+		/// The object's width
+		/// </summary>
 		public float Width { get { return Size.Width; } }
-		/// <summary></summary>
+
+		/// <summary>
+		/// The object's height
+		/// </summary>
 		public float Height { get { return Size.Height; } }
 
 		/// <summary>
-		/// 
+		/// The rectangle that the object spans on the board
 		/// </summary>
-		public RectangleF Bounds { get { return new RectangleF(Position, Size); } }
+		public RectangleF Bounds
+		{
+			get
+			{
+				return new RectangleF(X, Y, Size.Width, Size.Height);
+			}
+		}
 
 		/// <summary>
-		/// 
+		/// The player that this object belongs to (or represents), or -1 if none
 		/// </summary>
-		/// <param name="x"></param>
-		/// <param name="y"></param>
-		/// <param name="width"></param>
-		/// <param name="height"></param>
-		/// <param name="player"></param>
+		/// <remarks>
+		/// This is used to identify players and to choose the right color for
+		/// drawing them and their items
+		/// </remarks>
+		public readonly int PlayerIndex;
+		#endregion
+
+		#region Constructors
+		/// <summary>
+		/// Initialize a new board object with the given size at the given position
+		/// and belonging to the specified player
+		/// </summary>
+		/// <param name="x">Left coordinate</param>
+		/// <param name="y">Top coordinate</param>
+		/// <param name="width">Object width</param>
+		/// <param name="height">Object height</param>
+		/// <param name="player">
+		/// Index ([0, PlayerCount[) of the player that the object belongs
+		/// to (or represents), or -1 for player-independent objects
+		/// </param>
 		protected MobileObject(float x, float y, float width, float height, int player)
 		{
-			Position.X = x;
-			Position.Y = y;
-			Size.Width = width;
-			Size.Height = height;
+			Position = new PointF(x, y);
+			Size = new SizeF(width, height);
 			PlayerIndex = player;
+			SpeedX = 0.125f;
+			SpeedY = 0.125f;
 		}
+
 		/// <summary>
-		/// 
+		/// Initialize a new board object with the given size at the given position
 		/// </summary>
-		/// <param name="x"></param>
-		/// <param name="y"></param>
-		/// <param name="width"></param>
-		/// <param name="height"></param>
+		/// <param name="x">Left coordinate</param>
+		/// <param name="y">Top coordinate</param>
+		/// <param name="width">Object width</param>
+		/// <param name="height">Object height</param>
 		protected MobileObject(float x, float y, float width, float height)
 			: this(x, y, width, height, -1) { }
+		#endregion
 
-		/// <summary></summary>
+		#region Animation
+		/// <summary>
+		/// The animation that the object is visualized as
+		/// </summary>
 		protected AnimationIndex Animation;
-		/// <summary></summary>
-		protected int AnimationState;
-		/// <summary></summary>
-		protected bool Loop = true;
-		/// <summary></summary>
-		public readonly int PlayerIndex;
 
+		/// <summary>
+		/// The current state (frame number) of the animation
+		/// </summary>
+		protected int AnimationState;
+
+		/// <summary>
+		/// Whether the animation loops
+		/// </summary>
+		/// <value>
+		/// <c>true</c> if the animation should be looped endlessly,
+		/// <c>false</c> if the animation should be played only once
+		/// </value>
+		/// <remarks>
+		/// An object with a non-looping animation is destroyed
+		/// in <see cref="Animate" /> when the animation is finished
+		/// </remarks>
+		protected bool Loop = true;
 
 		/// <summary>
 		/// Increase the animation state
 		/// </summary>
-		/// <param name="aniList"></param>
+		/// <param name="aniList">The game's animation list</param>
 		/// <param name="ticks">
-		/// Number of time units that have passed
+		/// Number of animation ticks that have passed
 		/// </param>
 		/// <returns>
 		/// <c>true</c> if the animation should go on,
@@ -135,13 +201,16 @@ namespace BomberStuff.Core
 		}
 
 		/// <summary>
-		/// 
+		/// Get a sprite to draw for this object on the specified device
 		/// </summary>
-		/// <param name="aniList"></param>
-		/// <param name="device"></param>
-		/// <returns></returns>
+		/// <param name="aniList">The game's animation list</param>
+		/// <param name="device">The device to get a sprite for</param>
+		/// <returns>The sprite the draw</returns>
 		public virtual ISprite GetSprite(AnimationList aniList, IDevice device)
 		{
+			// TRYTRY: this seems to be quite a performance penalty. Verify.
+			//         Player-related objects currently override this instead
+			//         of relying on this check.
 			//if (PlayerIndex == -1)
 				return aniList[Animation].GetSprite(device, AnimationState);
 			//else
@@ -149,125 +218,282 @@ namespace BomberStuff.Core
 		}
 
 		/// <summary>
-		/// 
+		/// Get the current animation frame's offset
 		/// </summary>
-		/// <returns></returns>
+		/// <returns>
+		/// The coordinates of the object's <see cref="Position" />
+		/// relative to the top left corner of the current animation
+		/// frame
+		/// </returns>
 		public virtual SizeF GetOffset(AnimationList aniList)
 		{
-			//Console.Write("Getting offset for " + Animation);
 			return aniList[Animation].GetOffset(AnimationState);
 		}
 
 		/// <summary>
-		/// 
+		/// Get the current animation frame's size
 		/// </summary>
-		/// <param name="aniList"></param>
-		/// <returns></returns>
+		/// <param name="aniList">The game's animation list</param>
+		/// <returns>
+		/// The size of the object's current animation frame
+		/// </returns>
 		public SizeF GetSpriteSize(AnimationList aniList)
 		{
 			return aniList[Animation].GetSpriteSize(AnimationState);
 		}
+		#endregion
 
 		/// <summary>
-		/// 
+		/// Handle a number of game ticks
 		/// </summary>
-		/// <param name="direction"></param>
-		/// <param name="speed"></param>
-		public virtual void SetMoveState(Directions direction, float speed)
-		{
-			m_SpeedX = DirectionUtilities.GetX(direction) * speed;
-			m_SpeedY = DirectionUtilities.GetY(direction) * speed;
-		}
-
-		
-		/// <summary>The object's speed</summary>
-		/// <seealso cref="SpeedX" />
-		/// <seealso cref="SpeedY" />
-		protected float m_SpeedX, m_SpeedY;
-
-		// TRYTRY: Do we actually need public speed querying?
-		/// <summary>
-		/// The object's speed in X direction in fields per tick
-		/// </summary>
-		public float SpeedX { get { return m_SpeedX; } }
-		/// <summary>
-		/// The object's speed in Y direction in fields per tick
-		/// </summary>
-		public float SpeedY { get { return m_SpeedY; } }
-
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="board"></param>
-		/// <param name="ticks"></param>
+		/// <param name="board">
+		/// The board that the object is on
+		/// </param>
+		/// <param name="ticks">
+		/// The number of game ticks that have passed
+		/// </param>
+		/// <remarks>
+		/// All MobileObject's implementation does here is moving.
+		/// Derived classes should override this function if they
+		/// need to handle game ticks. base.Tick() must be called
+		/// in the overridden function in this case.
+		/// </remarks>
 		public virtual void Tick(Board board, int ticks)
 		{
+			// Move the object. Nothing else to do here.
 			Move(board, ticks);
 		}
 
+		#region General movement fields and methods
+		/// <summary>
+		/// The object's horizontal speed in fields per game tick
+		/// </summary>
+		/// <value>
+		/// A positive value that represents the object's
+		/// "potential" speed if it were moving
+		/// </value>
+		/// <seealso cref="SpeedY" />
+		protected float SpeedX;
+
+		/// <summary>
+		/// The object's vertical speed in fields per game tick
+		/// </summary>
+		/// <value>
+		/// A positive value that represents the object's
+		/// "potential" speed if it were moving
+		/// </value>
+		/// <seealso cref="SpeedX" />
+		protected float SpeedY;
+
+		/// <summary>
+		/// The direction in which the object is primarily moving
+		/// </summary>
+		public Directions Direction
+		{
+			get;
+			private set;
+		}
+
+		/// <summary>
+		/// The secondary direction in which the object is moving
+		/// </summary>
+		/// <remarks>
+		/// If the object hits anything and has to stop in the
+		/// primary direction, this is swapped with Direction
+		/// </remarks>
+		public Directions SecondaryDirection
+		{
+			get;
+			private set;
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		public bool Moving
+		{
+			get;
+			private set;
+		}
+
+		/// <summary>
+		/// Sets the primary and secondary direction of the object and
+		/// whether it is moving
+		/// </summary>
+		/// <param name="primary">Primary direction</param>
+		/// <param name="secondary">Secondary direction</param>
+		/// <param name="moving">
+		/// <c>true</c> if the object is moving, <c>false</c> otherwise
+		/// </param>
+		/// <remarks>
+		/// Derived classes that require different animations depending on
+		/// whether the object moves or on the movement direction should override
+		/// this. base.SetMoveState must be called in that case.
+		/// </remarks>
+		public virtual void SetMoveState(Directions primary, Directions secondary, bool moving)
+		{
+			Direction = primary;
+			SecondaryDirection = secondary;
+			Moving = moving;
+		}
+
+		/// <summary>
+		/// Sets the direction of the object and whether it is moving
+		/// </summary>
+		/// <param name="direction">Object's direction</param>
+		/// <param name="moving">
+		/// <c>true</c> if the object is moving, <c>false</c> otherwise
+		/// </param>
+		/// <remarks>
+		/// The object's secondary direction is set to
+		/// <paramref name="direction"/> as well to imply that there is no
+		/// secondary direction
+		/// </remarks>
+		public void SetMoveState(Directions direction, bool moving)
+		{
+			SetMoveState(direction, direction, moving);
+		}
+		#endregion
+
+		#region Internal movement handling
 		/// <summary>
 		/// 
 		/// </summary>
 		/// <param name="board"></param>
 		/// <param name="ticks"></param>
-		protected void Move(Board board, int ticks)
+		private void Move(Board board, int ticks)
 		{
-			if (m_SpeedX == 0 && m_SpeedY == 0)
+			// move one 'step' per tick
+			while (Moving && ticks-- > 0)
 			{
-				//System.Console.WriteLine(this + " not moving");
-				return;
-			}
-
-			if (ticks == 0)
-				return;
-
-			//System.Console.WriteLine("Moving " + this + " with speed " + SpeedX + ", " + SpeedY + " for " + ticks + " ticks");
-
-			while (ticks-- > 0)
-			{
-				// move. the direction with the higher speed goes first
-				if (Math.Abs(m_SpeedX) >= Math.Abs(m_SpeedY))
+				float dX = DirectionUtilities.GetX(Direction) * SpeedX;
+				float dY = DirectionUtilities.GetY(Direction) * SpeedY;
+			
+				if (dX != 0)
 				{
-					X = MoveX(board);
-					Y = MoveY(board);
+					// moving in X direction
+					if (!AdjustY(board, X + dX))
+						X = MoveX(board, X + dX);
 				}
+				else /* if (DirectionUtilities.GetY(Direction) != 0) */
+				{
+					// moving in Y direction
+					if (!AdjustX(board, Y + dY))
+						Y = MoveY(board, Y + dY);
+				}
+			}
+		}
+
+		private bool AdjustY(Board board, float newX)
+		{
+			float y = (float)Math.Floor(Y);
+			float dY = Y - y;
+
+			float newY = TryAdjust(board, newX, y, newX, y + 1f, dY);
+
+			// way is blocked or no adjustment needed
+			if (newY == 0f)
+				return false;
+
+			Y += newY * SpeedY;
+
+			return true;
+		}
+
+		private bool AdjustX(Board board, float newY)
+		{
+			float x = (float)Math.Floor(X);
+			float dX = X - x;
+
+			float newX = TryAdjust(board, x, newY, x + 1f, newY, dX);
+
+			// way is blocked or no adjustment needed
+			if (newX == 0f)
+				return false;
+
+			X += newX * SpeedX;
+
+			return true;
+		}
+
+		//
+		// +---+---+
+		// |   |   |
+		// | 1 | 2 |
+		// |   |   |
+		// +---+---+
+		// |   |   |
+		// | 3 | 4 |
+		// |   |   |
+		// +---+---+
+		//
+
+		private float TryAdjust(Board board, float firstX, float firstY, float secondX, float secondY, float delta)
+		{
+			// exactly on the field. No adjustment needed
+			if (delta == 0f)
+				return 0f;
+
+			// if we're in the top half of the field (on field 1),
+			// try to move towards field 2 first
+			if (delta < 0.5f)
+			{
+				if (!IsCollision(board, firstX, firstY))
+					return -1f; // top is okay
+
+				else if (!IsCollision(board, secondX, secondY))
+					return +1f; // bottom is okay
+
 				else
-				{
-					Y = MoveY(board);
-					X = MoveX(board);
-				}
+					return 0f;
 			}
+			// otherwise check field 3 first
+			else /* if (delta >= 0.5f) */
+			{
+				if (!IsCollision(board, secondX, secondY))
+					return +1f; // bottom is okay
 
-			//System.Console.WriteLine(this + " at ({0}, {1}), speed ({2}, {3})", X, Y, SpeedX, SpeedY);
+				else if (!IsCollision(board, firstX, firstY))
+					return -1f; // top is okay
+
+				else
+					return 0f;
+			}
+		}
+
+		private void SwapDirections()
+		{
+			if (Direction != SecondaryDirection)
+				SetMoveState(SecondaryDirection, Direction, Moving);
 		}
 
 		/// <summary>
 		/// Try to move the object in X direction
 		/// </summary>
 		/// <param name="board"></param>
+		/// <param name="newX"></param>
 		/// <returns>the new X coordinate</returns>
-		protected float MoveX(Board board)
+		private float MoveX(Board board, float newX)
 		{
-			float newX = X + SpeedX;
-			
 			// make sure the new position is still on the board
 			if (newX < 0.0f)
 			{
 				BorderCollide();
-				m_SpeedX = 0.0f;
-				newX = 0.0f;
+				SwapDirections();
+				newX = 0f;
 			}
-			else if (newX > board.Width - 1.0f)
+			else if (newX > board.Width - 1f)
 			{
 				BorderCollide();
-				m_SpeedX = 0.0f;
-				newX = board.Width - 1.0f;
+				SwapDirections();
+				newX = board.Width - 1f;
 			}
 
 			// check if the new position is blocked
 			if (IsCollision(board, newX, Y))
 			{
-				//m_SpeedX = 0.0f;
+				SwapDirections();
+				// TODO: set us as close as possible to the offending object
 				newX = X;
 			}
 
@@ -278,45 +504,47 @@ namespace BomberStuff.Core
 		/// Try to move the object in Y direction
 		/// </summary>
 		/// <param name="board"></param>
+		/// <param name="newY"></param>
 		/// <returns></returns>
-		protected float MoveY(Board board)
+		private float MoveY(Board board, float newY)
 		{
-			float newY = Y + SpeedY;
-
 			// make sure the new position is still on the board
 			if (newY < 0.0f)
 			{
 				BorderCollide();
-				m_SpeedY = 0.0f;
+				SwapDirections();
 				newY = 0.0f;
 			}
 			else if (newY > board.Height - 1.0f)
 			{
 				BorderCollide();
-				m_SpeedY = 0.0f;
+				SwapDirections();
 				newY = board.Height - 1.0f;
 			}
 
 			// check if the new position is blocked
 			if (IsCollision(board, X, newY))
 			{
-				//m_SpeedY = 0.0f;
+				SwapDirections();
+				// TODO: set us as close as possible to the offending object
 				newY = Y;
 			}
 
 			return newY;
 		}
+		#endregion
 
+		#region Collision testing and handling
 		/// <summary>
 		/// 
 		/// </summary>
 		/// <param name="board"></param>
 		/// <param name="newX"></param>
 		/// <param name="newY"></param>
-		protected bool IsCollision(Board board, float newX, float newY)
+		private bool IsCollision(Board board, float newX, float newY)
 		{
 			RectangleF newRect = new RectangleF(new PointF(newX, newY), Size);
-			RectangleF oldRect = new RectangleF(Position, Size);
+			RectangleF oldRect = Bounds;
 
 			foreach (MobileObject obj in board.Items)
 			{
@@ -354,5 +582,6 @@ namespace BomberStuff.Core
 		/// be initiated.
 		/// </summary>
 		protected abstract void BorderCollide();
+		#endregion
 	}
 }

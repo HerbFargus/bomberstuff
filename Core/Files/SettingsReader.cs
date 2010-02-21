@@ -1,7 +1,7 @@
 ﻿//
 // SettingsReader.cs - SettingsReader class
 //
-// Copyright © 2009  Thomas Faber
+// Copyright © 2009-2010  Thomas Faber
 //
 // This file is part of Bomber Stuff.
 //
@@ -262,7 +262,8 @@ namespace BomberStuff.Files
 				}
 
 				//System.Console.WriteLine(reader.NodeType + " node: " + reader.Name);
-				reader.ReadEndElement();
+				if (reader.NodeType != XmlNodeType.Element)
+					reader.ReadEndElement();
 			}
 			reader.ReadEndElement();
 

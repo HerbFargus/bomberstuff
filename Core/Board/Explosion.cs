@@ -33,11 +33,13 @@ namespace BomberStuff.Core
 		/// <summary>
 		/// 
 		/// </summary>
-		public const long ExplosionTicks = 20;
+		public const long ExplosionTicks = 9;
 		/// <summary>
 		/// 
 		/// </summary>
 		public long TicksLeft = ExplosionTicks;
+
+		float xOffset, yOffset;
 
 		/// <summary>
 		/// 
@@ -58,8 +60,12 @@ namespace BomberStuff.Core
 		/// <param name="direction"></param>
 		/// <param name="isTip"></param>
 		public Explosion(int x, int y, int player, Directions direction, bool isTip)
-			: base(x, y, 1.0f, 1.0f, player)
+			: base(GetX(x, direction, isTip), GetY(y, direction, isTip),
+					GetWidth(direction, isTip), GetHeight(direction, isTip),
+					player)
 		{
+			xOffset = X - x;
+			yOffset = Y - y;
 			if (isTip)
 				Animation = new PlayerDirectionAnimationIndex(PlayerDirectionAnimationIndex.Types.ExplosionTip, direction, 0);
 			else
@@ -73,9 +79,73 @@ namespace BomberStuff.Core
 		/// <param name="y"></param>
 		/// <param name="player"></param>
 		public Explosion(int x, int y, int player)
-			: base(x, y, 0.0f, 0.0f, player)
+			: base(x, y, 1.0f, 1.0f, player)
 		{
 			Animation = new PlayerAnimationIndex(PlayerAnimationIndex.Types.ExplosionCenter, 0);
+		}
+
+		//
+		// ·  ···  ···  ···  ···  ···  ·
+		// ·  ···  ···  ·^·  ···  ···  ·
+		// ·  ···  ···  ·|·  ···  ···  ·
+		//
+		// ·  ···  ···  ·|·  ···  ···  ·
+		// ·  ···  ···  ·|·  ···  ···  ·
+		// ·  ···  ···  ·|·  ···  ···  ·
+		//
+		// ·  ···  ···  ·|·  ···  ···  ·
+		// ·  ·<-  ---  -+-  ---  ->·  ·
+		// ·  ···  ···  ·|·  ···  ···  ·
+		//
+		// ·  ···  ···  ·|·  ···  ···  ·
+		// ·  ···  ···  ·|·  ···  ···  ·
+		// ·  ···  ···  ·|·  ···  ···  ·
+		//
+		// ·  ···  ···  ·|·  ···  ···  ·
+		// ·  ···  ···  ·v·  ···  ···  ·
+		// ·  ···  ···  ···  ···  ···  ·
+		//
+
+		private static float GetX(int x, Directions direction, bool isTip)
+		{
+			if (direction == Directions.Down || direction == Directions.Up)
+				return x + 0.5f;
+			if (isTip && direction == Directions.Left)
+				return x + 0.5f;
+
+			return x;
+		}
+
+		private static float GetY(int y, Directions direction, bool isTip)
+		{
+			if (direction == Directions.Left || direction == Directions.Right)
+				return y + 0.5f;
+			if (isTip && direction == Directions.Up)
+				return y + 0.5f;
+
+			return y;
+		}
+
+		private static float GetWidth(Directions direction, bool isTip)
+		{
+			if (direction == Directions.Down || direction == Directions.Up)
+				return 0.0f;
+
+			else if (isTip)
+				return 0.5f;
+
+			return 1.0f;
+		}
+
+		private static float GetHeight(Directions direction, bool isTip)
+		{
+			if (direction == Directions.Left || direction == Directions.Right)
+				return 0.0f;
+
+			else if (isTip)
+				return 0.5f;
+
+			return 1.0f;
 		}
 
 		/// <summary>
@@ -110,8 +180,8 @@ namespace BomberStuff.Core
 		{
 			SizeF offset = aniList[Animation].GetOffset(AnimationState);
 			// HACKHACK: this belongs to the animation, not the object
-			offset.Width -= 2.0f / 40.0f;
-			offset.Height -= 1.0f / 36.0f;
+			offset.Width -= 2.0f / 40.0f - xOffset;
+			offset.Height -= 1.0f / 36.0f - yOffset;
 
 			return offset;
 		}

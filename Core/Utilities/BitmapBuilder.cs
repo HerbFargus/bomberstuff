@@ -200,7 +200,7 @@ public class BitmapBuilder : IDisposable
 	/// </summary>
 	/// <param name="s">the Stream to read the palette from</param>
 	/// <remarks>
-	/// TODO: This will read a currently unknown number of bytes.
+	/// TRYTRY: this should read PaletteSize bytes
 	/// </remarks>
 	public void ReadPaletteFromPCX(Stream s)
 	{
@@ -214,7 +214,7 @@ public class BitmapBuilder : IDisposable
 	/// </summary>
 	/// <param name="r">the BinaryReader to read the palette with</param>
 	/// <remarks>
-	/// TODO: This will read a currently unknown number of bytes.
+	/// TRYTRY: this should read PaletteSize bytes
 	/// </remarks>
 	public void ReadPaletteFromPCX(BinaryReader r)
 	{
@@ -236,7 +236,7 @@ public class BitmapBuilder : IDisposable
 	/// specified <see cref="BinaryReader" /> and insert it into the bitmap
 	/// data
 	/// </summary>
-	/// <param name="r">the BinaryReader to read the data with</param>
+	/// <param name="s">the Stream to read the data from</param>
 	/// <param name="maxLength">
 	/// the maximum number of bytes to be read from the stream. Pass
 	/// <see cref="UInt64.MaxValue" /> if there is no limit
@@ -251,9 +251,7 @@ public class BitmapBuilder : IDisposable
 	/// Atomic bomberman ANI files, which is (exactly?) the same as that used
 	/// in TGA files.
 	/// </remarks>
-	// TODO: probably make ReadDataFromAni work on the stream instead?
-	// it only uses ReadByte anyway
-	public long ReadDataFromAni(BinaryReader r, ulong maxLength)
+	public long ReadDataFromAni(Stream s, ulong maxLength)
 	{
 		long bytesRead = 0;
 		
@@ -289,7 +287,7 @@ public class BitmapBuilder : IDisposable
 						return -bytesRead;
 					
 					// this is the status/count byte
-					count = r.ReadByte();
+					count = (uint)s.ReadByte();
 					++bytesRead;
 					
 					// if bit 7 is set, this denotes the start of an RLE block
@@ -304,9 +302,7 @@ public class BitmapBuilder : IDisposable
 						if ((ulong)bytesRead + bytesPerUnit > maxLength)
 							return -bytesRead;
 						
-						//for (int j = 0; j < bytesPerUnit; ++j)
-						//	data[j] = r.ReadByte();
-						r.Read(data, 0, (int)bytesPerUnit);
+						s.Read(data, 0, (int)bytesPerUnit);
 						
 						bytesRead += bytesPerUnit;
 					}
@@ -330,18 +326,13 @@ public class BitmapBuilder : IDisposable
 				// in RLE mode we just add the saved data unit once
 				if (rle)
 				{
-					//for (int j = 0; j < bytesPerUnit; ++j)
-					//	m_BitmapData[i++] = data[j];
 					Array.Copy(data, 0, m_BitmapData, (int)i, (int)bytesPerUnit);
 					i += bytesPerUnit;
 				}
 				// in raw mode, we copy one unit
 				else
 				{
-					//for (int j = 0; j < bytesPerUnit; ++j)
-					//	m_BitmapData[i++] = r.ReadByte();
-
-					r.Read(m_BitmapData, (int)i, (int)bytesPerUnit);
+					s.Read(m_BitmapData, (int)i, (int)bytesPerUnit);
 					i += bytesPerUnit;
 					bytesRead += bytesPerUnit;
 				}

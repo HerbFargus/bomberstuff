@@ -32,7 +32,8 @@ namespace BomberStuff.Core
 		/// <summary>
 		/// 
 		/// </summary>
-		private const long ExplosionTicks = 20;
+		private const long ExplosionTicks = 9;
+		
 		/// <summary>
 		/// 
 		/// </summary>

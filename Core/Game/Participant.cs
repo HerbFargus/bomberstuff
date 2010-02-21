@@ -1,7 +1,7 @@
 ﻿//
 // Participant.cs - Participant class
 //
-// Copyright © 2009  Thomas Faber
+// Copyright © 2009-2010  Thomas Faber
 //
 // This file is part of Bomber Stuff.
 //
@@ -21,7 +21,7 @@
 
 using System;
 
-namespace BomberStuff.Core
+namespace BomberStuff.Core.Game
 {
 	/// <summary>
 	/// Represents a participant in a game
@@ -228,6 +228,8 @@ namespace BomberStuff.Core
 		public readonly int PlayerIndex;
 		/// <summary>Specifies the player's direction</summary>
 		public readonly Directions Direction;
+		/// <summary>Specifies the player's secondary direction</summary>
+		public readonly Directions SecondaryDirection;
 		/// <summary>Specifies whether the player is moving</summary>
 		public readonly bool Moving;
 
@@ -235,12 +237,14 @@ namespace BomberStuff.Core
 		/// 
 		/// </summary>
 		/// <param name="playerIndex"></param>
-		/// <param name="direction"></param>
+		/// <param name="primary"></param>
+		/// <param name="secondary"></param>
 		/// <param name="moving"></param>
-		public MovePlayerEventArgs(int playerIndex, Directions direction, bool moving)
+		public MovePlayerEventArgs(int playerIndex, Directions primary, Directions secondary, bool moving)
 		{
 			PlayerIndex = playerIndex;
-			Direction = direction;
+			Direction = primary;
+			SecondaryDirection = secondary;
 			Moving = moving;
 		}
 	}

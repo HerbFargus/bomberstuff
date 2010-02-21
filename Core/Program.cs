@@ -1,7 +1,7 @@
 ﻿//
 // Program.cs - Program class
 //
-// Copyright © 2009  Thomas Faber
+// Copyright © 2009-2010  Thomas Faber
 //
 // This file is part of Bomber Stuff.
 //
@@ -26,6 +26,7 @@ using System.Collections.Generic;
 
 using BomberStuff.Core.UserInterface;
 using BomberStuff.Core.Input;
+using BomberStuff.Core.Game;
 using BomberStuff.Core.Utilities;
 
 namespace BomberStuff.Core
@@ -35,7 +36,7 @@ namespace BomberStuff.Core
 	/// </summary>
 	internal static class Program
 	{
-		private static Game Game;
+		private static Game.Game Game;
 		private static int playerCount = 0;
 		private static int nParticipantsNegotiating;
 		private static int[] playersRequested;
@@ -50,6 +51,39 @@ namespace BomberStuff.Core
 			--nParticipantsNegotiating;
 		}
 
+		private class ConsoleTraceListener : System.Diagnostics.TraceListener
+		{
+			public static int fails
+			{
+				get;
+				private set;
+			}
+
+			static ConsoleTraceListener()
+			{
+				fails = 0;
+			}
+			/// <summary>
+			/// 
+			/// </summary>
+			/// <param name="message"></param>
+			public override void Write(string message)
+			{
+				System.Console.Write(message);
+				fails++;
+			}
+
+			/// <summary>
+			/// 
+			/// </summary>
+			/// <param name="message"></param>
+			public override void WriteLine(string message)
+			{
+				System.Console.WriteLine(message);
+				fails++;
+			}
+		}
+
 		/// <summary>
 		/// Program entry. Handles command line arguments and loads
 		/// plugins accordingly
@@ -57,6 +91,46 @@ namespace BomberStuff.Core
 		/// <param name="args">Program arguments</param>
 		private static void Main(string/*^!^*/[]/*^!^*/ args)
 		{
+			System.Version ver = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
+			System.Console.WriteLine("This is Bomber Stuff {0}.{1}.{2} Build {3}", ver.Major, ver.Minor, ver.Build, ver.Revision);
+			//System.Console.WriteLine("Copyright (c) 2010 Thomas Faber");
+			//System.Console.WriteLine("License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>");
+			//System.Console.WriteLine("This is free software: you are free to change and redistribute it.");
+			//System.Console.WriteLine("There is NO WARRANTY, to the extent permitted by law.");
+			System.Console.WriteLine();
+
+			if (args.Length > 0)
+			{
+				if (args[0] == "-i")
+				{
+					System.Console.WriteLine("Running in integrity test mode");
+					// prepare integrity testing
+					System.Diagnostics.Debug.Listeners.Clear();
+					System.Diagnostics.Debug.Listeners.Add(new ConsoleTraceListener());
+					System.Diagnostics.Trace.Assert(false, "Assert test SUCCEEDED");
+					
+					// integrity testing
+					System.Diagnostics.Trace.Assert(!new Drawing.RectangleF(0, 0, 1, 1).IntersectsWith(new Drawing.RectangleF(1, 0, 1, 1)), "test1");
+					System.Diagnostics.Trace.Assert(new Drawing.RectangleF(0, 0, 1, 1).IntersectsWith(new Drawing.RectangleF(511.0f / 512.0f, 0, 1, 1)), "test2");
+
+					System.Diagnostics.Trace.Assert(new Drawing.RectangleF(0, 0, 1, 1).IntersectsWith(new Drawing.RectangleF(.5f, .5f, 0, 0)), "test3");
+					System.Diagnostics.Trace.Assert(new Drawing.RectangleF(.5f, .5f, 0, 0).IntersectsWith(new Drawing.RectangleF(0, 0, 1, 1)), "test4");
+
+					System.Diagnostics.Trace.Assert(!new Drawing.RectangleF(1, 0, 1, 1).IntersectsWith(new Drawing.RectangleF(.5f, .5f, .5f, 0)), "test5");
+					System.Diagnostics.Trace.Assert(new Drawing.RectangleF(.99f, 0, 1, 1).IntersectsWith(new Drawing.RectangleF(.5f, .5f, .5f, 0)), "test6");
+
+					System.Diagnostics.Trace.Assert(!new Drawing.RectangleF(.5f, .5f, .5f, 0).IntersectsWith(new Drawing.RectangleF(.5f, .5f, 0, 0)), "test7");
+					System.Diagnostics.Trace.Assert(new Drawing.RectangleF(.5f, .5f, .5f, 0).IntersectsWith(new Drawing.RectangleF(.4f, .4f, .2f, .2f)), "test8");
+					// end integrity testing
+
+					if (ConsoleTraceListener.fails == 1)
+						System.Console.WriteLine("All tests succeeded");
+					else
+						System.Console.WriteLine("{0} test(s) failed", ConsoleTraceListener.fails - 1);
+					return;
+				}
+			}
+
 			// load settings
 			Settings settings;
 
@@ -106,7 +180,7 @@ namespace BomberStuff.Core
 					throw new MissingMethodException();
 
 				// start a new game
-				Game = new Game(settings);
+				Game = new Game.Game(settings);
 
 				ui.LoadSprites += Game.LoadSprites;
 				ui.Render += Game.Render;
@@ -186,6 +260,10 @@ namespace BomberStuff.Core
 
 				// start up the game UI
 				ui.Initialize(settings);
+
+				// make settings file backup. This one apparently works
+				System.IO.File.Copy("settings.xml", "settings.lastgood.xml", true);
+
 				ui.MainLoop();
 				ui.Terminate();
 

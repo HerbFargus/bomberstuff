@@ -1,7 +1,7 @@
 ﻿//
 // LocalParticipant.cs - LocalParticipant class
 //
-// Copyright © 2009  Thomas Faber
+// Copyright © 2009-2010  Thomas Faber
 //
 // This file is part of Bomber Stuff.
 //
@@ -23,7 +23,7 @@ using System;
 
 using BomberStuff.Core.Input;
 
-namespace BomberStuff.Core
+namespace BomberStuff.Core.Game
 {
 	/// <summary>
 	/// 
@@ -71,6 +71,30 @@ namespace BomberStuff.Core
 			}
 		}
 
+		private void MovePressed(Player player, Directions direction)
+		{
+			if (direction == player.Direction)
+				return;
+			
+			if (player.Moving)
+				OnMovePlayer(new MovePlayerEventArgs(player.PlayerIndex, direction, player.Direction, true));
+			else
+				OnMovePlayer(new MovePlayerEventArgs(player.PlayerIndex, direction, direction, true));
+		}
+
+		private void MoveReleased(Player player, Directions direction)
+		{
+			if (direction == player.Direction)
+			{
+				if (direction != player.SecondaryDirection)
+					OnMovePlayer(new MovePlayerEventArgs(player.PlayerIndex, player.SecondaryDirection, player.SecondaryDirection, true));
+				else
+					OnMovePlayer(new MovePlayerEventArgs(player.PlayerIndex, player.Direction, player.Direction, false));
+			}
+			else if (direction == player.SecondaryDirection)
+				OnMovePlayer(new MovePlayerEventArgs(player.PlayerIndex, player.Direction, player.Direction, player.Moving));
+		}
+
 		private void Control_Pressed(object sender, PlayerControlEventArgs e)
 		{
 			for (int i = 0; i < Math.Min(Players.Length, Controls.Length); ++i)
@@ -79,16 +103,16 @@ namespace BomberStuff.Core
 					switch (e.Type)
 					{
 						case PlayerControls.Types.Up:
-							OnMovePlayer(new MovePlayerEventArgs(Players[i].PlayerIndex, Directions.Up, true));
+							MovePressed(Players[i], Directions.Up);
 							break;
 						case PlayerControls.Types.Down:
-							OnMovePlayer(new MovePlayerEventArgs(Players[i].PlayerIndex, Directions.Down, true));
+							MovePressed(Players[i], Directions.Down);
 							break;
 						case PlayerControls.Types.Left:
-							OnMovePlayer(new MovePlayerEventArgs(Players[i].PlayerIndex, Directions.Left, true));
+							MovePressed(Players[i], Directions.Left);
 							break;
 						case PlayerControls.Types.Right:
-							OnMovePlayer(new MovePlayerEventArgs(Players[i].PlayerIndex, Directions.Right, true));
+							MovePressed(Players[i], Directions.Right);
 							break;
 						case PlayerControls.Types.Action1:
 							OnPlayerAction(new PlayerActionEventArgs(Players[i].PlayerIndex, PlayerActionEventArgs.Types.Action1));
@@ -111,16 +135,16 @@ namespace BomberStuff.Core
 					switch (e.Type)
 					{
 						case PlayerControls.Types.Up:
-							OnMovePlayer(new MovePlayerEventArgs(Players[i].PlayerIndex, Directions.Up, false));
+							MoveReleased(Players[i], Directions.Up);
 							break;
 						case PlayerControls.Types.Down:
-							OnMovePlayer(new MovePlayerEventArgs(Players[i].PlayerIndex, Directions.Down, false));
+							MoveReleased(Players[i], Directions.Down);
 							break;
 						case PlayerControls.Types.Left:
-							OnMovePlayer(new MovePlayerEventArgs(Players[i].PlayerIndex, Directions.Left, false));
+							MoveReleased(Players[i], Directions.Left);
 							break;
 						case PlayerControls.Types.Right:
-							OnMovePlayer(new MovePlayerEventArgs(Players[i].PlayerIndex, Directions.Right, false));
+							MoveReleased(Players[i], Directions.Right);
 							break;
 						default:
 							break;

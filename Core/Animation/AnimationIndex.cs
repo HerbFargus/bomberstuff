@@ -113,18 +113,18 @@ namespace BomberStuff.Core.Animation
 	public sealed class PowerupAnimationIndex : AnimationIndex
 	{
 		/// <summary>Number of animations of this type</summary>
-		public const int Count = (int)PowerupTypes.Last + 1;
+		public const int Count = (int)Powerup.Types.Last + 1;
 		/// <summary>Index of the first animation of this type</summary>
 		public const int First = SimpleAnimationIndex.First + SimpleAnimationIndex.Count;
 
 		/// <summary></summary>
-		private readonly PowerupTypes Type;
+		private readonly Powerup.Types Type;
 
 		/// <summary>
 		/// 
 		/// </summary>
 		/// <param name="type"></param>
-		public PowerupAnimationIndex(PowerupTypes type)
+		public PowerupAnimationIndex(Powerup.Types type)
 			: base(First + (int)type)
 		{
 			Type = type;
