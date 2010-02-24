@@ -71,27 +71,39 @@ namespace BomberStuff.Core.Game
 			}
 		}
 
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="player"></param>
+		/// <param name="direction"></param>
 		private void MovePressed(Player player, Directions direction)
 		{
-			if (direction == player.Direction)
-				return;
-			
-			if (player.Moving)
+			if (player.Moving && direction != player.Direction)
+				// change of direction. Old becomes secondary
 				OnMovePlayer(new MovePlayerEventArgs(player.PlayerIndex, direction, player.Direction, true));
 			else
+				// start moving. No secondary
 				OnMovePlayer(new MovePlayerEventArgs(player.PlayerIndex, direction, direction, true));
 		}
 
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="player"></param>
+		/// <param name="direction"></param>
 		private void MoveReleased(Player player, Directions direction)
 		{
 			if (direction == player.Direction)
 			{
 				if (direction != player.SecondaryDirection)
+					// move in secondary direction instead if present
 					OnMovePlayer(new MovePlayerEventArgs(player.PlayerIndex, player.SecondaryDirection, player.SecondaryDirection, true));
 				else
+					// no secondary. Stop
 					OnMovePlayer(new MovePlayerEventArgs(player.PlayerIndex, player.Direction, player.Direction, false));
 			}
 			else if (direction == player.SecondaryDirection)
+				// remove secondary
 				OnMovePlayer(new MovePlayerEventArgs(player.PlayerIndex, player.Direction, player.Direction, player.Moving));
 		}
 

@@ -1,7 +1,7 @@
 ﻿//
 // Powerup.cs - Powerup class
 //
-// Copyright © 2009  Thomas Faber
+// Copyright © 2009-2010  Thomas Faber
 //
 // This file is part of Bomber Stuff.
 //
@@ -29,6 +29,7 @@ namespace BomberStuff.Core
 	/// </summary>
 	public class Powerup : MobileObject
 	{
+		#region Types
 		/// <summary>
 		/// A type of <see cref="Powerup" />.
 		/// </summary>
@@ -64,21 +65,24 @@ namespace BomberStuff.Core
 			/// <summary></summary>
 			Last = Random
 		}
+		#endregion
 
 		/// <summary>
 		/// 
 		/// </summary>
 		public readonly Types Type;
 
+		#region Constructor
 		/// <summary>
 		/// 
 		/// </summary>
 		public Powerup(int x, int y, Types type)
-			: base(x, y, 1.0f, 1.0f)
+			: base(x + 0.5f, y + 0.5f, 0.0f, 0.0f)
 		{
 			Type = type;
 			Animation = new PowerupAnimationIndex(Type);
 		}
+		#endregion
 
 		private bool Used = false;
 
@@ -92,6 +96,7 @@ namespace BomberStuff.Core
 			base.Tick(board, ticks);
 
 			// HACKHACK: using Tick to remove used powerup? That's weird
+			// TODO: add a Board parameter to Collide() to make this unnecessary
 			if (Used)
 				board.Items.Remove(this);
 		}
@@ -139,7 +144,8 @@ namespace BomberStuff.Core
 		/// <returns></returns>
 		public override BomberStuff.Core.Drawing.SizeF GetOffset(AnimationList aniList)
 		{
-			return new BomberStuff.Core.Drawing.SizeF();
+			// No offset except that created by the +0.5f in the constructor
+			return new BomberStuff.Core.Drawing.SizeF(.5f, .5f);
 		}
 
 		/// <summary>
@@ -149,7 +155,8 @@ namespace BomberStuff.Core
 		/// <returns></returns>
 		protected override bool Collide(MobileObject other)
 		{
-			return true;
+			// powerups shouldn't move, so they really shouldn't collide with anything
+			throw new System.InvalidOperationException("Powerup colliding with " + other);
 		}
 
 		/// <summary>
@@ -157,6 +164,17 @@ namespace BomberStuff.Core
 		/// </summary>
 		protected override void BorderCollide()
 		{
+			throw new System.InvalidOperationException("Powerup colliding with border");
 		}
+#if DEBUG
+		/// <summary>
+		/// Convert to string
+		/// </summary>
+		/// <returns>a string representation of the object</returns>
+		public override string ToString()
+		{
+			return Type + " Powerup";
+		}
+#endif
 	}
 }

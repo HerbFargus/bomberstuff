@@ -369,17 +369,19 @@ namespace BomberStuff.Core
 				float dX = DirectionUtilities.GetX(Direction) * SpeedX;
 				float dY = DirectionUtilities.GetY(Direction) * SpeedY;
 			
+				// BUGBUG: because the player "cuts" the corner, an unnecessary collision
+				//         action is taken :|
 				if (dX != 0)
 				{
 					// moving in X direction
-					if (!AdjustY(board, X + dX))
-						X = MoveX(board, X + dX);
+					AdjustY(board, X + dX);
+					X = MoveX(board, X + dX);
 				}
-				else /* if (DirectionUtilities.GetY(Direction) != 0) */
+				else /* if (dY != 0) */
 				{
 					// moving in Y direction
-					if (!AdjustX(board, Y + dY))
-						Y = MoveY(board, Y + dY);
+					AdjustX(board, Y + dY);
+					Y = MoveY(board, Y + dY);
 				}
 			}
 		}
@@ -551,13 +553,25 @@ namespace BomberStuff.Core
 				RectangleF objRect = new RectangleF(obj.Position, obj.Size);
 
 				if (newRect.IntersectsWith(objRect) && !oldRect.IntersectsWith(objRect))
-					//if (Collide(obj))
-					//	return true;
-				// this means if there's a player (you can walk through) AND a
-				// stone (can't walk through) on the field, you might be able to
-				// go there. As this shouldn't happen, we use this (because it saves
-				// the rest of the loop)
-					return Collide(obj);
+				{
+					//System.Console.Write("Testing for collision between {0} and {1}: ", this, obj);
+					if (Collide(obj))
+					{
+						//System.Console.WriteLine("true");
+						return true;
+					}
+					//System.Console.WriteLine("false");
+					// this means if there's a player (you can walk through) AND a
+					// stone (can't walk through) on the field, you might be able to
+					// go there. As this shouldn't happen, we use this (because it saves
+					// the rest of the loop)
+					// err... that does happen. Try to walk through a player who has just
+					// laid a bomb and is standing on it. -> Using the above method
+					//return Collide(obj);
+					// TRYTRY: What if there are multiple object's you can't walk through,
+					//         but one of them has a side effect on collision?
+					//         Can this happen? If so, modify the loop accordingly
+				}
 			}
 
 			return false;

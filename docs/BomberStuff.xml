@@ -669,6 +669,20 @@
             
             </summary>
         </member>
+        <member name="M:BomberStuff.Core.Game.LocalParticipant.MovePressed(BomberStuff.Core.Player,BomberStuff.Core.Directions)">
+            <summary>
+            
+            </summary>
+            <param name="player"></param>
+            <param name="direction"></param>
+        </member>
+        <member name="M:BomberStuff.Core.Game.LocalParticipant.MoveReleased(BomberStuff.Core.Player,BomberStuff.Core.Directions)">
+            <summary>
+            
+            </summary>
+            <param name="player"></param>
+            <param name="direction"></param>
+        </member>
         <member name="T:BomberStuff.Core.Wall">
             <summary>
             
@@ -1093,6 +1107,12 @@
             <summary>
             
             </summary>
+        </member>
+        <member name="M:BomberStuff.Core.Powerup.ToString">
+            <summary>
+            Convert to string
+            </summary>
+            <returns>a string representation of the object</returns>
         </member>
         <member name="T:BomberStuff.Core.Powerup.Types">
             <summary>
