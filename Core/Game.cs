@@ -277,7 +277,11 @@ namespace BomberStuff.Core.Game
 			// Draw items on the board
 			//
 			foreach (MobileObject obj in Board.Items)
-				DrawMobileObject(e.UserInterface, e.Device, obj, System.Drawing.Color.White);
+				if (!(obj is Player))
+					DrawMobileObject(e.UserInterface, e.Device, obj, System.Drawing.Color.White);
+
+			foreach (Player p in Players)
+				DrawMobileObject(e.UserInterface, e.Device, p, System.Drawing.Color.White);
 
 			++framesThisSec;
 		}
