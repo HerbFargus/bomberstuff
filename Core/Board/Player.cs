@@ -76,7 +76,7 @@ namespace BomberStuff.Core
 			MaxBombs = 1;
 			CurrentBombs = 0;
 			Speed = 0.125f;
-			Animation = new PlayerDirectionAnimationIndex(PlayerDirectionAnimationIndex.Types.Stand, Directions.Down, 0);
+			Animation = new PlayerDirectionAnimationIndex(PlayerDirectionAnimationIndex.Types.Stand, Directions.Down);
 		}
 
 		/// <summary>
@@ -93,7 +93,7 @@ namespace BomberStuff.Core
 			
 			// set death animation. This is non-looping, so the player object
 			// will be removed when it's finished
-			Animation = new PlayerDeathAnimationIndex(DeathAnimationIndex, 0);
+			Animation = new PlayerDeathAnimationIndex(DeathAnimationIndex);
 			Loop = false;
 
 			SpeedX = 0f;
@@ -173,10 +173,10 @@ namespace BomberStuff.Core
 
 			if (!moving)
 			{
-				Animation = new PlayerDirectionAnimationIndex(PlayerDirectionAnimationIndex.Types.Stand, primary, 0);
+				Animation = new PlayerDirectionAnimationIndex(PlayerDirectionAnimationIndex.Types.Stand, primary);
 			}
 			else
-				Animation = new PlayerDirectionAnimationIndex(PlayerDirectionAnimationIndex.Types.Walk, primary, 0);
+				Animation = new PlayerDirectionAnimationIndex(PlayerDirectionAnimationIndex.Types.Walk, primary);
 
 			AnimationState = 0;
 		}

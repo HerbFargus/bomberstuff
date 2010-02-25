@@ -1,7 +1,7 @@
 ﻿//
 // Explosion.cs - Explosion class
 //
-// Copyright © 2009  Thomas Faber
+// Copyright © 2009-2010  Thomas Faber
 //
 // This file is part of Bomber Stuff.
 //
@@ -67,9 +67,9 @@ namespace BomberStuff.Core
 			xOffset = X - x;
 			yOffset = Y - y;
 			if (isTip)
-				Animation = new PlayerDirectionAnimationIndex(PlayerDirectionAnimationIndex.Types.ExplosionTip, direction, 0);
+				Animation = new PlayerDirectionAnimationIndex(PlayerDirectionAnimationIndex.Types.ExplosionTip, direction);
 			else
-				Animation = new PlayerDirectionAnimationIndex(PlayerDirectionAnimationIndex.Types.ExplosionMid, direction, 0);
+				Animation = new PlayerDirectionAnimationIndex(PlayerDirectionAnimationIndex.Types.ExplosionMid, direction);
 		}
 
 		/// <summary>
@@ -81,7 +81,7 @@ namespace BomberStuff.Core
 		public Explosion(int x, int y, int player)
 			: base(x, y, 1.0f, 1.0f, player)
 		{
-			Animation = new PlayerAnimationIndex(PlayerAnimationIndex.Types.ExplosionCenter, 0);
+			Animation = new PlayerAnimationIndex(PlayerAnimationIndex.Types.ExplosionCenter);
 		}
 
 		//

@@ -1,7 +1,7 @@
 ﻿//
 // Bomb.cs - Bomb class
 //
-// Copyright © 2009  Thomas Faber
+// Copyright © 2009-2010  Thomas Faber
 //
 // This file is part of Bomber Stuff.
 //
@@ -55,7 +55,7 @@ namespace BomberStuff.Core
 			: base(x, y, 1.0f, 1.0f, player)
 		{
 			Range = range;
-			Animation = new PlayerAnimationIndex(PlayerAnimationIndex.Types.BombRegular, 0);
+			Animation = new PlayerAnimationIndex(PlayerAnimationIndex.Types.BombRegular);
 		}
 
 		/// <summary>

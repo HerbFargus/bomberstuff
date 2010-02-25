@@ -1,7 +1,7 @@
 ﻿//
 // AnimationList.cs - AnimationList class
 //
-// Copyright © 2009  Thomas Faber
+// Copyright © 2009-2010  Thomas Faber
 //
 // This file is part of Bomber Stuff.
 //
@@ -36,7 +36,7 @@ namespace BomberStuff.Core.Animation
 		/// <summary></summary>
 		private Animation[] TilesetAnimations;
 		/// <summary></summary>
-		private List<Animation>[] DeathAnimations;
+		private List<Animation> DeathAnimations;
 		///// <summary>Number of players that animations exist for</summary>
 		//private int PlayerCount;
 		/// <summary>Player Colors</summary>
@@ -50,20 +50,15 @@ namespace BomberStuff.Core.Animation
 		/// <param name="remapInfo"></param>
 		public AnimationList(ColorRemapInfo[] remapInfo)
 		{
-			//PlayerCount = playerCount;
 			Animations = new Animation[SimpleAnimationIndex.Count
 									+ PowerupAnimationIndex.Count
 									+ 4 * DirectionAnimationIndex.Count
-									+ 1/*playerCount*/ * (PlayerAnimationIndex.Count
-											+ 4 * PlayerDirectionAnimationIndex.Count)];
+									+ PlayerAnimationIndex.Count
+									+ 4 * PlayerDirectionAnimationIndex.Count];
 			// this is enlarged automatically
 			TilesetAnimations = new Animation[TilesetAnimationIndex.Count];
-			DeathAnimations = new List<Animation>[1/*playerCount*/];
-			for (int i = 0; i < 1/*playerCount*/; ++i)
-				DeathAnimations[i] = new List<Animation>();
-			RemapInfo = remapInfo;/* new ColorRemapInfo[playerCount];
-			for (int i = 0; i < playerCount; ++i)
-				RemapInfo[i] = PlayerColor(i);*/
+			DeathAnimations = new List<Animation>();
+			RemapInfo = remapInfo;
 		}
 		#endregion
 
@@ -79,7 +74,7 @@ namespace BomberStuff.Core.Animation
 				if (i is PlayerDeathAnimationIndex)
 				{
 					PlayerDeathAnimationIndex di = (PlayerDeathAnimationIndex)i;
-					return DeathAnimations[di.Player][di.Type];
+					return DeathAnimations[di.Type];
 				}
 				else if (i is TilesetAnimationIndex)
 				{
@@ -105,12 +100,9 @@ namespace BomberStuff.Core.Animation
 			//Console.WriteLine("Trying to load animation " + i.Value + ": " + i);
 			if (i is PlayerDeathAnimationIndex)
 			{
-				for (int iPlayer = 0; iPlayer < 1/*PlayerCount*/; ++iPlayer)
-				{
-					DeathAnimations[iPlayer].Add(ani);
-					// TODO remap on the fly, reduce death remapping
-					ani.Remap(RemapInfo);
-				}
+				DeathAnimations.Add(ani);
+				// TODO remap on the fly, reduce death remapping
+				ani.Remap(RemapInfo);
 			}
 			else if (i is TilesetAnimationIndex)
 			{
@@ -191,7 +183,7 @@ namespace BomberStuff.Core.Animation
 								frame.GetSprite(device, ani.VideoMemory, iPlayer);
 						
 				}
-			foreach (Animation ani in DeathAnimations[0])
+			foreach (Animation ani in DeathAnimations)
 				if (ani.Cached)
 				{
 					//System.Console.WriteLine("Caching " + ani.Name);

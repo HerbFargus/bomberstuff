@@ -1,9 +1,7 @@
 ﻿//
-// Bomber Stuff: Atomic Bomberman Remake
-//  Copyright © 2008 Thomas Faber
-//  All Rights Reserved.
+// AniFileReader.cs - interface for reading Atomic Bomerman .ani files
 //
-// Animation.cs - interface for reading Atomic Bomerman .ani files
+// Copyright © 2008-2010  Thomas Faber
 //
 // This file is part of Bomber Stuff.
 // 
@@ -18,7 +16,7 @@
 // GNU General Public License for more details.
 //
 // You should have received a copy of the GNU General Public License
-// along with Bomber Stuff.  If not, see <http://www.gnu.org/licenses/>.
+// along with Bomber Stuff. If not, see <http://www.gnu.org/licenses/>.
 //
 
 using System;
@@ -26,7 +24,6 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
-using System.Threading;
 
 using BomberStuff.Core;
 using BomberStuff.Core.Animation;
@@ -1131,7 +1128,7 @@ namespace BomberStuff.Files
 						{
 							index = new PlayerDirectionAnimationIndex(
 								PlayerDirectionAnimationIndex.Types.Stand,
-								DirectionUtilities.FromString(words[1]), 0);
+								DirectionUtilities.FromString(words[1]));
 						}
 						else
 							throw new FormatException();
@@ -1145,7 +1142,7 @@ namespace BomberStuff.Files
 						{
 							index = new PlayerDirectionAnimationIndex(
 								PlayerDirectionAnimationIndex.Types.Walk,
-								DirectionUtilities.FromString(words[1]), 0);
+								DirectionUtilities.FromString(words[1]));
 						}
 						else
 							throw new FormatException();
@@ -1159,7 +1156,7 @@ namespace BomberStuff.Files
 						{
 							index = new PlayerDirectionAnimationIndex(
 								PlayerDirectionAnimationIndex.Types.Kick,
-								DirectionUtilities.FromString(words[1]), 0);
+								DirectionUtilities.FromString(words[1]));
 						}
 						else
 							throw new FormatException();
@@ -1186,7 +1183,7 @@ namespace BomberStuff.Files
 						if (deathNo < 1/* || deathNo > DeathCount*/)
 							throw new FormatException();
 
-						index = new PlayerDeathAnimationIndex(0, 0);
+						index = new PlayerDeathAnimationIndex(0);
 
 						seq.Cached = false;
 
@@ -1197,7 +1194,7 @@ namespace BomberStuff.Files
 								&& words[2] == "green" && words[3] == "dud")
 						{
 							index = new PlayerAnimationIndex(
-								PlayerAnimationIndex.Types.BombDud, 0);
+								PlayerAnimationIndex.Types.BombDud);
 						}
 						else if (words.Length != 3 || words[2] != "green")
 							throw new FormatException();
@@ -1205,19 +1202,19 @@ namespace BomberStuff.Files
 						else if (words[1] == "regular")
 						{
 							index = new PlayerAnimationIndex(
-								PlayerAnimationIndex.Types.BombRegular, 0);
+								PlayerAnimationIndex.Types.BombRegular);
 
 							seq.VideoMemory = true;
 						}
 						else if (words[1] == "jelly")
 						{
 							index = new PlayerAnimationIndex(
-								PlayerAnimationIndex.Types.BombJelly, 0);
+								PlayerAnimationIndex.Types.BombJelly);
 						}
 						else if (words[1] == "trigger")
 						{
 							index = new PlayerAnimationIndex(
-								PlayerAnimationIndex.Types.BombTrigger, 0);
+								PlayerAnimationIndex.Types.BombTrigger);
 						}
 						else
 							throw new FormatException();
@@ -1237,19 +1234,19 @@ namespace BomberStuff.Files
 							if (words[1] == "center")
 							{
 								index = new PlayerAnimationIndex(
-									PlayerAnimationIndex.Types.ExplosionCenter, 0);
+									PlayerAnimationIndex.Types.ExplosionCenter);
 							}
 							else if (words[1].Substring(0, 3) == "mid")
 							{
 								index = new PlayerDirectionAnimationIndex(
 									PlayerDirectionAnimationIndex.Types.ExplosionMid,
-									DirectionUtilities.FromString(words[1].Substring(3)), 0);
+									DirectionUtilities.FromString(words[1].Substring(3)));
 							}
 							else if (words[1].Substring(0, 3) == "tip")
 							{
 								index = new PlayerDirectionAnimationIndex(
 									PlayerDirectionAnimationIndex.Types.ExplosionTip,
-									DirectionUtilities.FromString(words[1].Substring(3)), 0);
+									DirectionUtilities.FromString(words[1].Substring(3)));
 							}
 							else
 								throw new FormatException();
@@ -1271,7 +1268,7 @@ namespace BomberStuff.Files
 
 						index = new PlayerDirectionAnimationIndex(
 							PlayerDirectionAnimationIndex.Types.Punch,
-							DirectionUtilities.FromString(words[1]), 0);
+							DirectionUtilities.FromString(words[1]));
 						seq.Cached = false;
 
 						break;
@@ -1281,7 +1278,7 @@ namespace BomberStuff.Files
 
 						index = new PlayerDirectionAnimationIndex(
 							PlayerDirectionAnimationIndex.Types.Pickup,
-							DirectionUtilities.FromString(words[1]), 0);
+							DirectionUtilities.FromString(words[1]));
 						seq.Cached = false;
 
 						break;
@@ -1403,11 +1400,11 @@ namespace BomberStuff.Files
 #if !LOWMEM
 						seq.VideoMemory = true;
 #endif
-						// TODO disallow transparency in powerups. This is
+						// disallow transparency in powerups. This is
 						// required because the default powerups' key color
 						// is set to black (HACKHACK?)
-						//foreach (AnimationState stat in seq.States)
-						//	stat.SetKeyColor(stat.RawKeyColor, System.Drawing.Color.Transparent);
+						foreach (AnimationFrame frame in seq.Frames)
+							frame.SetKeyColor(frame.RawKeyColor, System.Drawing.Color.Transparent);
 
 						break;
 
@@ -1421,32 +1418,6 @@ namespace BomberStuff.Files
 										name, seq.Frames.Length);
 
 				return aniList.AddAnimation(index, seq);
-
-				/*if (playerSequence)
-				{
-					if (directedSequence)
-					{
-						for (int player = 1; player <= PlayerCount; ++player)
-							this[new SequenceIndex(directedType, player, direction)] = new Sequence(seq, Game.PlayerColor(player));
-					}
-					else
-						for (int player = 1; player <= PlayerCount; ++player)
-							this[new SequenceIndex(type, player)] = new Sequence(seq, Game.PlayerColor(player));
-					BitmapBuilder.SeqCropDone(true);
-				}
-				else if (deathSequence)
-				{
-					for (int player = 1; player <= PlayerCount; ++player)
-						this[new SequenceIndex(player, deathNo)] = new Sequence(seq, Game.PlayerColor(player));
-					BitmapBuilder.SeqCropDone(true);
-				}
-				else
-				{
-					this[index] = seq;
-					Fabba.Utilities.BitmapBuilder.SeqCropDone(false);
-					/*Console.WriteLine("Sequence {0} has been loaded. It has {3} states. Size of the first is {1}x{2}",
-										name, seq.States[0].BitmapBuilder.Width, seq.States[0].BitmapBuilder.Height, seq.States.Length);* /
-				}*/
 			}
 			catch (FormatException e)
 			{

@@ -10,10 +10,10 @@ using System.Resources;
 //      Build Number
 //      Revision
 //
-[assembly: AssemblyVersion("0.1.1.115")]
+[assembly: AssemblyVersion("0.1.2.118")]
 [assembly: NeutralResourcesLanguageAttribute("en-US")]
-[assembly: AssemblyCompany("N/A")]
+[assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("BomberStuff")]
-[assembly: AssemblyCopyright("Copyright © 2009 Thomas Faber")]
+[assembly: AssemblyCopyright("Copyright © 2009-2010 Thomas Faber")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]

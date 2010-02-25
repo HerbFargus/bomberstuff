@@ -1505,22 +1505,14 @@
         <member name="F:BomberStuff.Core.Animation.PlayerAnimationIndex.First">
             <summary>Index of the first animation of this type</summary>
         </member>
-        <member name="F:BomberStuff.Core.Animation.PlayerAnimationIndex.Player">
-            <summary>
-            The number of the player with which the animation
-            is associated
-            </summary>
-        </member>
         <member name="F:BomberStuff.Core.Animation.PlayerAnimationIndex.Type">
             <summary></summary>
         </member>
-        <member name="M:BomberStuff.Core.Animation.PlayerAnimationIndex.#ctor(BomberStuff.Core.Animation.PlayerAnimationIndex.Types,System.Int32)">
+        <member name="M:BomberStuff.Core.Animation.PlayerAnimationIndex.#ctor(BomberStuff.Core.Animation.PlayerAnimationIndex.Types)">
             <summary>
-            Initialize a new PlayerAnimationIndex of the specified
-            type and for the specified player
+            Initialize a new PlayerAnimationIndex of the specified type
             </summary>
             <param name="type"></param>
-            <param name="player"></param>
         </member>
         <member name="M:BomberStuff.Core.Animation.PlayerAnimationIndex.ToString">
             <summary>
@@ -1560,26 +1552,19 @@
         <member name="F:BomberStuff.Core.Animation.PlayerDirectionAnimationIndex.Count">
             <summary>Number of animations of this type</summary>
         </member>
-        <member name="F:BomberStuff.Core.Animation.PlayerDirectionAnimationIndex.Player">
-            <summary>
-            The number of the player with which the animation
-            is associated
-            </summary>
-        </member>
         <member name="F:BomberStuff.Core.Animation.PlayerDirectionAnimationIndex.Direction">
             <summary>The animation's direction</summary>
         </member>
         <member name="F:BomberStuff.Core.Animation.PlayerDirectionAnimationIndex.Type">
             <summary>The type of this animation</summary>
         </member>
-        <member name="M:BomberStuff.Core.Animation.PlayerDirectionAnimationIndex.#ctor(BomberStuff.Core.Animation.PlayerDirectionAnimationIndex.Types,BomberStuff.Core.Directions,System.Int32)">
+        <member name="M:BomberStuff.Core.Animation.PlayerDirectionAnimationIndex.#ctor(BomberStuff.Core.Animation.PlayerDirectionAnimationIndex.Types,BomberStuff.Core.Directions)">
             <summary>
             Initialize a PlayerDirectionAnimationIndex of the specified
             type and direction for the specified player
             </summary>
             <param name="type"></param>
             <param name="direction"></param>
-            <param name="player"></param>
         </member>
         <member name="M:BomberStuff.Core.Animation.PlayerDirectionAnimationIndex.ToString">
             <summary>
@@ -1666,22 +1651,15 @@
             An animation index representing a player death animation
             </summary>
         </member>
-        <member name="F:BomberStuff.Core.Animation.PlayerDeathAnimationIndex.Player">
-            <summary>
-            The number of the player with which the animation
-            is associated
-            </summary>
-        </member>
         <member name="F:BomberStuff.Core.Animation.PlayerDeathAnimationIndex.Type">
             <summary></summary>
         </member>
-        <member name="M:BomberStuff.Core.Animation.PlayerDeathAnimationIndex.#ctor(System.Int32,System.Int32)">
+        <member name="M:BomberStuff.Core.Animation.PlayerDeathAnimationIndex.#ctor(System.Int32)">
             <summary>
             Initialize a new PlayerAnimationIndex of the specified
             type and for the specified player
             </summary>
             <param name="type"></param>
-            <param name="player"></param>
         </member>
         <member name="M:BomberStuff.Core.Animation.PlayerDeathAnimationIndex.ToString">
             <summary>

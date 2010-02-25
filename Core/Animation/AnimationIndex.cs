@@ -1,7 +1,7 @@
 ﻿//
 // AnimationIndex.cs - Animation indices
 //
-// Copyright © 2009  Thomas Faber
+// Copyright © 2009-2010  Thomas Faber
 //
 // This file is part of Bomber Stuff.
 //
@@ -90,12 +90,6 @@ namespace BomberStuff.Core.Animation
 			Type = type;
 		}
 
-		///// <summary></summary>
-		//public readonly int Value;
-		/*{
-			get { return First + (int)Type; }
-		}*/
-
 		/// <summary>
 		/// Returns a string representation of the object
 		/// </summary>
@@ -129,12 +123,6 @@ namespace BomberStuff.Core.Animation
 		{
 			Type = type;
 		}
-
-		///// <summary></summary>
-		//public readonly int Value;
-		/*{
-			get { return First + (int)Type; }
-		}*/
 
 		/// <summary>
 		/// Returns a string representation of the object
@@ -191,12 +179,6 @@ namespace BomberStuff.Core.Animation
 			Direction = direction;
 		}
 
-		///// <summary></summary>
-		//public readonly int Value;
-		/*{
-			get { return First + (int)Direction * Count + (int)Type; }
-		}*/
-		
 		/// <summary>
 		/// Returns a string representation of the object
 		/// </summary>
@@ -239,40 +221,18 @@ namespace BomberStuff.Core.Animation
 		/// <summary>Index of the first animation of this type</summary>
 		public const int First = DirectionAnimationIndex.First + 4 * DirectionAnimationIndex.Count;
 
-		/// <summary>
-		/// The number of the player with which the animation
-		/// is associated
-		/// </summary>
-		private readonly int Player;
-
 		/// <summary></summary>
 		private readonly Types Type;
 
 		/// <summary>
-		/// Initialize a new PlayerAnimationIndex of the specified
-		/// type and for the specified player
+		/// Initialize a new PlayerAnimationIndex of the specified type
 		/// </summary>
 		/// <param name="type"></param>
-		/// <param name="player"></param>
-		public PlayerAnimationIndex(Types type, int player)
-			: base(First
-						+ player * (Count + 4 * PlayerDirectionAnimationIndex.Count)
-						+ (int)type)
+		public PlayerAnimationIndex(Types type)
+			: base(First + (int)type)
 		{
 			Type = type;
-			Player = player;
 		}
-
-		///// <summary></summary>
-		//public readonly int Value;
-		/*{
-			get
-			{
-				return First
-						+ Player * (Count + 4 * PlayerDirectionAnimationIndex.Count)
-						+ (int)Type;
-			}
-		}*/
 
 		/// <summary>
 		/// Returns a string representation of the object
@@ -280,7 +240,7 @@ namespace BomberStuff.Core.Animation
 		/// <returns>a string representing the object</returns>
 		public override string ToString()
 		{
-			return "PlayerAnimationIndex(Player " + Player + ", " + Type + ")";
+			return "PlayerAnimationIndex(" + Type + ")";
 		}
 	}
 
@@ -318,11 +278,6 @@ namespace BomberStuff.Core.Animation
 		/// <summary>Number of animations of this type</summary>
 		public const int Count = (int)Types.Last + 1;
 
-		/// <summary>
-		/// The number of the player with which the animation
-		/// is associated
-		/// </summary>
-		private readonly int Player;
 		/// <summary>The animation's direction</summary>
 		private readonly Directions Direction;
 
@@ -335,29 +290,13 @@ namespace BomberStuff.Core.Animation
 		/// </summary>
 		/// <param name="type"></param>
 		/// <param name="direction"></param>
-		/// <param name="player"></param>
-		public PlayerDirectionAnimationIndex(Types type, Directions direction, int player)
-			: base(PlayerAnimationIndex.First
-						+ player * (PlayerAnimationIndex.Count + 4 * Count)
-						+ PlayerAnimationIndex.Count
+		public PlayerDirectionAnimationIndex(Types type, Directions direction)
+			: base(PlayerAnimationIndex.First + PlayerAnimationIndex.Count
 						+ Count * (int)direction + (int)type)
 		{
 			Type = type;
 			Direction = direction;
-			Player = player;
 		}
-
-		///// <summary></summary>
-		//public readonly int Value;
-		/*{
-			get
-			{
-				return PlayerAnimationIndex.First
-						+ Player * (PlayerAnimationIndex.Count + 4 * Count)
-						+ PlayerAnimationIndex.Count
-						+ Count * (int)Direction + (int)Type;
-			}
-		}*/
 
 		/// <summary>
 		/// Returns a string representation of the object
@@ -365,7 +304,7 @@ namespace BomberStuff.Core.Animation
 		/// <returns>a string representing the object</returns>
 		public override string ToString()
 		{
-			return "PlayerDirectionAnimationIndex(Player " + Player + ", " + Direction + ", " + Type + ")";
+			return "PlayerDirectionAnimationIndex(" + Direction + ", " + Type + ")";
 		}
 	}
 
@@ -412,12 +351,6 @@ namespace BomberStuff.Core.Animation
 			Tileset = tileset;
 		}
 
-		///// <summary></summary>
-		//public readonly int Value;
-		/*{
-			get { return Tileset * Count + (int)Type; }
-		}*/
-
 		/// <summary>
 		/// Returns a string representation of the object
 		/// </summary>
@@ -433,12 +366,6 @@ namespace BomberStuff.Core.Animation
 	/// </summary>
 	public sealed class PlayerDeathAnimationIndex : AnimationIndex
 	{
-		/// <summary>
-		/// The number of the player with which the animation
-		/// is associated
-		/// </summary>
-		public readonly int Player;
-
 		/// <summary></summary>
 		public readonly int Type;
 
@@ -447,22 +374,11 @@ namespace BomberStuff.Core.Animation
 		/// type and for the specified player
 		/// </summary>
 		/// <param name="type"></param>
-		/// <param name="player"></param>
-		public PlayerDeathAnimationIndex(int type, int player)
+		public PlayerDeathAnimationIndex(int type)
 			: base(-1)
 		{
 			Type = type;
-			Player = player;
 		}
-
-		///// <summary></summary>
-		/*public override int Value
-		{
-			get
-			{
-				throw new System.InvalidOperationException("A death animation index has no value");
-			}
-		}*/
 
 		/// <summary>
 		/// Returns a string representation of the object
@@ -470,7 +386,7 @@ namespace BomberStuff.Core.Animation
 		/// <returns>a string representing the object</returns>
 		public override string ToString()
 		{
-			return "PlayerDeatAnimationIndex(Player " + Player + ", " + Type + ")";
+			return "PlayerDeatAnimationIndex(" + Type + ")";
 		}
 	}
 }
