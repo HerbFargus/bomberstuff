@@ -10,7 +10,7 @@ using System.Resources;
 //      Build Number
 //      Revision
 //
-[assembly: AssemblyVersion("0.1.2.118")]
+[assembly: AssemblyVersion("0.1.2.121")]
 [assembly: NeutralResourcesLanguageAttribute("en-US")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("BomberStuff")]

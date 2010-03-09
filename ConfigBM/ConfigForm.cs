@@ -29,6 +29,9 @@ using BomberStuff.Core;
 using BomberStuff.Core.Animation;
 using BomberStuff.Files;
 using BomberStuff.Core.Utilities;
+using System.IO;
+using System.Diagnostics;
+using System.Text;
 
 namespace BomberStuff.ConfigBM
 {
@@ -261,6 +264,77 @@ namespace BomberStuff.ConfigBM
 		private void txtPath_TextChanged(object sender, EventArgs e)
 		{
 			TestABPath();
+		}
+
+		private void btnRun_Click(object sender, EventArgs e)
+		{
+			btnApply_Click(sender, e);
+			// run BomberStuff
+			StartBomberStuff();
+			btnCancel_Click(sender, e);
+		}
+
+		/// <summary>
+		/// Log file to append output to
+		/// </summary>
+		private static StreamWriter OutFile;
+
+		/// <summary>
+		/// Start Bomber Stuff
+		/// </summary>
+		private static void StartBomberStuff()
+		{
+			// open log file and write introductory message
+			OutFile = new StreamWriter(File.Open("BomberStuff.log", FileMode.Append, FileAccess.Write, FileShare.Read), new UTF8Encoding(false));
+			OutFile.WriteLine(new string('-', 78));
+			OutFile.WriteLine(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + " -- Starting BomberStuff");
+			OutFile.WriteLine(new string('-', 78));
+
+			// prepare a process to start the application
+			Process bomberStuff = new Process();
+
+			bomberStuff.StartInfo.FileName = "BomberStuff.exe";
+			//bomberStuff.StartInfo.Arguments = string.Join(" ", args);
+			bomberStuff.StartInfo.UseShellExecute = false;
+
+			// redirect both standard output and standard error to our handler
+			bomberStuff.StartInfo.RedirectStandardOutput = true;
+			bomberStuff.StartInfo.RedirectStandardError = true;
+
+			bomberStuff.OutputDataReceived += DataReceived;
+			bomberStuff.ErrorDataReceived += DataReceived;
+
+			// start the program
+			bomberStuff.Start();
+
+			// start reading program output
+			bomberStuff.BeginOutputReadLine();
+			bomberStuff.BeginErrorReadLine();
+
+			// wait until the program is done, then close the log file
+			bomberStuff.WaitForExit();
+			OutFile.Close();
+
+			// wait for enter before closing
+			//Console.ReadLine();
+		}
+
+		/// <summary>
+		/// Event handler for receiving data from standard output/error
+		/// of the started process
+		/// </summary>
+		/// <param name="sender">Object raising the event</param>
+		/// <param name="e">Event arguments</param>
+		private static void DataReceived(object sender, DataReceivedEventArgs e)
+		{
+			// write to console as the user would expect
+			Console.WriteLine(e.Data);
+
+			// write a copy to the log file
+			OutFile.WriteLine(e.Data);
+
+			// flush to make sure data is written, in case something crashes.
+			OutFile.Flush();
 		}
 	}
 }

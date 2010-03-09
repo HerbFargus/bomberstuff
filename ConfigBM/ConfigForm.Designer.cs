@@ -95,7 +95,7 @@ namespace BomberStuff.ConfigBM
 			this.btnCancel = new System.Windows.Forms.Button();
 			this.btnOK = new System.Windows.Forms.Button();
 			this.browsePath = new System.Windows.Forms.FolderBrowserDialog();
-			this.btnApply = new System.Windows.Forms.Button();
+			this.btnRun = new System.Windows.Forms.Button();
 			this.groupBox1.SuspendLayout();
 			this.groupBox2.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.numPlayers)).BeginInit();
@@ -118,7 +118,7 @@ namespace BomberStuff.ConfigBM
 			this.groupBox1.Location = new System.Drawing.Point(314, 12);
 			this.groupBox1.Name = "groupBox1";
 			this.groupBox1.Size = new System.Drawing.Size(329, 115);
-			this.groupBox1.TabIndex = 15;
+			this.groupBox1.TabIndex = 2;
 			this.groupBox1.TabStop = false;
 			this.groupBox1.Text = "Window Size";
 			// 
@@ -128,7 +128,7 @@ namespace BomberStuff.ConfigBM
 			this.checkFullscreen.Location = new System.Drawing.Point(188, 40);
 			this.checkFullscreen.Name = "checkFullscreen";
 			this.checkFullscreen.Size = new System.Drawing.Size(95, 21);
-			this.checkFullscreen.TabIndex = 19;
+			this.checkFullscreen.TabIndex = 4;
 			this.checkFullscreen.Text = "Fullscreen";
 			// 
 			// txtHeight
@@ -137,7 +137,7 @@ namespace BomberStuff.ConfigBM
 			this.txtHeight.MaxLength = 4;
 			this.txtHeight.Name = "txtHeight";
 			this.txtHeight.Size = new System.Drawing.Size(49, 22);
-			this.txtHeight.TabIndex = 18;
+			this.txtHeight.TabIndex = 3;
 			this.txtHeight.Validated += new System.EventHandler(this.txtWidthHeight_Validated);
 			this.txtHeight.Validating += new System.ComponentModel.CancelEventHandler(this.txtWidthHeight_Validating);
 			// 
@@ -155,7 +155,7 @@ namespace BomberStuff.ConfigBM
 			this.txtWidth.MaxLength = 4;
 			this.txtWidth.Name = "txtWidth";
 			this.txtWidth.Size = new System.Drawing.Size(49, 22);
-			this.txtWidth.TabIndex = 16;
+			this.txtWidth.TabIndex = 2;
 			this.txtWidth.Validated += new System.EventHandler(this.txtWidthHeight_Validated);
 			this.txtWidth.Validating += new System.ComponentModel.CancelEventHandler(this.txtWidthHeight_Validating);
 			// 
@@ -171,7 +171,7 @@ namespace BomberStuff.ConfigBM
 			this.cbSize.Location = new System.Drawing.Point(20, 38);
 			this.cbSize.Name = "cbSize";
 			this.cbSize.Size = new System.Drawing.Size(146, 24);
-			this.cbSize.TabIndex = 15;
+			this.cbSize.TabIndex = 1;
 			this.cbSize.SelectedIndexChanged += new System.EventHandler(this.cbSize_SelectedIndexChanged);
 			// 
 			// groupBox2
@@ -200,7 +200,7 @@ namespace BomberStuff.ConfigBM
 			this.groupBox2.Location = new System.Drawing.Point(12, 281);
 			this.groupBox2.Name = "groupBox2";
 			this.groupBox2.Size = new System.Drawing.Size(631, 290);
-			this.groupBox2.TabIndex = 16;
+			this.groupBox2.TabIndex = 4;
 			this.groupBox2.TabStop = false;
 			this.groupBox2.Text = "Player Settings";
 			// 
@@ -230,7 +230,7 @@ namespace BomberStuff.ConfigBM
 			this.checkBox5.Location = new System.Drawing.Point(341, 84);
 			this.checkBox5.Name = "checkBox5";
 			this.checkBox5.Size = new System.Drawing.Size(79, 27);
-			this.checkBox5.TabIndex = 32;
+			this.checkBox5.TabIndex = 4;
 			this.checkBox5.Text = "Action 2";
 			this.checkBox5.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
 			this.checkBox5.UseVisualStyleBackColor = true;
@@ -243,7 +243,7 @@ namespace BomberStuff.ConfigBM
 			this.checkBox4.Location = new System.Drawing.Point(341, 18);
 			this.checkBox4.Name = "checkBox4";
 			this.checkBox4.Size = new System.Drawing.Size(79, 27);
-			this.checkBox4.TabIndex = 31;
+			this.checkBox4.TabIndex = 3;
 			this.checkBox4.Text = "Action 1";
 			this.checkBox4.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
 			this.checkBox4.UseVisualStyleBackColor = true;
@@ -256,7 +256,7 @@ namespace BomberStuff.ConfigBM
 			this.checkBox3.Location = new System.Drawing.Point(475, 84);
 			this.checkBox3.Name = "checkBox3";
 			this.checkBox3.Size = new System.Drawing.Size(79, 27);
-			this.checkBox3.TabIndex = 30;
+			this.checkBox3.TabIndex = 8;
 			this.checkBox3.Text = "Down";
 			this.checkBox3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
 			this.checkBox3.UseVisualStyleBackColor = true;
@@ -269,7 +269,7 @@ namespace BomberStuff.ConfigBM
 			this.checkBox2.Location = new System.Drawing.Point(475, 18);
 			this.checkBox2.Name = "checkBox2";
 			this.checkBox2.Size = new System.Drawing.Size(79, 27);
-			this.checkBox2.TabIndex = 29;
+			this.checkBox2.TabIndex = 5;
 			this.checkBox2.Text = "Up";
 			this.checkBox2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
 			this.checkBox2.UseVisualStyleBackColor = true;
@@ -282,7 +282,7 @@ namespace BomberStuff.ConfigBM
 			this.checkBox1.Location = new System.Drawing.Point(525, 51);
 			this.checkBox1.Name = "checkBox1";
 			this.checkBox1.Size = new System.Drawing.Size(79, 27);
-			this.checkBox1.TabIndex = 28;
+			this.checkBox1.TabIndex = 7;
 			this.checkBox1.Text = "Right";
 			this.checkBox1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
 			this.checkBox1.UseVisualStyleBackColor = true;
@@ -295,7 +295,7 @@ namespace BomberStuff.ConfigBM
 			this.checkLeft.Location = new System.Drawing.Point(422, 51);
 			this.checkLeft.Name = "checkLeft";
 			this.checkLeft.Size = new System.Drawing.Size(79, 27);
-			this.checkLeft.TabIndex = 27;
+			this.checkLeft.TabIndex = 6;
 			this.checkLeft.Text = "Left";
 			this.checkLeft.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
 			this.checkLeft.UseVisualStyleBackColor = true;
@@ -319,7 +319,7 @@ namespace BomberStuff.ConfigBM
             0});
 			this.numPlayers.Name = "numPlayers";
 			this.numPlayers.Size = new System.Drawing.Size(50, 22);
-			this.numPlayers.TabIndex = 25;
+			this.numPlayers.TabIndex = 1;
 			this.numPlayers.ValueChanged += new System.EventHandler(this.numPlayers_ValueChanged);
 			// 
 			// cbPlayer
@@ -329,7 +329,7 @@ namespace BomberStuff.ConfigBM
 			this.cbPlayer.MaxDropDownItems = 10;
 			this.cbPlayer.Name = "cbPlayer";
 			this.cbPlayer.Size = new System.Drawing.Size(146, 24);
-			this.cbPlayer.TabIndex = 24;
+			this.cbPlayer.TabIndex = 2;
 			this.cbPlayer.SelectedIndexChanged += new System.EventHandler(this.cbPlayer_SelectedIndexChanged);
 			// 
 			// lblLightnessValue
@@ -377,7 +377,7 @@ namespace BomberStuff.ConfigBM
 			this.checkSaturation.Location = new System.Drawing.Point(5, 168);
 			this.checkSaturation.Name = "checkSaturation";
 			this.checkSaturation.Size = new System.Drawing.Size(95, 21);
-			this.checkSaturation.TabIndex = 18;
+			this.checkSaturation.TabIndex = 11;
 			this.checkSaturation.Text = "Saturation";
 			this.checkSaturation.CheckStateChanged += new System.EventHandler(this.UpdatePreview);
 			// 
@@ -386,7 +386,7 @@ namespace BomberStuff.ConfigBM
 			this.checkHue.Location = new System.Drawing.Point(5, 120);
 			this.checkHue.Name = "checkHue";
 			this.checkHue.Size = new System.Drawing.Size(56, 21);
-			this.checkHue.TabIndex = 17;
+			this.checkHue.TabIndex = 9;
 			this.checkHue.Text = "Hue";
 			this.checkHue.CheckStateChanged += new System.EventHandler(this.UpdatePreview);
 			// 
@@ -399,7 +399,7 @@ namespace BomberStuff.ConfigBM
 			this.trackLightness.Name = "trackLightness";
 			this.trackLightness.Size = new System.Drawing.Size(282, 56);
 			this.trackLightness.SmallChange = 10;
-			this.trackLightness.TabIndex = 16;
+			this.trackLightness.TabIndex = 13;
 			this.trackLightness.TickFrequency = 10;
 			this.trackLightness.ValueChanged += new System.EventHandler(this.UpdatePreview);
 			// 
@@ -411,7 +411,7 @@ namespace BomberStuff.ConfigBM
 			this.trackSaturation.Name = "trackSaturation";
 			this.trackSaturation.Size = new System.Drawing.Size(282, 56);
 			this.trackSaturation.SmallChange = 10;
-			this.trackSaturation.TabIndex = 15;
+			this.trackSaturation.TabIndex = 12;
 			this.trackSaturation.TickFrequency = 10;
 			this.trackSaturation.ValueChanged += new System.EventHandler(this.UpdatePreview);
 			// 
@@ -423,7 +423,7 @@ namespace BomberStuff.ConfigBM
 			this.trackHue.Name = "trackHue";
 			this.trackHue.Size = new System.Drawing.Size(282, 56);
 			this.trackHue.SmallChange = 10;
-			this.trackHue.TabIndex = 14;
+			this.trackHue.TabIndex = 10;
 			this.trackHue.TickFrequency = 10;
 			this.trackHue.Value = 135;
 			this.trackHue.ValueChanged += new System.EventHandler(this.UpdatePreview);
@@ -438,7 +438,7 @@ namespace BomberStuff.ConfigBM
 			this.groupBox3.Location = new System.Drawing.Point(12, 12);
 			this.groupBox3.Name = "groupBox3";
 			this.groupBox3.Size = new System.Drawing.Size(296, 115);
-			this.groupBox3.TabIndex = 17;
+			this.groupBox3.TabIndex = 1;
 			this.groupBox3.TabStop = false;
 			this.groupBox3.Text = "User Interface";
 			// 
@@ -457,7 +457,7 @@ namespace BomberStuff.ConfigBM
 			this.rbCustom.Location = new System.Drawing.Point(15, 84);
 			this.rbCustom.Name = "rbCustom";
 			this.rbCustom.Size = new System.Drawing.Size(92, 21);
-			this.rbCustom.TabIndex = 24;
+			this.rbCustom.TabIndex = 3;
 			this.rbCustom.Text = "Custom ...";
 			// 
 			// rbWinForms
@@ -465,7 +465,7 @@ namespace BomberStuff.ConfigBM
 			this.rbWinForms.Location = new System.Drawing.Point(15, 57);
 			this.rbWinForms.Name = "rbWinForms";
 			this.rbWinForms.Size = new System.Drawing.Size(147, 21);
-			this.rbWinForms.TabIndex = 23;
+			this.rbWinForms.TabIndex = 2;
 			this.rbWinForms.Text = "WinFormsInterface";
 			// 
 			// rbSlimDX
@@ -474,7 +474,7 @@ namespace BomberStuff.ConfigBM
 			this.rbSlimDX.Location = new System.Drawing.Point(15, 30);
 			this.rbSlimDX.Name = "rbSlimDX";
 			this.rbSlimDX.Size = new System.Drawing.Size(129, 21);
-			this.rbSlimDX.TabIndex = 22;
+			this.rbSlimDX.TabIndex = 1;
 			this.rbSlimDX.TabStop = true;
 			this.rbSlimDX.Text = "SlimDXInterface";
 			// 
@@ -492,7 +492,7 @@ namespace BomberStuff.ConfigBM
 			this.groupBox4.Location = new System.Drawing.Point(12, 133);
 			this.groupBox4.Name = "groupBox4";
 			this.groupBox4.Size = new System.Drawing.Size(631, 142);
-			this.groupBox4.TabIndex = 18;
+			this.groupBox4.TabIndex = 3;
 			this.groupBox4.TabStop = false;
 			this.groupBox4.Text = "Game Settings";
 			// 
@@ -511,7 +511,7 @@ namespace BomberStuff.ConfigBM
 			this.btnBrowse.Location = new System.Drawing.Point(596, 38);
 			this.btnBrowse.Name = "btnBrowse";
 			this.btnBrowse.Size = new System.Drawing.Size(29, 23);
-			this.btnBrowse.TabIndex = 7;
+			this.btnBrowse.TabIndex = 2;
 			this.btnBrowse.Text = "...";
 			this.btnBrowse.UseVisualStyleBackColor = true;
 			this.btnBrowse.Click += new System.EventHandler(this.btnBrowse_Click);
@@ -522,7 +522,7 @@ namespace BomberStuff.ConfigBM
 			this.label9.Location = new System.Drawing.Point(6, 18);
 			this.label9.Name = "label9";
 			this.label9.Size = new System.Drawing.Size(163, 17);
-			this.label9.TabIndex = 6;
+			this.label9.TabIndex = 10;
 			this.label9.Text = "Atomic Bomberman Path";
 			// 
 			// txtPath
@@ -532,7 +532,7 @@ namespace BomberStuff.ConfigBM
 			this.txtPath.Location = new System.Drawing.Point(9, 38);
 			this.txtPath.Name = "txtPath";
 			this.txtPath.Size = new System.Drawing.Size(576, 22);
-			this.txtPath.TabIndex = 5;
+			this.txtPath.TabIndex = 1;
 			this.txtPath.TextChanged += new System.EventHandler(this.txtPath_TextChanged);
 			// 
 			// label8
@@ -551,7 +551,7 @@ namespace BomberStuff.ConfigBM
 			this.cbScheme.Location = new System.Drawing.Point(407, 90);
 			this.cbScheme.Name = "cbScheme";
 			this.cbScheme.Size = new System.Drawing.Size(197, 24);
-			this.cbScheme.TabIndex = 3;
+			this.cbScheme.TabIndex = 4;
 			// 
 			// label5
 			// 
@@ -586,7 +586,7 @@ namespace BomberStuff.ConfigBM
             -2147483648});
 			this.numTileset.Name = "numTileset";
 			this.numTileset.Size = new System.Drawing.Size(50, 22);
-			this.numTileset.TabIndex = 0;
+			this.numTileset.TabIndex = 3;
 			this.numTileset.Value = new decimal(new int[] {
             1,
             0,
@@ -596,41 +596,43 @@ namespace BomberStuff.ConfigBM
 			// btnCancel
 			// 
 			this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-			this.btnCancel.Location = new System.Drawing.Point(415, 577);
+			this.btnCancel.Location = new System.Drawing.Point(548, 577);
 			this.btnCancel.Name = "btnCancel";
-			this.btnCancel.Size = new System.Drawing.Size(114, 38);
-			this.btnCancel.TabIndex = 19;
-			this.btnCancel.Text = "&Cancel";
+			this.btnCancel.Size = new System.Drawing.Size(95, 38);
+			this.btnCancel.TabIndex = 7;
+			this.btnCancel.Text = "Discard";
 			this.btnCancel.UseVisualStyleBackColor = true;
 			this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
 			// 
 			// btnOK
 			// 
 			this.btnOK.DialogResult = System.Windows.Forms.DialogResult.OK;
-			this.btnOK.Location = new System.Drawing.Point(296, 577);
+			this.btnOK.Location = new System.Drawing.Point(447, 577);
 			this.btnOK.Name = "btnOK";
 			this.btnOK.Size = new System.Drawing.Size(95, 38);
-			this.btnOK.TabIndex = 20;
-			this.btnOK.Text = "&OK";
+			this.btnOK.TabIndex = 6;
+			this.btnOK.Text = "Save && Exit";
 			this.btnOK.UseVisualStyleBackColor = true;
 			this.btnOK.Click += new System.EventHandler(this.btnOK_Click);
 			// 
-			// btnApply
+			// btnRun
 			// 
-			this.btnApply.DialogResult = System.Windows.Forms.DialogResult.OK;
-			this.btnApply.Location = new System.Drawing.Point(542, 577);
-			this.btnApply.Name = "btnApply";
-			this.btnApply.Size = new System.Drawing.Size(95, 38);
-			this.btnApply.TabIndex = 21;
-			this.btnApply.Text = "Apply";
-			this.btnApply.UseVisualStyleBackColor = true;
-			this.btnApply.Click += new System.EventHandler(this.btnApply_Click);
+			this.btnRun.DialogResult = System.Windows.Forms.DialogResult.OK;
+			this.btnRun.Location = new System.Drawing.Point(346, 577);
+			this.btnRun.Name = "btnRun";
+			this.btnRun.Size = new System.Drawing.Size(95, 38);
+			this.btnRun.TabIndex = 5;
+			this.btnRun.Text = "Save && Run";
+			this.btnRun.UseVisualStyleBackColor = true;
+			this.btnRun.Click += new System.EventHandler(this.btnRun_Click);
 			// 
 			// ConfigForm
 			// 
+			this.AcceptButton = this.btnRun;
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
+			this.CancelButton = this.btnCancel;
 			this.ClientSize = new System.Drawing.Size(655, 627);
-			this.Controls.Add(this.btnApply);
+			this.Controls.Add(this.btnRun);
 			this.Controls.Add(this.btnOK);
 			this.Controls.Add(this.btnCancel);
 			this.Controls.Add(this.groupBox4);
@@ -639,7 +641,7 @@ namespace BomberStuff.ConfigBM
 			this.Controls.Add(this.groupBox1);
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
 			this.Name = "ConfigForm";
-			this.Text = "ConfigBM";
+			this.Text = "Configure Bomber Stuff";
 			this.groupBox1.ResumeLayout(false);
 			this.groupBox1.PerformLayout();
 			this.groupBox2.ResumeLayout(false);
@@ -705,6 +707,6 @@ namespace BomberStuff.ConfigBM
 		private System.Windows.Forms.FolderBrowserDialog browsePath;
 		private System.Windows.Forms.Button btnBrowse;
 		private System.Windows.Forms.Label lblPathInvalid;
-		private System.Windows.Forms.Button btnApply;
+		private System.Windows.Forms.Button btnRun;
 	}
 }
